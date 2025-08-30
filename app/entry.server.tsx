@@ -17,6 +17,18 @@ export default async function handleRequest(
       checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
       storeDomain: context.env.PUBLIC_STORE_DOMAIN,
     },
+    // Allow external stylesheet for Inter font
+    styleSrc: ['https://rsms.me'],
+    // Allow images from Tailwind assets and Shopify domains
+    imgSrc: [
+      "'self'",
+      'data:',
+      'https://cdn.shopify.com',
+      'https://shopify.com',
+      'https://tailwindcss.com',
+    ],
+    // Allow font files for Inter
+    fontSrc: ["'self'", 'data:', 'https://rsms.me'],
   });
 
   const body = await renderToReadableStream(
