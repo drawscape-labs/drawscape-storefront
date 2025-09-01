@@ -76,6 +76,11 @@ aside header h2 {
 
 aside main {
   margin: 1rem;
+  /* Make the aside content area a flex column that fills the remaining height below the aside header */
+  height: calc(100vh - var(--header-height) - 2rem);
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
 aside p {
@@ -239,55 +244,30 @@ button.reset:hover:not(:has(> *)) {
 * components/Cart
 * --------------------------------------------------
 */
-/* .cart-main {
-  height: 100%;
-  max-height: calc(100vh - var(--cart-aside-summary-height));
-  overflow-y: auto;
-  width: auto;
-}
-
-.cart-main.with-discount {
-  max-height: calc(100vh - var(--cart-aside-summary-height-with-discount));
-}
-
-.cart-line {
+/* Scope cart layout behavior to the aside only */
+aside .cart-details {
   display: flex;
-  padding: 0.75rem 0;
+  flex-direction: column;
+  height: 100%;
 }
 
-.cart-line img {
-  height: 100%;
-  display: block;
-  margin-right: 0.75rem;
+aside .cart-lines-scroll {
+  flex: 1;
+  overflow-y: auto;
 }
 
 .cart-summary-page {
   position: relative;
 }
 
+/* Sticky summary inside the aside */
 .cart-summary-aside {
-  background: white;
-  border-top: 1px solid var(--color-dark);
+  position: sticky;
   bottom: 0;
+  background: var(--color-light);
+  border-top: 1px solid var(--color-dark);
   padding-top: 0.75rem;
-  position: absolute;
-  width: calc(var(--aside-width) - 40px);
 }
-
-.cart-line-quantity {
-  display: flex;
-}
-
-.cart-discount {
-  align-items: center;
-  display: flex;
-  margin-top: 0.25rem;
-}
-
-.cart-subtotal {
-  align-items: center;
-  display: flex;
-} */
 /*
 * --------------------------------------------------
 * components/Search

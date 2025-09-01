@@ -32,7 +32,10 @@ export function CartMain({layout, cart: originalCart}: CartMainProps) {
     <div className={className}>
       <CartEmpty hidden={linesCount} layout={layout} />
       <div className="cart-details">
-        <div aria-labelledby="cart-lines">
+        <div
+          aria-labelledby="cart-lines"
+          className={layout === 'aside' ? 'cart-lines-scroll' : undefined}
+        >
           <ul className="divide-y divide-gray-200 border-t border-b border-gray-200">
             {(cart?.lines?.nodes ?? []).map((line) => (
               <CartLineItem key={line.id} line={line} layout={layout} />
@@ -59,10 +62,6 @@ function CartEmpty({
         Looks like you haven&rsquo;t added anything yet, let&rsquo;s get you
         started!
       </p>
-      <br />
-      <Link to="/collections" onClick={close} prefetch="viewport">
-        Continue shopping →
-      </Link>
     </div>
   );
 }
