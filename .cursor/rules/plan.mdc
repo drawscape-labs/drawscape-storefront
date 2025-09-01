@@ -1,0 +1,33 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+## Feature Planning Workflow
+
+When you ask me to create a plan (e.g. by typing **/plan**), I will follow this process:
+
+1. **Clarify Requirements**
+   • I'll behave like a senior software engineer, reviewing the feature or task you describe.
+   • If anything is ambiguous or missing, I'll ask targeted follow-up questions. Simple tasks may skip this step.
+
+2. **Draft the Plan**
+   • Once I understand the goal, I'll create a new Markdown file inside the `tasks/` directory.
+   • The file will contain an easy-to-read outline of the proposed solution:
+     – High-level steps and architecture
+     – Key data structures / modules (pseudocode only)
+     – Minimal Markdown formatting for readability
+   • No production code will be written at this stage.
+
+3. **Review & Confirm**
+   • You review the plan and either request changes or approve it.
+
+4. **Initialize Implementation (after approval)**
+Once I approve the plan by saying "approved"
+   • Create and check out a new git branch with a descriptive name for the feature.
+   • Commit the new task file with a message like "chore: initial plan for <feature>".
+   • Actual implementation begins only when you explicitly instruct me to proceed.
+
+---
+Keep this workflow in mind whenever you request a project plan.

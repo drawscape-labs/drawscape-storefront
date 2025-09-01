@@ -216,7 +216,7 @@ button.reset:hover:not(:has(> *)) {
 * components/Footer
 * --------------------------------------------------
 */
-.footer {
+/* .footer {
   background: var(--color-dark);
   margin-top: auto;
 }
@@ -232,7 +232,7 @@ button.reset:hover:not(:has(> *)) {
 .footer-menu a {
   color: var(--color-light);
   min-width: fit-content;
-}
+} */
 
 /*
 * --------------------------------------------------

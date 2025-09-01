@@ -18,6 +18,8 @@ import {SearchResultsPredictive} from '~/components/SearchResultsPredictive';
 interface PageLayoutProps {
   cart: Promise<CartApiQueryFragment | null>;
   footer: Promise<FooterQuery | null>;
+  footerProducts: Promise<FooterQuery | null>;
+  footerLegal: Promise<FooterQuery | null>;
   header: HeaderQuery;
   isLoggedIn: Promise<boolean>;
   publicStoreDomain: string;
@@ -28,6 +30,8 @@ export function PageLayout({
   cart,
   children = null,
   footer,
+  footerProducts,
+  footerLegal,
   header,
   isLoggedIn,
   publicStoreDomain,
@@ -48,6 +52,8 @@ export function PageLayout({
       <main>{children}</main>
       <Footer
         footer={footer}
+        footerProducts={footerProducts}
+        footerLegal={footerLegal}
         header={header}
         publicStoreDomain={publicStoreDomain}
       />
