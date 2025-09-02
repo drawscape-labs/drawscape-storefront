@@ -9,3 +9,53 @@
     --font-sans: InterVariable, sans-serif;
     --font-sans--font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
+
+
+@layer components {
+    .page,
+    .policy { @apply mx-auto max-w-3xl px-4 py-10 text-neutral-800; }
+
+    .page h1,
+    .policy h1 { @apply text-3xl font-semibold leading-tight mb-6; }
+    .page h2,
+    .policy h2 { @apply text-2xl font-semibold leading-snug mt-10 mb-4; }
+    .page h3,
+    .policy h3 { @apply text-xl font-semibold mt-8 mb-3; }
+
+    .page p,
+    .policy p { @apply my-4 leading-7; }
+    .page a,
+    .policy a { @apply text-blue-600 underline hover:text-blue-700; }
+
+    .page ul,
+    .policy ul { @apply list-disc pl-6 my-4; }
+    .page ol,
+    .policy ol { @apply list-decimal pl-6 my-4; }
+    .page li,
+    .policy li { @apply my-1; }
+
+    .page img,
+    .policy img { @apply my-6 rounded-md; }
+    .page figure,
+    .policy figure { @apply my-6; }
+    .page figcaption,
+    .policy figcaption { @apply text-sm text-neutral-600 mt-2; }
+
+    .page blockquote,
+    .policy blockquote { @apply border-l-4 border-neutral-200 pl-4 italic text-neutral-700 my-6; }
+
+    .page hr,
+    .policy hr { @apply my-10 border-neutral-200; }
+
+    .page table,
+    .policy table { @apply w-full text-left text-sm my-6 border-collapse; }
+    .page th,
+    .policy th { @apply font-semibold border-b border-neutral-200 py-2; }
+    .page td,
+    .policy td { @apply border-b border-neutral-100 py-2; }
+
+    .page pre,
+    .policy pre { @apply p-4 bg-neutral-900 text-neutral-100 rounded-md overflow-x-auto my-6; }
+    .page code,
+    .policy code { @apply font-mono text-sm; }
+}
