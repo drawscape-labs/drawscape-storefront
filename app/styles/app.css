@@ -167,6 +167,7 @@ button.reset:hover:not(:has(> *)) {
 * components/Header
 * --------------------------------------------------
 */
+/* 
 .header {
   align-items: center;
   background: #fff;
@@ -213,7 +214,7 @@ button.reset:hover:not(:has(> *)) {
 
 .header-ctas > * {
   min-width: fit-content;
-}
+} */
 
 
 /*

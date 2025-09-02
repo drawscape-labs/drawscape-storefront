@@ -41,7 +41,7 @@ export function Header({
                 <span className="sr-only">{shop.name}</span>
                 <img
                   alt={shop.name}
-                  src="/logo.png"
+                  src="/logo-full.png"
                   className="h-8 w-auto lg:hidden"
                 />
                 <img
@@ -197,7 +197,7 @@ export function HeaderMenu({
               onClick={close}
               prefetch="intent"
               to={url}
-              className="header-menu-item px-1 py-4 text-sm font-medium text-gray-700 hover:text-gray-800"
+              className="header-menu-item px-3 py-4 text-sm font-medium text-gray-700 hover:text-gray-800"
             >
               {item.title}
             </NavLink>
