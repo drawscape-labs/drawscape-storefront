@@ -26,6 +26,8 @@ export default async function handleRequest(
       'https://cdn.shopify.com',
       'https://shopify.com',
       'https://tailwindcss.com',
+      'https://drawscape.io',
+      'https://drawscape-projects.s3.us-west-2.amazonaws.com',
     ],
     // Allow font files for Inter
     fontSrc: ["'self'", 'data:', 'https://rsms.me'],
