@@ -85,6 +85,58 @@ export function HeaderMenu({
   const className = `header-menu-${viewport}`;
   const {close} = useAside();
 
+  // tempararily hardcode for development
+  menu = {
+    "id": "gid://shopify/Menu/284328165670",
+    "items": [
+        {
+            "id": "gid://shopify/MenuItem/687200108838",
+            "resourceId": null,
+            "tags": [],
+            "title": "Home",
+            "type": "FRONTPAGE",
+            "url": "/",
+            "items": []
+        },
+        {
+            "id": "gid://shopify/MenuItem/687200141606",
+            "resourceId": "gid://shopify/Page/151583064358",
+            "tags": [],
+            "title": "Shop",
+            "type": "PAGE",
+            "url": "/shop-all",
+            "items": []
+        },
+        {
+            "id": "gid://shopify/MenuItem/714857677094",
+            "resourceId": null,
+            "tags": [],
+            "title": "Gallery",
+            "type": "HTTP",
+            "url": "/gallery",
+            "items": []
+        },
+        {
+            "id": "gid://shopify/MenuItem/717103038758",
+            "resourceId": "gid://shopify/Page/149251293478",
+            "tags": [],
+            "title": "Reviews",
+            "type": "PAGE",
+            "url": "/reviews",
+            "items": []
+        },
+        {
+            "id": "gid://shopify/MenuItem/687200174374",
+            "resourceId": "gid://shopify/Page/141668942118",
+            "tags": [],
+            "title": "Contact",
+            "type": "PAGE",
+            "url": "/contact",
+            "items": []
+        }
+    ]
+  };
+
   return (
     <nav
       className={
