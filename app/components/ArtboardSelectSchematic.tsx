@@ -1,8 +1,6 @@
 import { Combobox, ComboboxOption, ComboboxLabel } from './combobox';
 import { useEffect, useState } from 'react';
-import { useRouteLoaderData } from 'react-router';
-import API, { setDrawscapeBaseUrl } from '~/lib/drawscapeApi';
-import type { RootLoader } from '~/root';
+import API from '~/lib/drawscapeApi';
 
 type Schematic = {
   id: string;
@@ -18,18 +16,14 @@ export function ArtboardSelectSchematic({
   value,
   onChange,
 }: ArtboardSelectSchematicProps) {
-  const rootData = useRouteLoaderData<RootLoader>('root');
-  const baseUrl = rootData?.drawscapeApiUrl || '';
-  setDrawscapeBaseUrl(baseUrl);
-
   const [schematics, setSchematics] = useState<Schematic[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-
     let cancelled = false;
     setLoading(true);
 
+    // Fetch schematics via proxy route - no base URL configuration needed
     API.get<any[]>('schematics', { published: 'true', sort: 'title' })
       .then((res) => {
         if (cancelled) return;

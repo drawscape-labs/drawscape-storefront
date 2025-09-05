@@ -1,24 +1,17 @@
 import {type LoaderFunctionArgs, useLoaderData} from 'react-router';
-import API, { setDrawscapeBaseUrl } from '~/lib/drawscapeApi';
+import API from '~/lib/drawscapeApi';
 import DrawscapeTest from '~/components/DrawscapeTest';
 
-export async function loader({ context }: LoaderFunctionArgs) {
-  
-  console.log('context', context.env.DRAWSCAPE_API_URL);
-  
-  // console.log('loader', context.env);
+export async function loader({}: LoaderFunctionArgs) {
   try {
-    setDrawscapeBaseUrl(context.env.DRAWSCAPE_API_URL)
-    // Hit a harmless endpoint or healthcheck; default to '/'  
+    // Test the API connection by fetching schematics
     let res = await API.get('schematics');
-    console.log('res', res);
   
     return {
       status: 200,
       results: res
     };
   } catch (error) {
-    console.log(error)
     return {status: 500, message: (error as Error).message};
   }
 }

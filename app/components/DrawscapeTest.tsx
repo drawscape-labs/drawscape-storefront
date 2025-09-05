@@ -1,7 +1,5 @@
 import {useEffect, useState} from 'react'
-import {useRouteLoaderData} from 'react-router'
-import API, {setDrawscapeBaseUrl} from '~/lib/drawscapeApi'
-import type {RootLoader} from '~/root'
+import API from '~/lib/drawscapeApi'
 import {useArtboards} from '~/context/artboards'
 
 type FetchState<T> = {
@@ -11,7 +9,6 @@ type FetchState<T> = {
 }
 
 export default function DrawscapeTest() {
-  const rootData = useRouteLoaderData<RootLoader>('root')
   const {schematic_id, setSchematicId} = useArtboards()
   const [state, setState] = useState<FetchState<any>>({
     loading: false,
@@ -20,15 +17,8 @@ export default function DrawscapeTest() {
   })
 
   const fetchSchematics = async () => {
-    const baseUrl = rootData?.drawscapeApiUrl
-    if (!baseUrl) {
-      setState({loading: false, error: 'DRAWSCAPE_API_URL is not configured', data: null})
-      return
-    }
-
     setState((s) => ({...s, loading: true, error: null}))
     try {
-      setDrawscapeBaseUrl(baseUrl)
       const result = await API.get('schematics', {
         limit: 1
       })
@@ -49,7 +39,7 @@ export default function DrawscapeTest() {
   return (
     <div style={{marginTop: 16, padding: 16, border: '1px solid #eee', borderRadius: 8}}>
       <h2 style={{fontSize: 18, fontWeight: 600}}>Client-side Drawscape test</h2>
-      <p style={{margin: '8px 0'}}>Base URL: {rootData?.drawscapeApiUrl || 'Not set'}</p>
+      <p style={{margin: '8px 0'}}>Base URL: /api/drawscape (proxy)</p>
       <p style={{margin: '8px 0'}}>Schematic ID (from context): {schematic_id ?? 'None'}</p>
       <div style={{display: 'flex', gap: 8, alignItems: 'center'}}>
         <button
