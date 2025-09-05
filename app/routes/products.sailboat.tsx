@@ -146,12 +146,12 @@ export default function Product() {
               </div>            
 
               <div className="mt-3">
-                <p className="text-3xl tracking-tight text-gray-900">
+                <div className="text-3xl tracking-tight text-gray-900">
                   <ProductPrice
                     price={selectedVariant?.price}
                     compareAtPrice={selectedVariant?.compareAtPrice}
                   />
-                </p>
+                </div>
                 <ProductForm
                   productOptions={productOptions}
                   selectedVariant={selectedVariant}

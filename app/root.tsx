@@ -2,6 +2,7 @@ import {Analytics, getShopAnalytics, useNonce} from '@shopify/hydrogen';
 import {useState} from 'react';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {ReactQueryDevtools} from '@tanstack/react-query-devtools';
+import {ClientOnly} from '~/components/ClientOnly';
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {
   Outlet,
@@ -195,17 +196,21 @@ export function Layout({children}: {children?: React.ReactNode}) {
           >
             <QueryClientProvider client={queryClient}>
               <PageLayout {...data}>{children}</PageLayout>
-              {process.env.NODE_ENV === 'development' ? (
-                <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
-              ) : null}
+              <ClientOnly>
+                {process.env.NODE_ENV === 'development' ? (
+                  <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
+                ) : null}
+              </ClientOnly>
             </QueryClientProvider>
           </Analytics.Provider>
         ) : (
           <QueryClientProvider client={queryClient}>
             {children}
-            {process.env.NODE_ENV === 'development' ? (
-              <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
-            ) : null}
+            <ClientOnly>
+              {process.env.NODE_ENV === 'development' ? (
+                <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
+              ) : null}
+            </ClientOnly>
           </QueryClientProvider>
         )}
         <ScrollRestoration nonce={nonce} />
