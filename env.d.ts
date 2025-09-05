@@ -20,6 +20,9 @@ declare global {
 
   interface Env extends HydrogenEnv {
     // declare additional Env parameter use in the fetch handler and Remix loader context here
+    DRAWSCAPE_API_URL: string;
+    // If you plan to expose a public-safe URL to the client at runtime
+    PUBLIC_DRAWSCAPE_API_URL?: string;
   }
 }
 

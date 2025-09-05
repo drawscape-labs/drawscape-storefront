@@ -19,6 +19,10 @@ export default defineConfig({
     assetsInlineLimit: 0,
   },
   ssr: {
+    // Fix SSR CJS-in-ESM issues for worker runtime (mini-oxygen)
+    // Headless UI and use-sync-external-store ship CJS entrypoints that reference `module`
+    // which is undefined in ESM workers. Force Vite to prebundle and include them in SSR.
+    noExternal: ['@headlessui/react', 'use-sync-external-store'],
     optimizeDeps: {
       /**
        * Include dependencies here if they throw CJS<>ESM errors.
@@ -30,7 +34,7 @@ export default defineConfig({
        * Include 'example-dep' in the array below.
        * @see https://vitejs.dev/config/dep-optimization-options
        */
-      include: [],
+      include: ['@headlessui/react', 'use-sync-external-store'],
     },
   },
 });

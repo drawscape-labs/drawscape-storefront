@@ -1,10 +1,17 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 
-console.log('Drawscape API', import.meta.env.VITE_DRAWSCAPE_API_URL);
+let configuredBaseUrl: string | undefined
+
+export function setDrawscapeBaseUrl(url: string) {
+  configuredBaseUrl = url?.trim()
+}
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
+console.log('configuredBaseUrl', process.env);
+
 interface RequestOptions extends Omit<AxiosRequestConfig, 'url' | 'method' | 'data' | 'params' | 'headers' | 'responseType'> {
+  baseUrl?: string;
   headers?: Record<string, string>;
   responseType?: AxiosRequestConfig['responseType'];
   [key: string]: any;
@@ -44,11 +51,9 @@ async function request<T = any>(
   params?: Record<string, any>,
   options: RequestOptions = {}
 ): Promise<T> {
-  const apiUrl: string | undefined = import.meta.env.VITE_DRAWSCAPE_API_URL as
-    | string
-    | undefined;
+  const apiUrl: string | undefined = options.baseUrl ?? configuredBaseUrl
   if (!apiUrl) {
-    throw new Error('API URL environment variable is not configured');
+    throw new Error('Drawscape API base URL is not configured. Call setDrawscapeBaseUrl(url) before making requests.');
   }
 
   try {

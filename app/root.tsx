@@ -1,4 +1,7 @@
 import {Analytics, getShopAnalytics, useNonce} from '@shopify/hydrogen';
+import {useState} from 'react';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import {ReactQueryDevtools} from '@tanstack/react-query-devtools';
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {
   Outlet,
@@ -78,6 +81,7 @@ export async function loader(args: LoaderFunctionArgs) {
     ...deferredData,
     ...criticalData,
     publicStoreDomain: env.PUBLIC_STORE_DOMAIN,
+    drawscapeApiUrl: env.DRAWSCAPE_API_URL,
     shop: getShopAnalytics({
       storefront,
       publicStorefrontId: env.PUBLIC_STOREFRONT_ID,
@@ -170,6 +174,7 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
 export function Layout({children}: {children?: React.ReactNode}) {
   const nonce = useNonce();
   const data = useRouteLoaderData<RootLoader>('root');
+  const [queryClient] = useState(() => new QueryClient());
 
   return (
     <html lang="en">
@@ -178,7 +183,6 @@ export function Layout({children}: {children?: React.ReactNode}) {
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
         <link rel="stylesheet" href={tailwindCss}></link>
-        {/* <link rel="stylesheet" href={resetStyles}></link> */}
         <link rel="stylesheet" href={appStyles}></link>
         <Meta />
         <Links />
@@ -190,10 +194,20 @@ export function Layout({children}: {children?: React.ReactNode}) {
             shop={data.shop}
             consent={data.consent}
           >
-            <PageLayout {...data}>{children}</PageLayout>
+            <QueryClientProvider client={queryClient}>
+              <PageLayout {...data}>{children}</PageLayout>
+              {process.env.NODE_ENV === 'development' ? (
+                <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
+              ) : null}
+            </QueryClientProvider>
           </Analytics.Provider>
         ) : (
-          children
+          <QueryClientProvider client={queryClient}>
+            {children}
+            {process.env.NODE_ENV === 'development' ? (
+              <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
+            ) : null}
+          </QueryClientProvider>
         )}
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />

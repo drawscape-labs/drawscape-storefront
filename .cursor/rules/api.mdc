@@ -1,0 +1,7 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+if neededing to use the Drawscape API, please look at the api.yaml file in the root of this project for routes and model sturctures. 

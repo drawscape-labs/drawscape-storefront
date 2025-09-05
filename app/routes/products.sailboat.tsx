@@ -12,10 +12,20 @@ import {ProductPrice} from '~/components/ProductPrice';
 import {ProductImage} from '~/components/ProductImage';
 import {ProductForm} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import DrawscapeTest from '~/components/DrawscapeTest';
+import {ArtboardsProvider} from '~/context/artboards';
+import {ArtboardPreview} from '~/components/ArtboardPreview';
+
+import { StarIcon } from '@heroicons/react/20/solid'
+import { ArtboardSelectSchematic } from '~/components/ArtboardSelectSchematic';
+
+function classNames(...classes: string[]) {
+  return classes.filter(Boolean).join(' ')
+}
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [
-    {title: `Hydrogen | ${data?.product.title ?? ''}`},
+    {title: `Drawscape | ${data?.product.title ?? ''}`},
     {
       rel: 'canonical',
       href: `/products/${data?.product.handle}`,
@@ -97,44 +107,83 @@ export default function Product() {
   const {title, descriptionHtml} = product;
 
   return (
-    <div className="product">
-      <ProductImage image={selectedVariant?.image} />
-      <div className="product-main">
-        <h1>{title}</h1>
-        <ProductPrice
-          price={selectedVariant?.price}
-          compareAtPrice={selectedVariant?.compareAtPrice}
-        />
-        <br />
-        <ProductForm
-          productOptions={productOptions}
-          selectedVariant={selectedVariant}
-        />
-        <br />
-        <br />
-        <p>
-          <strong>Description</strong>
-        </p>
-        <br />
-        <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
-        <br />
+    <>
+    <ArtboardsProvider>
+      <div className="bg-white">
+        <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+          <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
+            
+            {/* Artboard preview */}
+            <ArtboardPreview />
+
+            {/* Product info */}
+            <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
+
+              {/* Artboard select */}
+              <ArtboardSelectSchematic />
+
+              {/* Title */}
+              <h1 className="text-3xl font-bold tracking-tight text-gray-900">{title}</h1>
+              
+              {/* Reviews */}
+              <div className="mt-3">
+                <h3 className="sr-only">Reviews</h3>
+                <div className="flex items-center">
+                  <div className="flex items-center">
+                    {[0, 1, 2, 3, 4].map((rating) => (
+                      <StarIcon
+                        key={rating}
+                        aria-hidden="true"
+                        className={classNames(
+                          4 > rating ? 'text-indigo-500' : 'text-gray-300',
+                          'size-5 shrink-0',
+                        )}
+                      />
+                    ))}
+                  </div>
+                  <p className="sr-only">4 out of 5 stars</p>
+                </div>
+              </div>            
+
+              <div className="mt-3">
+                <p className="text-3xl tracking-tight text-gray-900">
+                  <ProductPrice
+                    price={selectedVariant?.price}
+                    compareAtPrice={selectedVariant?.compareAtPrice}
+                  />
+                </p>
+                <ProductForm
+                  productOptions={productOptions}
+                  selectedVariant={selectedVariant}
+                />         
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+      
+      <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
+
+    </ArtboardsProvider>
+
+    {/* Analytics */}
       <Analytics.ProductView
-        data={{
-          products: [
-            {
-              id: product.id,
-              title: product.title,
-              price: selectedVariant?.price.amount || '0',
-              vendor: product.vendor,
-              variantId: selectedVariant?.id || '',
-              variantTitle: selectedVariant?.title || '',
-              quantity: 1,
-            },
-          ],
-        }}
-      />
-    </div>
+      data={{
+        products: [
+          {
+            id: product.id,
+            title: product.title,
+            price: selectedVariant?.price.amount || '0',
+            vendor: product.vendor,
+            variantId: selectedVariant?.id || '',
+            variantTitle: selectedVariant?.title || '',
+            quantity: 1,
+          },
+        ],
+      }}
+    />
+    </>
+    
   );
 }
 
