@@ -68,6 +68,13 @@ export function CartLineItem({
                 {option.name}: {option.value}
               </li>
             ))}
+            {(line.attributes ?? [])
+              .filter((a) => a?.key && a?.value)
+              .map((attr) => (
+                <li key={`attr-${attr.key}`}>
+                  {attr.key}: {attr.value}
+                </li>
+              ))}
           </ul>
         </div>
 

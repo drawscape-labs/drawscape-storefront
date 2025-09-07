@@ -7,6 +7,7 @@ import type {
 import {AddToCartButton} from './AddToCartButton';
 import {useAside} from './Aside';
 import type {ProductFragment} from 'storefrontapi.generated';
+import {useArtboards} from '~/context/artboards';
 
 export function ProductForm({
   productOptions,
@@ -17,6 +18,7 @@ export function ProductForm({
 }) {
   const navigate = useNavigate();
   const {open} = useAside();
+  const {schematic_id} = useArtboards();
   return (
     <div className="product-form">
       {productOptions.map((option) => {
@@ -113,6 +115,16 @@ export function ProductForm({
                   merchandiseId: selectedVariant.id,
                   quantity: 1,
                   selectedVariant,
+                  attributes: [
+                    ...(schematic_id
+                      ? [
+                          {
+                            key: 'schematic_id',
+                            value: String(schematic_id),
+                          },
+                        ]
+                      : []),
+                  ],
                 },
               ]
             : []

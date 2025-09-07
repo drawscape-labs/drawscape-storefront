@@ -1,5 +1,6 @@
 import { Combobox, ComboboxOption, ComboboxLabel } from './combobox';
 import { useEffect, useState } from 'react';
+import { useArtboards } from '~/context/artboards';
 import API from '~/lib/drawscapeApi';
 
 type Schematic = {
@@ -18,6 +19,8 @@ export function ArtboardSelectSchematic({
 }: ArtboardSelectSchematicProps) {
   const [schematics, setSchematics] = useState<Schematic[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const { setSchematicId } = useArtboards();
+  const [selected, setSelected] = useState<Schematic | null>(value ?? null);
 
   useEffect(() => {
     let cancelled = false;
@@ -53,7 +56,16 @@ export function ArtboardSelectSchematic({
     <div className="max-w-xs">
       <Combobox<Schematic>
         options={schematics}
-        onChange={onChange}
+        value={selected ?? undefined}
+        onChange={(option) => {
+          setSelected(option);
+          try {
+            setSchematicId(option?.id ?? null);
+          } catch (_) {
+            // no-op if provider not present
+          }
+          onChange?.(option);
+        }}
         displayValue={(option) => option?.name}
         placeholder={loading ? 'Loading schematics…' : 'Select a schematic'}
         aria-label="Select schematic"
