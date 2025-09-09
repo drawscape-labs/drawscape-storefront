@@ -1,6 +1,5 @@
 import {useEffect, useState} from 'react'
 import API from '~/lib/drawscapeApi'
-import {useArtboards} from '~/context/artboards'
 
 type FetchState<T> = {
   loading: boolean
@@ -9,7 +8,6 @@ type FetchState<T> = {
 }
 
 export default function DrawscapeTest() {
-  const {schematic_id, setSchematicId} = useArtboards()
   const [state, setState] = useState<FetchState<any>>({
     loading: false,
     error: null,
@@ -22,7 +20,6 @@ export default function DrawscapeTest() {
       const result = await API.get('schematics', {
         limit: 1
       })
-      // setSchematicId(result[0].id)
       setState({loading: false, error: null, data: result})
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Unknown error'
@@ -40,7 +37,6 @@ export default function DrawscapeTest() {
     <div style={{marginTop: 16, padding: 16, border: '1px solid #eee', borderRadius: 8}}>
       <h2 style={{fontSize: 18, fontWeight: 600}}>Client-side Drawscape test</h2>
       <p style={{margin: '8px 0'}}>Base URL: /api/drawscape (proxy)</p>
-      <p style={{margin: '8px 0'}}>Schematic ID (from context): {schematic_id ?? 'None'}</p>
       <div style={{display: 'flex', gap: 8, alignItems: 'center'}}>
         <button
           onClick={fetchSchematics}
@@ -55,28 +51,6 @@ export default function DrawscapeTest() {
         >
           {state.loading ? 'Loading…' : 'Fetch Schematics'}
         </button>
-        <button
-          onClick={() => setSchematicId('demo-123')}
-          style={{
-            background: '#0a7',
-            color: '#fff',
-            padding: '8px 12px',
-            borderRadius: 6,
-          }}
-        >
-          Set Demo ID
-        </button>
-        <button
-          onClick={() => setSchematicId(null)}
-          style={{
-            background: '#777',
-            color: '#fff',
-            padding: '8px 12px',
-            borderRadius: 6,
-          }}
-        >
-          Clear
-        </button>
         {state.error && <span style={{color: 'crimson'}}>Error: {state.error}</span>}
       </div>
       {state.data && (
@@ -87,5 +61,3 @@ export default function DrawscapeTest() {
     </div>
   )
 }
-
-

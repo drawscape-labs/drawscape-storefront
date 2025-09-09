@@ -1,81 +1,47 @@
 import { Combobox, ComboboxOption, ComboboxLabel } from './combobox';
-import { useEffect, useState } from 'react';
 import { useArtboards } from '~/context/artboards';
-import API from '~/lib/drawscapeApi';
+import { Field, Label } from '../ui/fieldset';
 
-type Schematic = {
+export type Schematic = {
   id: string;
   name: string;
 };
 
 type ArtboardSelectSchematicProps = {
-  value?: Schematic | null;
-  onChange?: (schematic: Schematic | null) => void;
+  options: Schematic[];
+  category?: string;
+  placeholder?: string;
 };
 
 export function ArtboardSelectSchematic({
-  value,
-  onChange,
+  options,
+  category,
+  placeholder,
 }: ArtboardSelectSchematicProps) {
-  const [schematics, setSchematics] = useState<Schematic[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const { setSchematicId } = useArtboards();
-  const [selected, setSelected] = useState<Schematic | null>(value ?? null);
+  const { schematicId, setSchematicId } = useArtboards();
 
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-
-    // Fetch schematics via proxy route - no base URL configuration needed
-    API.get<any[]>('schematics', { published: 'true', sort: 'title' })
-      .then((res) => {
-        if (cancelled) return;
-        const mapped: Schematic[] = (Array.isArray(res) ? res : [])
-          .filter(Boolean)
-          .map((item: any) => {
-            const name =  item?.title || 'Untitled';
-            return { id: item?.id, name } as Schematic;
-          });
-        setSchematics(mapped);
-      })
-      .catch(() => {
-        if (cancelled) return;
-        setSchematics([]);
-      })
-      .finally(() => {
-        if (cancelled) return;
-        setLoading(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const selected = options.find((s) => s.id === schematicId) ?? null;
 
   return (
     <div className="max-w-xs">
-      <Combobox<Schematic>
-        options={schematics}
-        value={selected ?? undefined}
-        onChange={(option) => {
-          setSelected(option);
-          try {
-            setSchematicId(option?.id ?? null);
-          } catch (_) {
-            // no-op if provider not present
-          }
-          onChange?.(option);
-        }}
-        displayValue={(option) => option?.name}
-        placeholder={loading ? 'Loading schematics…' : 'Select a schematic'}
-        aria-label="Select schematic"
-      >
-        {(option) => (
-          <ComboboxOption key={option.id} value={option}>
-            <ComboboxLabel>{option.name}</ComboboxLabel>
-          </ComboboxOption>
-        )}
-      </Combobox>
+      <Field>
+        <Label className="capitalize">{category ?? 'Schematic'}</Label>
+        <Combobox<Schematic>
+          by={(a, b) => (a as Schematic | null)?.id === (b as Schematic | null)?.id}
+          options={options}
+          value={selected ?? undefined}
+          onChange={(option) => setSchematicId(option?.id ?? null)}
+          displayValue={(option) => option?.name}
+          placeholder={placeholder ?? 'Select a schematic'}
+          aria-label="Select schematic"
+        >
+          {(option) => (
+            <ComboboxOption key={option.id} value={option}>
+              <ComboboxLabel>{option.name}</ComboboxLabel>
+            </ComboboxOption>
+          )}
+        </Combobox>
+      </Field>
     </div>
   );
 }

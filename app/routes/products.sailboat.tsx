@@ -9,15 +9,14 @@ import {
   useSelectedOptionInUrlParam,
 } from '@shopify/hydrogen';
 import {ProductPrice} from '~/components/ProductPrice';
-import {ProductImage} from '~/components/ProductImage';
 import {ProductForm} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
-import DrawscapeTest from '~/components/DrawscapeTest';
 import {ArtboardsProvider} from '~/context/artboards';
 import {ArtboardPreview} from '~/components/ArtboardPreview';
 
 import { StarIcon } from '@heroicons/react/20/solid'
-import { ArtboardSelectSchematic } from '~/components/ArtboardSelectSchematic';
+import { ArtboardSelectSchematic, type Schematic } from '~/components/ArtboardSelectSchematic';
+import { ArtboardSelectVectors } from '~/components/ArtboardSelectVectors';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -40,7 +39,27 @@ export async function loader(args: LoaderFunctionArgs) {
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  return {...deferredData, ...criticalData};
+  const defaultSchematicId = args.context.env.SAILBOAT_DEFAULT_SCHEMATIC_ID ?? null;
+
+  // Fetch schematics via app proxy with absolute URL (server-safe)
+  let schematics: Schematic[] = [];
+  try {
+    const origin = new URL(args.request.url).origin;
+    const url = new URL('/api/drawscape/schematics', origin);
+    url.searchParams.set('published', 'true');
+    url.searchParams.set('sort', 'title');
+    url.searchParams.set('category', 'sailboats');
+    const res = await fetch(url.toString());
+    const raw = await res.json();
+    schematics = (Array.isArray(raw) ? raw : [])
+      .filter(Boolean)
+      .map((item: any) => ({ id: item?.id, name: item?.title || 'Untitled' }));
+  } catch (error) {
+    console.error('Error fetching schematics', error);
+    schematics = [];
+  }
+
+  return {...deferredData, ...criticalData, defaultSchematicId, schematics};
 }
 
 /**
@@ -53,6 +72,8 @@ async function loadCriticalData({
 }: LoaderFunctionArgs) {
   const handle = 'sailboat';
   const {storefront} = context;
+
+  console.log('loadCriticalData')
 
   const [{product}] = await Promise.all([
     storefront.query(PRODUCT_QUERY, {
@@ -86,7 +107,7 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
 }
 
 export default function Product() {
-  const {product} = useLoaderData<typeof loader>();
+  const {product, defaultSchematicId, schematics} = useLoaderData<typeof loader>();
 
   // Optimistically selects a variant with given available variant information
   const selectedVariant = useOptimisticVariant(
@@ -108,7 +129,7 @@ export default function Product() {
 
   return (
     <>
-    <ArtboardsProvider>
+    <ArtboardsProvider initialSchematicId={defaultSchematicId}>
       <div className="bg-white">
         <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
           <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
@@ -119,8 +140,11 @@ export default function Product() {
             {/* Product info */}
             <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
 
-              {/* Artboard select */}
-              <ArtboardSelectSchematic />
+              {/* Schematic Select */}
+              <ArtboardSelectSchematic category="sailboats" options={schematics} />
+
+              {/* Vector Select */}
+              <ArtboardSelectVectors />
 
               {/* Title */}
               <h1 className="text-3xl font-bold tracking-tight text-gray-900">{title}</h1>

@@ -358,6 +358,22 @@ paths:
         properties:
           id:
             type: number
+  /api/v1/schematic-list:
+    get:
+      parameters:
+        0:
+          name: category
+          in: query
+          schema:
+            type: string
+          required: true
+        1:
+          name: view
+          in: query
+          schema:
+            type: string
+      response:
+        type: object
   /api/v1/schematic-sources:
     get:
       parameters:
@@ -2234,6 +2250,42 @@ paths:
           required: true
       response:
         type: object
+  /api/v1/artboard/render:
+    post:
+      parameters:
+        0:
+          name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              render_style:
+                type: string
+              title:
+                type: string
+              subtitle:
+                type: string
+              color_scheme:
+                type: string
+              paper_color:
+                type: string
+              pen_color:
+                type: string
+              size:
+                type: string
+              orientation:
+                type: string
+              legend:
+                type: object
+              schematic_url:
+                type: string
+            required:
+              0: render_style
+              1: title
+              2: schematic_url
+      response:
+        type: object
   /api/v1/klaviyo/postcard-label:
     post:
       parameters:
@@ -2461,7 +2513,18 @@ paths:
               2: post_type
       response:
         type: object
-  /api/v1/artboards/{id}/lock:
+  /api/v1/artboards/{id}/unlock:
+    post:
+      parameters:
+        0:
+          name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      response:
+        type: object
+  /api/v1/artboards/{id}/buy-now:
     post:
       parameters:
         0:
@@ -2494,18 +2557,7 @@ paths:
               0: email
       response:
         type: object
-  /api/v1/artboards/{id}/buy-now:
-    post:
-      parameters:
-        0:
-          name: id
-          in: path
-          schema:
-            type: string
-          required: true
-      response:
-        type: object
-  /api/v1/artboards/{id}/unlock:
+  /api/v1/artboards/{id}/lock:
     post:
       parameters:
         0:
@@ -2544,20 +2596,6 @@ paths:
         properties:
           message:
             type: string
-  /api/v1/projects/{id}/remove-svg:
-    post:
-      parameters:
-        0:
-          name: id
-          in: path
-          schema:
-            type: number
-          required: true
-      response:
-        type: object
-        properties:
-          success:
-            type: boolean
   /api/v1/projects/{id}/upload-svg:
     post:
       parameters:
@@ -2578,6 +2616,20 @@ paths:
                 type: object
             required:
               0: file
+      response:
+        type: object
+        properties:
+          success:
+            type: boolean
+  /api/v1/projects/{id}/remove-svg:
+    post:
+      parameters:
+        0:
+          name: id
+          in: path
+          schema:
+            type: number
+          required: true
       response:
         type: object
         properties:
@@ -2605,7 +2657,7 @@ paths:
               0: file
       response:
         type: object
-  /api/v1/schematics/{id}/request-build:
+  /api/v1/schematics/{id}/approve:
     post:
       parameters:
         0:
@@ -2627,7 +2679,7 @@ paths:
           required: true
       response:
         type: object
-  /api/v1/schematics/{id}/approve:
+  /api/v1/schematics/{id}/request-build:
     post:
       parameters:
         0:

@@ -18,7 +18,7 @@ export function ProductForm({
 }) {
   const navigate = useNavigate();
   const {open} = useAside();
-  const {schematic_id} = useArtboards();
+  const {schematicId} = useArtboards();
   return (
     <div className="product-form">
       {productOptions.map((option) => {
@@ -116,11 +116,11 @@ export function ProductForm({
                   quantity: 1,
                   selectedVariant,
                   attributes: [
-                    ...(schematic_id
+                    ...(schematicId
                       ? [
                           {
                             key: 'schematic_id',
-                            value: String(schematic_id),
+                            value: String(schematicId),
                           },
                         ]
                       : []),

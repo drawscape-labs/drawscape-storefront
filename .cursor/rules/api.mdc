@@ -4,4 +4,10 @@ globs:
 alwaysApply: true
 ---
 
-if neededing to use the Drawscape API, please look at the api.yaml file in the root of this project for routes and model sturctures. 
+If we are needing to use the Drawscape API, please include this file: 
+
+```
+import API from '~/lib/drawscapeApi';
+```
+
+If neededing to use the Drawscape API, please look at the api.yaml file in the root of this project for routes and model sturctures. 
