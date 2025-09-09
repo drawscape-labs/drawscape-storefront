@@ -122,6 +122,10 @@ export function ProductForm({
                             key: 'schematic_id',
                             value: String(schematicId),
                           },
+                          {
+                            key: '_schematic_id',
+                            value: String(schematicId),
+                          },
                         ]
                       : []),
                   ],

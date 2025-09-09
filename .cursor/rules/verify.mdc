@@ -1,0 +1,22 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# Verification Prompt
+
+Please review the current branch and report ONLY the problems you find. 
+Compare the code written on this branch to the current task and plan that we are trying to implement.
+
+Organize issues by severity:
+**Critical** – Must-fix items that will break the build, cause runtime errors, or invalidate the plan.
+**High** – Serious flaws that could lead to incorrect behavior or major rework if left unfixed.
+**Medium** – Important but non-blocking problems (e.g., edge-case bugs, violations of conventions).
+
+Guidelines:
+Do not list things that are already correct.
+Ignore “Migration not staged” warnings.
+Ignore files being is still untracked or unstages as critical issues
+No code changes—just the verification report.
+Format the response as four clearly labeled bullet lists: Critical, High, Medium, Low.
