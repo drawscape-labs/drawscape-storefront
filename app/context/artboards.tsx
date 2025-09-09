@@ -37,6 +37,7 @@ export function ArtboardsProvider({
   );
   const [schematic, setSchematic] = useState<any | null>(null);
   const [schematicVectorId, setSchematicVectorId] = useState<string | null>(null);
+  
   const vectors = useMemo<VectorOption[]>(() => {
     const raw = (schematic?.vectors ?? schematic?.schematic_vectors ?? []) as any[];
     return Array.isArray(raw)
@@ -45,10 +46,8 @@ export function ArtboardsProvider({
             id: v?.id,
             url: v?.url,
             title: v?.title,
-            filename: v?.filename,
             orientation: v?.orientation,
             primary: v?.primary,
-            optimized: v?.optimized,
             published: v?.published,
           }))
           .filter((v: VectorOption) => !!v.id && v.published !== false)
@@ -60,7 +59,7 @@ export function ArtboardsProvider({
     if (primary?.id) {
       setSchematicVectorId((prev) => (prev ? prev : primary.id));
     } else if (vectors.length === 0) {
-      setSchematicVectorId(null);
+      setSchematicVectorId(vectors[0]?.id);
     }
   }, [vectors]);
 

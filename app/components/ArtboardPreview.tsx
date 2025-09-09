@@ -82,6 +82,7 @@ export function ArtboardPreview() {
         const payload = {
           render_style: 'blueprint',
           title: 'Preview Title',
+          subtitle: 'Preview Subtitle',
           schematic_url: schematicUrl,
           // Optional presentation defaults
           color_scheme: 'blue_white',
