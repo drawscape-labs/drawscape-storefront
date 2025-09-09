@@ -63,19 +63,16 @@ export function ArtboardPreview() {
         // Find the selected vector
         const selectedVector = vectors.find(v => v.id === schematicVectorId);
         if (!selectedVector) {
-          throw new Error('Selected vector not found');
+          // If vector is missing (e.g., during schematic switch), skip rendering gracefully
+          setSvgMarkup(null);
+          return;
         }
 
-        // Get the schematic URL - check if it's already on the vector object
-        let schematicUrl: string | null = null;
-        
-        // Option A: URL already on vector (check multiple possible fields)
-        const vectorData = selectedVector as any;
-        schematicUrl = vectorData.url || vectorData.public_url || vectorData.download_url;
-
-
+        // Get the schematic URL - now typed on vector object
+        const schematicUrl = (selectedVector as any).url || (selectedVector as any).public_url || (selectedVector as any).download_url;
         if (!schematicUrl) {
-          throw new Error('No schematic URL available');
+          setSvgMarkup(null);
+          return;
         }
 
         // Build the payload
@@ -84,6 +81,7 @@ export function ArtboardPreview() {
           title: 'Preview Title',
           subtitle: 'Preview Subtitle',
           schematic_url: schematicUrl,
+          
           // Optional presentation defaults
           color_scheme: 'blue_white',
           paper_color: 'navy',

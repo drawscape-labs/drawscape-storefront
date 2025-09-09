@@ -47,7 +47,7 @@ export function ArtboardSelectVectors({options, selectedId, onChange, placeholde
           </option>
           {effectiveOptions.map((option) => (
             <option key={option.id} value={option.id}>
-              {option.title || option.filename || 'Untitled Vector'}
+              {option.title || 'Untitled Vector'}
             </option>
           ))}
         </Select>

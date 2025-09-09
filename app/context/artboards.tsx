@@ -4,6 +4,7 @@ import API from '~/lib/drawscapeApi';
 export type VectorOption = {
   id: string;
   title?: string;
+  url?: string;
   filename?: string;
   orientation?: string;
   primary?: boolean;
@@ -52,8 +53,9 @@ export function ArtboardsProvider({
       ? raw
           .map((v: any) => ({
             id: v?.id,
-            url: v?.url,
+            url: v?.url || v?.public_url || v?.download_url,
             title: v?.title,
+            filename: v?.filename,
             orientation: v?.orientation,
             primary: v?.primary,
             published: v?.published,
@@ -62,17 +64,28 @@ export function ArtboardsProvider({
       : [];
   }, [schematic]);
 
-  useEffect(() => {
-    const primary = vectors.find((v) => v.primary);
-    if (primary?.id) {
-      setSchematicVectorId((prev) => (prev ? prev : primary.id));
-    } else if (vectors.length === 0) {
-      setSchematicVectorId(vectors[0]?.id);
-    }
-  }, [vectors]);
+  // Centralized vector selection algorithm
+  function chooseVectorId(vectors: VectorOption[], currentId: string | null): string | null {
+    const published = (vectors ?? []).filter(v => v?.id && v.published !== false);
+    if (currentId && published.some(v => v.id === currentId)) return currentId;
+    const primary = published.find(v => v.primary === true);
+    if (primary?.id) return primary.id;
+    return published[0]?.id ?? null;
+  }
 
   useEffect(() => {
-    console.log('fetching schematic details', schematicId);
+    const nextId = chooseVectorId(vectors, schematicVectorId);
+    if (nextId !== schematicVectorId) {
+      setSchematicVectorId(nextId);
+    }
+  }, [vectors, schematicVectorId]);
+
+  useEffect(() => {
+    // Reset vector selection when schematic changes
+    setSchematicVectorId(null);
+    // Clear current schematic immediately to avoid stale vectors re-selection
+    setSchematic(null);
+    
     let isCancelled = false;
     async function fetchSchematicDetails() {
       if (!schematicId) {
