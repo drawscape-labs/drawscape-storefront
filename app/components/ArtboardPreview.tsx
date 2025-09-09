@@ -1,38 +1,172 @@
-import React from 'react';
+import { useEffect, useState, useRef } from 'react';
+import { useArtboards } from '~/context/artboards';
+import API from '~/lib/drawscapeApi';
 
-import {
-    Tab,
-    TabGroup,
-    TabList,
-    TabPanel,
-    TabPanels,
-  } from '@headlessui/react'
+export function ArtboardPreview() {
+  const { schematicId, schematicVectorId, vectors } = useArtboards();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [svgMarkup, setSvgMarkup] = useState<string | null>(null);
+  const requestIdRef = useRef(0);
 
-type ArtboardPreviewProps = {
-  // Define your props here as needed
-};
+  function normalizeSvgForResponsiveDisplay(rawSvg: string): string {
+    try {
+      if (typeof window === 'undefined') return rawSvg;
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(rawSvg, 'image/svg+xml');
+      const svgEl = doc.documentElement as unknown as SVGSVGElement;
+      if (!svgEl || svgEl.tagName.toLowerCase() !== 'svg') return rawSvg;
 
-export function ArtboardPreview(props: ArtboardPreviewProps) {
+      const existingViewBox = svgEl.getAttribute('viewBox');
+      const rawWidth = svgEl.getAttribute('width') || '';
+      const rawHeight = svgEl.getAttribute('height') || '';
+
+      if (!existingViewBox) {
+        const widthNumber = parseFloat((rawWidth || '').toString().replace(/[^0-9.]/g, ''));
+        const heightNumber = parseFloat((rawHeight || '').toString().replace(/[^0-9.]/g, ''));
+        if (!Number.isNaN(widthNumber) && !Number.isNaN(heightNumber) && widthNumber > 0 && heightNumber > 0) {
+          svgEl.setAttribute('viewBox', `0 0 ${widthNumber} ${heightNumber}`);
+        }
+      }
+
+      if (!svgEl.getAttribute('preserveAspectRatio')) {
+        svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+      }
+
+      svgEl.removeAttribute('width');
+      svgEl.removeAttribute('height');
+
+      // Do not enforce inline styles; Tailwind utilities on the container
+      // will size the nested <svg> element responsively.
+
+      const serializer = new XMLSerializer();
+      return serializer.serializeToString(svgEl);
+    } catch (_e) {
+      return rawSvg;
+    }
+  }
+
+  useEffect(() => {
+    // Increment request ID to ignore stale responses
+    const currentRequestId = ++requestIdRef.current;
+
+    async function fetchArtboardRender() {
+      if (!schematicId || !schematicVectorId) {
+        setSvgMarkup(null);
+        return;
+      }
+
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        // Find the selected vector
+        const selectedVector = vectors.find(v => v.id === schematicVectorId);
+        if (!selectedVector) {
+          throw new Error('Selected vector not found');
+        }
+
+        // Get the schematic URL - check if it's already on the vector object
+        let schematicUrl: string | null = null;
+        
+        // Option A: URL already on vector (check multiple possible fields)
+        const vectorData = selectedVector as any;
+        schematicUrl = vectorData.url || vectorData.public_url || vectorData.download_url;
+
+
+        if (!schematicUrl) {
+          throw new Error('No schematic URL available');
+        }
+
+        // Build the payload
+        const payload = {
+          render_style: 'blueprint',
+          title: 'Preview Title',
+          schematic_url: schematicUrl,
+          // Optional presentation defaults
+          color_scheme: 'blue_white',
+          paper_color: 'navy',
+          pen_color: 'white',
+          size: 'letter',
+          orientation: 'portrait',
+          legend: [{ label: 'Legend', content: 'Legend' }],
+        };
+
+        // Call the API with text response type to handle raw SVG
+        const result = await API.post<string>('artboard/render', payload, { responseType: 'text' });
+
+        // Check if this is still the current request
+        if (currentRequestId !== requestIdRef.current) {
+          return; // Ignore stale response
+        }
+
+        // Normalize the response
+        let svg: string | null = null;
+
+        // Check if response is raw SVG string
+        if (typeof result === 'string' && result.includes('<svg')) {
+          svg = result;
+        } else {
+          // Try to parse as JSON in case API returns JSON despite text responseType
+          try {
+            const jsonResult = typeof result === 'string' ? JSON.parse(result) : result;
+            const parsed = jsonResult as { svg?: string; svg_text?: string; svg_url?: string };
+            
+            // Look for common SVG fields in JSON response
+            if (parsed.svg && typeof parsed.svg === 'string') {
+              svg = parsed.svg;
+            } else if (parsed.svg_text && typeof parsed.svg_text === 'string') {
+              svg = parsed.svg_text;
+            } else if (parsed.svg_url && typeof parsed.svg_url === 'string') {
+              // If we get a URL, fetch the SVG content
+              const svgResponse = await fetch(parsed.svg_url);
+              svg = await svgResponse.text();
+            }
+          } catch {
+            // Not JSON, and not valid SVG
+            throw new Error('Invalid response format from render API');
+          }
+        }
+
+        if (!svg || !svg.includes('<svg')) {
+          throw new Error('No valid SVG content in response');
+        }
+
+        setSvgMarkup(normalizeSvgForResponsiveDisplay(svg));
+      } catch (err) {
+        if (currentRequestId === requestIdRef.current) {
+          setError(err instanceof Error ? err.message : 'Failed to render artboard');
+        }
+      } finally {
+        if (currentRequestId === requestIdRef.current) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    fetchArtboardRender();
+  }, [schematicId, schematicVectorId, vectors]);
+
   return (
-    <div>
-            {/* Image gallery */}
-            <TabGroup className="flex flex-col-reverse">
-              {/* Image selector */}
-              <div className="mx-auto mt-6 hidden w-full max-w-2xl sm:block lg:max-w-none">
-                <TabList className="grid grid-cols-4 gap-6">                
-                    <Tab key="1"
-                      className="group relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium text-gray-900 uppercase hover:bg-gray-50 focus:ring-3 focus:ring-indigo-500/50 focus:ring-offset-4 focus:outline-hidden">
-                    </Tab>
-                </TabList>
-              </div>
-
-              <TabPanels>
-                  <TabPanel>
-                    asdf
-                  </TabPanel>
-              </TabPanels>
-            </TabGroup>
-
+    <div className="w-full">
+      {svgMarkup ? (
+        <div 
+          className="w-full overflow-hidden [&>svg]:block [&>svg]:max-w-full [&>svg]:w-full [&>svg]:h-auto" 
+          dangerouslySetInnerHTML={{ __html: svgMarkup }} 
+        />
+      ) : isLoading ? (
+        <div className="flex items-center justify-center h-64">
+          <div className="text-gray-500">Rendering…</div>
+        </div>
+      ) : error ? (
+        <div className="flex items-center justify-center h-64">
+          <div className="text-red-600">Error: {error}</div>
+        </div>
+      ) : (
+        <div className="flex items-center justify-center h-64">
+          <div className="text-gray-400">Select a schematic and vector to preview</div>
+        </div>
+      )}
     </div>
   );
 }

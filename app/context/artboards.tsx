@@ -43,6 +43,7 @@ export function ArtboardsProvider({
       ? raw
           .map((v: any) => ({
             id: v?.id,
+            url: v?.url,
             title: v?.title,
             filename: v?.filename,
             orientation: v?.orientation,
