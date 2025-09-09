@@ -11,6 +11,11 @@ export type VectorOption = {
   published?: boolean;
 };
 
+export type LegendItem = {
+  label: string;
+  content: string;
+};
+
 type ArtboardsContextValue = {
   schematicId: string | null;
   setSchematicId: (id: string | null) => void;
@@ -19,6 +24,8 @@ type ArtboardsContextValue = {
   schematicVectorId: string | null;
   setSchematicVectorId: (id: string | null) => void;
   vectors: VectorOption[];
+  legend: LegendItem[];
+  setLegend: (items: LegendItem[]) => void;
 };
 
 const ArtboardsContext = createContext<ArtboardsContextValue | undefined>(
@@ -37,6 +44,7 @@ export function ArtboardsProvider({
   );
   const [schematic, setSchematic] = useState<any | null>(null);
   const [schematicVectorId, setSchematicVectorId] = useState<string | null>(null);
+  const [legend, setLegend] = useState<LegendItem[]>([]);
   
   const vectors = useMemo<VectorOption[]>(() => {
     const raw = (schematic?.vectors ?? schematic?.schematic_vectors ?? []) as any[];
@@ -90,9 +98,17 @@ export function ArtboardsProvider({
     };
   }, [schematicId]);
 
+  useEffect(() => {
+    if (!schematicId) {
+      setLegend([]);
+      return;
+    }
+    setLegend(schematic?.legend ?? []);
+  }, [schematicId, schematic?.legend]);
+
   const value = useMemo<ArtboardsContextValue>(
-    () => ({schematicId, setSchematicId, schematic, setSchematic, schematicVectorId, setSchematicVectorId, vectors}),
-    [schematicId, schematic, schematicVectorId, vectors],
+    () => ({schematicId, setSchematicId, schematic, setSchematic, schematicVectorId, setSchematicVectorId, vectors, legend, setLegend}),
+    [schematicId, schematic, schematicVectorId, vectors, legend],
   );
 
 

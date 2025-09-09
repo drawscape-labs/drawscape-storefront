@@ -3,7 +3,7 @@ import { useArtboards } from '~/context/artboards';
 import API from '~/lib/drawscapeApi';
 
 export function ArtboardPreview() {
-  const { schematicId, schematicVectorId, vectors } = useArtboards();
+  const { schematicId, schematicVectorId, vectors, legend } = useArtboards();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [svgMarkup, setSvgMarkup] = useState<string | null>(null);
@@ -90,7 +90,7 @@ export function ArtboardPreview() {
           pen_color: 'white',
           size: 'letter',
           orientation: 'portrait',
-          legend: [{ label: 'Legend', content: 'Legend' }],
+          legend,
         };
 
         // Call the API with text response type to handle raw SVG
@@ -146,7 +146,7 @@ export function ArtboardPreview() {
     }
 
     fetchArtboardRender();
-  }, [schematicId, schematicVectorId, vectors]);
+  }, [schematicId, schematicVectorId, vectors, legend]);
 
   return (
     <div className="w-full">
