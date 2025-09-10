@@ -5,7 +5,6 @@ export type VectorOption = {
   id: string;
   title?: string;
   url?: string;
-  filename?: string;
   orientation?: string;
   primary?: boolean;
   optimized?: boolean;
@@ -17,16 +16,39 @@ export type LegendItem = {
   content: string;
 };
 
+// Internal type for schematic data
+type Schematic = {
+  id: string;
+  title?: string;
+  subtitle?: string;
+  legend?: LegendItem[];
+  vectors?: any[];
+  [key: string]: any;
+};
+
 type ArtboardsContextValue = {
+  // Selection
   schematicId: string | null;
-  setSchematicId: (id: string | null) => void;
-  schematic: any | null;
-  setSchematic: (schematic: any | null) => void;
-  schematicVectorId: string | null;
-  setSchematicVectorId: (id: string | null) => void;
+  selectSchematic: (id: string | null) => void;
+  
+  vectorId: string | null;
+  selectVector: (id: string | null) => void;
+  
+  // Derived data
   vectors: VectorOption[];
+  selectedVector: VectorOption | null;
+  
+  // Controlled presentation state
+  title?: string;
+  setTitle: (title?: string) => void;
+  subtitle?: string;
+  setSubtitle: (subtitle?: string) => void;
   legend: LegendItem[];
   setLegend: (items: LegendItem[]) => void;
+  
+  // Loading state
+  status: 'idle' | 'loading' | 'ready' | 'error';
+  error: string | null;
 };
 
 const ArtboardsContext = createContext<ArtboardsContextValue | undefined>(
@@ -40,22 +62,33 @@ export function ArtboardsProvider({
   children: React.ReactNode;
   initialSchematicId?: string | null;
 }) {
+  // Selection state
   const [schematicId, setSchematicId] = useState<string | null>(
     initialSchematicId ?? null,
   );
-  const [schematic, setSchematic] = useState<any | null>(null);
-  const [schematicVectorId, setSchematicVectorId] = useState<string | null>(null);
-  const [legend, setLegend] = useState<LegendItem[]>([]);
+  const [vectorId, setVectorId] = useState<string | null>(null);
   
+  // Internal data
+  const [schematic, setSchematic] = useState<Schematic | null>(null);
+  const [status, setStatus] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
+  const [error, setError] = useState<string | null>(null);
+  
+  // Controlled presentation state
+  const [legend, setLegend] = useState<LegendItem[]>([]);
+  const [title, setTitle] = useState<string | undefined>(undefined);
+  const [subtitle, setSubtitle] = useState<string | undefined>(undefined);
+  
+
+  // Derived Data
+  // Data that is massaged and populated when changes are made
   const vectors = useMemo<VectorOption[]>(() => {
-    const raw = (schematic?.vectors ?? schematic?.schematic_vectors ?? []) as any[];
+    const raw = (schematic?.vectors ?? []) as any[];
     return Array.isArray(raw)
       ? raw
           .map((v: any) => ({
             id: v?.id,
             url: v?.url || v?.public_url || v?.download_url,
             title: v?.title,
-            filename: v?.filename,
             orientation: v?.orientation,
             primary: v?.primary,
             published: v?.published,
@@ -63,6 +96,25 @@ export function ArtboardsProvider({
           .filter((v: VectorOption) => !!v.id && v.published !== false)
       : [];
   }, [schematic]);
+
+  const selectedVector = useMemo(() => {
+    return vectors.find(v => v.id === vectorId) ?? null;
+  }, [vectors, vectorId]);
+
+
+  // Triggers when new schematic is selected from the select list
+  const selectSchematic = (id: string | null) => {
+    if (id !== schematicId) {
+      setSchematicId(id);
+      // Reset vector selection immediately to prevent stale selections
+      setVectorId(null);
+    }
+  };
+
+  const selectVector = (id: string | null) => {
+    setVectorId(id);
+  };
+
 
   // Centralized vector selection algorithm
   function chooseVectorId(vectors: VectorOption[], currentId: string | null): string | null {
@@ -73,58 +125,81 @@ export function ArtboardsProvider({
     return published[0]?.id ?? null;
   }
 
+  // Effect 1: Handle schematic changes and fetching
   useEffect(() => {
-    const nextId = chooseVectorId(vectors, schematicVectorId);
-    if (nextId !== schematicVectorId) {
-      setSchematicVectorId(nextId);
-    }
-  }, [vectors, schematicVectorId]);
-
-  useEffect(() => {
-    // Reset vector selection when schematic changes
-    setSchematicVectorId(null);
-    // Clear current schematic immediately to avoid stale vectors re-selection
-    setSchematic(null);
-    
     let isCancelled = false;
-    async function fetchSchematicDetails() {
+
+    async function handleSchematicChange() {
       if (!schematicId) {
+        // Clear everything when no schematic selected
         setSchematic(null);
-        setSchematicVectorId(null);
+        setVectorId(null);
+        setLegend([]);
+        setTitle(undefined);
+        setSubtitle(undefined);
+        setStatus('idle');
+        setError(null);
         return;
       }
+
+      // Start loading
+      setStatus('loading');
+      setError(null);
+      
       try {
-        const data = await API.get(`/schematics/${schematicId}`);
+        const data = await API.get<Schematic>(`/schematics/${schematicId}`);
         if (!isCancelled) {
           setSchematic(data);
+          // Initialize presentation state from fetched data
+          setLegend(data?.legend ?? []);
+          setTitle(data?.title);
+          setSubtitle(data?.subtitle);
+          setStatus('ready');
         }
-      } catch (_error) {
+      } catch (err) {
         if (!isCancelled) {
           setSchematic(null);
-          setSchematicVectorId(null);
+          setStatus('error');
+          setError(err instanceof Error ? err.message : 'Failed to load schematic');
         }
       }
     }
-    fetchSchematicDetails();
+
+    handleSchematicChange();
+    
     return () => {
       isCancelled = true;
     };
   }, [schematicId]);
 
+  // Effect 2: Auto-correct vector selection
   useEffect(() => {
-    if (!schematicId) {
-      setLegend([]);
-      return;
+    const nextId = chooseVectorId(vectors, vectorId);
+    if (nextId !== vectorId) {
+      setVectorId(nextId);
     }
-    setLegend(schematic?.legend ?? []);
-  }, [schematicId, schematic?.legend]);
+  }, [vectors, vectorId]);
+
 
   const value = useMemo<ArtboardsContextValue>(
-    () => ({schematicId, setSchematicId, schematic, setSchematic, schematicVectorId, setSchematicVectorId, vectors, legend, setLegend}),
-    [schematicId, schematic, schematicVectorId, vectors, legend],
+    () => ({
+      schematicId,
+      selectSchematic,
+      vectorId,
+      selectVector,
+      vectors,
+      selectedVector,
+      legend,
+      setLegend,
+      title,
+      setTitle,
+      subtitle,
+      setSubtitle,
+      status,
+      error,
+    }),
+    [schematicId, vectorId, vectors, selectedVector, legend, title, subtitle, status, error],
   );
-
-
 
   return (
     <ArtboardsContext.Provider value={value}>{children}</ArtboardsContext.Provider>
@@ -132,12 +207,9 @@ export function ArtboardsProvider({
 }
 
 export function useArtboards() {
-  
   const ctx = useContext(ArtboardsContext);
   if (!ctx) {
     throw new Error('useArtboards must be used within an ArtboardsProvider');
   }
   return ctx;
 }
-
-

@@ -18,7 +18,7 @@ export function ArtboardSelectSchematic({
   category,
   placeholder,
 }: ArtboardSelectSchematicProps) {
-  const { schematicId, setSchematicId } = useArtboards();
+  const { schematicId, selectSchematic } = useArtboards();
 
   const selected = options.find((s) => s.id === schematicId) ?? null;
 
@@ -30,7 +30,7 @@ export function ArtboardSelectSchematic({
           by={(a, b) => (a as Schematic | null)?.id === (b as Schematic | null)?.id}
           options={options}
           value={selected ?? undefined}
-          onChange={(option) => setSchematicId(option?.id ?? null)}
+          onChange={(option) => selectSchematic(option?.id ?? null)}
           displayValue={(option) => option?.name}
           placeholder={placeholder ?? 'Select a schematic'}
           aria-label="Select schematic"

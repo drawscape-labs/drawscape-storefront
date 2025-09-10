@@ -2,31 +2,8 @@ import {Field, Label} from '../ui/fieldset';
 import {Select} from '../ui/select';
 import {useArtboards} from '~/context/artboards';
 
-export type Vector = {
-  id: string;
-  title?: string;
-  filename?: string;
-  orientation?: string;
-  primary?: boolean;
-  optimized?: boolean;
-  published?: boolean;
-};
-
-type ArtboardSelectVectorsProps = {
-  options?: Vector[];
-  selectedId?: string | null;
-  onChange?: (id: string | null) => void;
-  placeholder?: string;
-  category?: string;
-};
-
-export function ArtboardSelectVectors({options, selectedId, onChange, placeholder, category}: ArtboardSelectVectorsProps) {
-  const {vectors, schematicVectorId, setSchematicVectorId} = useArtboards();
-
-  const safeOptions = (Array.isArray(options) ? options : []).filter((v) => v.published !== false);
-  const effectiveOptions = (vectors?.length ?? 0) > 0 ? ((vectors as Vector[]).filter((v) => v.published !== false)) : safeOptions;
-  const effectiveSelectedId = schematicVectorId ?? selectedId ?? null;
-  const selected = effectiveOptions.find((v) => v.id === effectiveSelectedId) ?? null;
+export function ArtboardSelectVectors({placeholder, category}: {placeholder?: string; category?: string}) {
+  const {vectors, vectorId, selectVector} = useArtboards();
 
   return (
     <div className="max-w-xs">
@@ -34,18 +11,18 @@ export function ArtboardSelectVectors({options, selectedId, onChange, placeholde
         <Label className="capitalize">{category ?? 'Vector'}</Label>
         <Select
           name="schematicVector"
-          value={effectiveSelectedId ?? ''}
+          value={vectorId ?? ''}
           onChange={(event) => {
             const id = event.target.value || null;
-            setSchematicVectorId(id);
-            onChange?.(id);
+            selectVector(id);
           }}
           aria-label="Select vector"
+          disabled={vectors.length === 0}
         >
-          <option value="" disabled={effectiveOptions.length > 0}>
+          <option value="" disabled={vectors.length > 0}>
             {placeholder ?? 'Select a vector'}
           </option>
-          {effectiveOptions.map((option) => (
+          {vectors.map((option) => (
             <option key={option.id} value={option.id}>
               {option.title || 'Untitled Vector'}
             </option>

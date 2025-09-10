@@ -3,9 +3,7 @@ import { useArtboards } from '~/context/artboards';
 import API from '~/lib/drawscapeApi';
 
 export function ArtboardPreview() {
-  const { schematicId, schematicVectorId, vectors, legend } = useArtboards();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { schematicId, vectorId, selectedVector, legend, title, subtitle, status } = useArtboards();
   const [svgMarkup, setSvgMarkup] = useState<string | null>(null);
   const requestIdRef = useRef(0);
 
@@ -51,22 +49,12 @@ export function ArtboardPreview() {
     const currentRequestId = ++requestIdRef.current;
 
     async function fetchArtboardRender() {
-      if (!schematicId || !schematicVectorId) {
+      if (!schematicId || !vectorId || !selectedVector) {
         setSvgMarkup(null);
         return;
       }
 
-      setIsLoading(true);
-      setError(null);
-
       try {
-        // Find the selected vector
-        const selectedVector = vectors.find(v => v.id === schematicVectorId);
-        if (!selectedVector) {
-          // If vector is missing (e.g., during schematic switch), skip rendering gracefully
-          setSvgMarkup(null);
-          return;
-        }
 
         // Get the schematic URL - now typed on vector object
         const schematicUrl = (selectedVector as any).url || (selectedVector as any).public_url || (selectedVector as any).download_url;
@@ -78,8 +66,8 @@ export function ArtboardPreview() {
         // Build the payload
         const payload = {
           render_style: 'blueprint',
-          title: 'Preview Title',
-          subtitle: 'Preview Subtitle',
+          title: title || 'Preview Title',
+          subtitle: subtitle || 'Preview Subtitle',
           schematic_url: schematicUrl,
           
           // Optional presentation defaults
@@ -134,17 +122,13 @@ export function ArtboardPreview() {
         setSvgMarkup(normalizeSvgForResponsiveDisplay(svg));
       } catch (err) {
         if (currentRequestId === requestIdRef.current) {
-          setError(err instanceof Error ? err.message : 'Failed to render artboard');
-        }
-      } finally {
-        if (currentRequestId === requestIdRef.current) {
-          setIsLoading(false);
+          setSvgMarkup(null);
         }
       }
     }
 
     fetchArtboardRender();
-  }, [schematicId, schematicVectorId, vectors, legend]);
+  }, [schematicId, vectorId, selectedVector, legend, title, subtitle]);
 
   return (
     <div className="w-full">
@@ -153,13 +137,13 @@ export function ArtboardPreview() {
           className="w-full overflow-hidden [&>svg]:block [&>svg]:max-w-full [&>svg]:w-full [&>svg]:h-auto" 
           dangerouslySetInnerHTML={{ __html: svgMarkup }} 
         />
-      ) : isLoading ? (
+      ) : status === 'loading' ? (
         <div className="flex items-center justify-center h-64">
-          <div className="text-gray-500">Rendering…</div>
+          <div className="text-gray-500">Loading schematic…</div>
         </div>
-      ) : error ? (
+      ) : status === 'error' ? (
         <div className="flex items-center justify-center h-64">
-          <div className="text-red-600">Error: {error}</div>
+          <div className="text-red-600">Error loading schematic</div>
         </div>
       ) : (
         <div className="flex items-center justify-center h-64">

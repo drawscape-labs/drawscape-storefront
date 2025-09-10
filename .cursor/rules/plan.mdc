@@ -24,10 +24,11 @@ When you ask me to create a plan (e.g. by typing **/plan**), I will follow this 
    • You review the plan and either request changes or approve it.
 
 4. **Initialize Implementation (after approval)**
-Once I approve the plan by saying "approved"
+Once I approve the plan by saying "approved" or "accept"
    • Create and check out a new git branch with a descriptive name for the feature.
    • Commit the new task file with a message like "chore: initial plan for <feature>".
    • Actual implementation begins only when you explicitly instruct me to proceed.
+   - Do not implmenet the plan
 
 ---
 Keep this workflow in mind whenever you request a project plan.
