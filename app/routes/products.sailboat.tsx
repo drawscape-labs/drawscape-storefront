@@ -1,4 +1,4 @@
-import {redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {useLoaderData, type MetaFunction} from 'react-router';
 import {
   getSelectedProductOptions,
@@ -40,17 +40,20 @@ export async function loader(args: LoaderFunctionArgs) {
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  const defaultSchematicId = args.context.env.SAILBOAT_DEFAULT_SCHEMATIC_ID ?? null;
+  // Parse URL query params
+  const url = new URL(args.request.url);
+  const paramId = url.searchParams.get('schematic_id') || url.searchParams.get('schematicId');
+  const envDefault = args.context.env.SAILBOAT_DEFAULT_SCHEMATIC_ID ?? null;
 
   // Fetch schematics via app proxy with absolute URL (server-safe)
   let schematics: Schematic[] = [];
   try {
-    const origin = new URL(args.request.url).origin;
-    const url = new URL('/api/drawscape/schematics', origin);
-    url.searchParams.set('published', 'true');
-    url.searchParams.set('sort', 'title');
-    url.searchParams.set('category', 'sailboats');
-    const res = await fetch(url.toString());
+    const origin = url.origin;
+    const apiUrl = new URL('/api/drawscape/schematics', origin);
+    apiUrl.searchParams.set('published', 'true');
+    apiUrl.searchParams.set('sort', 'title');
+    apiUrl.searchParams.set('category', 'sailboats');
+    const res = await fetch(apiUrl.toString());
     const raw = await res.json();
     schematics = (Array.isArray(raw) ? raw : [])
       .filter(Boolean)
@@ -60,7 +63,15 @@ export async function loader(args: LoaderFunctionArgs) {
     schematics = [];
   }
 
-  return {...deferredData, ...criticalData, defaultSchematicId, schematics};
+  // Compute initialSchematicId with proper precedence
+  const validIds = new Set(schematics.map((s) => s.id));
+  const initialSchematicId = paramId && validIds.has(paramId)
+    ? paramId
+    : envDefault && validIds.has(envDefault)
+      ? envDefault
+      : schematics[0]?.id ?? null;
+
+  return {...deferredData, ...criticalData, initialSchematicId, schematics};
 }
 
 /**
@@ -100,7 +111,7 @@ async function loadCriticalData({
  * fetched after the initial page load. If it's unavailable, the page should still 200.
  * Make sure to not throw any errors here, as it will cause the page to 500.
  */
-function loadDeferredData({context}: LoaderFunctionArgs) {
+function loadDeferredData(_args: LoaderFunctionArgs) {
   // Put any API calls that is not critical to be available on first page render
   // For example: product reviews, product recommendations, social feeds.
 
@@ -108,7 +119,7 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
 }
 
 export default function Product() {
-  const {product, defaultSchematicId, schematics} = useLoaderData<typeof loader>();
+  const {product, initialSchematicId, schematics} = useLoaderData<typeof loader>();
 
   // Optimistically selects a variant with given available variant information
   const selectedVariant = useOptimisticVariant(
@@ -130,7 +141,7 @@ export default function Product() {
 
   return (
     <>
-    <ArtboardsProvider initialSchematicId={defaultSchematicId}>
+    <ArtboardsProvider initialSchematicId={initialSchematicId}>
       <div className="bg-white">
         <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
           <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
