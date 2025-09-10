@@ -16,9 +16,10 @@ When you ask me to create a plan (e.g. by typing **/plan**), I will follow this 
    • Once I understand the goal, I'll create a new Markdown file inside the `tasks/` directory.
    • The file will contain an easy-to-read outline of the proposed solution:
      – High-level steps and architecture
-     – Key data structures / modules (pseudocode only)
+     – Key data structures / modules
      – Minimal Markdown formatting for readability
    • No production code will be written at this stage.
+   - if psuedo code is helpful make it minimual.
 
 3. **Review & Confirm**
    • You review the plan and either request changes or approve it.
