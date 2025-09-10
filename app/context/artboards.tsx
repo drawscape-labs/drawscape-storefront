@@ -138,12 +138,13 @@ export function ArtboardsProvider({
       
       try {
         const data = await API.get<Schematic>(`/schematics/${schematicId}`);
+        console.log('data', data);
         if (!isCancelled) {
           setSchematic(data);
           // Initialize presentation state from fetched data
           setLegend(data?.legend ?? []);
-          setTitle(data?.title);
-          setSubtitle(data?.subtitle);
+          setTitle(data?.display_title);
+          setSubtitle(data?.display_subtitle);
           setStatus('ready');
         }
       } catch (err) {

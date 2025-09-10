@@ -17,6 +17,7 @@ import {ArtboardPreview} from '~/components/ArtboardPreview';
 import { StarIcon } from '@heroicons/react/20/solid'
 import { ArtboardSelectSchematic, type Schematic } from '~/components/ArtboardSelectSchematic';
 import { ArtboardSelectVectors } from '~/components/ArtboardSelectVectors';
+import { ArtboardText } from '~/components/ArtboardText';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -145,6 +146,9 @@ export default function Product() {
 
               {/* Vector Select */}
               <ArtboardSelectVectors />
+
+              {/* Artboard Text */}
+              <ArtboardText />
 
               {/* Title */}
               <h1 className="text-3xl font-bold tracking-tight text-gray-900">{title}</h1>
