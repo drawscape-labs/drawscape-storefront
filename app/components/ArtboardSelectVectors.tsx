@@ -5,6 +5,8 @@ import {useArtboards} from '~/context/artboards';
 export function ArtboardSelectVectors({placeholder, category}: {placeholder?: string; category?: string}) {
   const {vectors, vectorId, selectVector} = useArtboards();
 
+  console.log('vectors', vectors);
+
   return (
     <div className="max-w-xs">
       <Field>

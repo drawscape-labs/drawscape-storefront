@@ -128,7 +128,7 @@ export function ArtboardPreview() {
     }
 
     fetchArtboardRender();
-  }, [schematicId, vectorId, selectedVector, legend, title, subtitle]);
+  }, [schematicId, vectorId, legend, title, subtitle]);
 
   return (
     <div className="w-full">

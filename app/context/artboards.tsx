@@ -16,7 +16,7 @@ export type LegendItem = {
   content: string;
 };
 
-// Internal type for schematic data
+// Internal type for schematic data coming from the API
 type Schematic = {
   id: string;
   title?: string;
@@ -115,16 +115,6 @@ export function ArtboardsProvider({
     setVectorId(id);
   };
 
-
-  // Centralized vector selection algorithm
-  function chooseVectorId(vectors: VectorOption[], currentId: string | null): string | null {
-    const published = (vectors ?? []).filter(v => v?.id && v.published !== false);
-    if (currentId && published.some(v => v.id === currentId)) return currentId;
-    const primary = published.find(v => v.primary === true);
-    if (primary?.id) return primary.id;
-    return published[0]?.id ?? null;
-  }
-
   // Effect 1: Handle schematic changes and fetching
   useEffect(() => {
     let isCancelled = false;
@@ -172,9 +162,18 @@ export function ArtboardsProvider({
     };
   }, [schematicId]);
 
-  // Effect 2: Auto-correct vector selection
+  // Logic to select an initial vector
   useEffect(() => {
-    const nextId = chooseVectorId(vectors, vectorId);
+    const published = (vectors ?? []).filter(v => v?.id && v.published !== false);
+
+    let nextId: string | null = null;
+    if (vectorId && published.some(v => v.id === vectorId)) {
+      nextId = vectorId;
+    } else {
+      const primary = published.find(v => v.primary === true);
+      nextId = primary?.id ?? (published[0]?.id ?? null);
+    }
+
     if (nextId !== vectorId) {
       setVectorId(nextId);
     }
