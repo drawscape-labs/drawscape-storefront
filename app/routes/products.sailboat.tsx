@@ -18,6 +18,7 @@ import { StarIcon } from '@heroicons/react/20/solid'
 import { ArtboardSelectSchematic, type Schematic } from '~/components/ArtboardSelectSchematic';
 import { ArtboardSelectVectors } from '~/components/ArtboardSelectVectors';
 import { ArtboardText } from '~/components/ArtboardText';
+import Tabs from '~/components/Tabs';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -152,14 +153,29 @@ export default function Product() {
             {/* Product info */}
             <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
 
-              {/* Schematic Select */}
-              <ArtboardSelectSchematic category="sailboats" options={schematics} />
+              {/* Product Information Tabs */}
 
-              {/* Vector Select */}
-              <ArtboardSelectVectors />
+                <Tabs defaultValue="design" ariaLabel="Product Customization">
+                  <Tabs.List>
+                    <Tabs.Trigger value="design">Design</Tabs.Trigger>
+                    <Tabs.Trigger value="text">Text</Tabs.Trigger>
+                    <Tabs.Trigger value="legend">Legend</Tabs.Trigger>
+                  </Tabs.List>
 
-              {/* Artboard Text */}
-              <ArtboardText />
+                  <Tabs.Content value="design" className="mt-6">
+                    {/* Schematic Select */}
+                    <ArtboardSelectSchematic category="sailboats" options={schematics} />
+
+                    {/* Vector Select */}
+                    <ArtboardSelectVectors />
+                  </Tabs.Content>
+                  
+                  <Tabs.Content value="text" className="mt-6">
+                    <ArtboardText />
+                  </Tabs.Content>
+                  
+                  <Tabs.Content value="legend" className="mt-6"></Tabs.Content>
+                </Tabs>
 
               {/* Title */}
               <h1 className="text-3xl font-bold tracking-tight text-gray-900">{title}</h1>
@@ -198,10 +214,9 @@ export default function Product() {
               </div>
             </div>
           </div>
+
         </div>
       </div>
-      
-      <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
 
     </ArtboardsProvider>
 
