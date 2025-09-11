@@ -26,9 +26,13 @@
 - Expose `colorSchemes`, `colorScheme`, `setColorScheme` via context value/memo.
 
 ### Component (`app/components/ArtboardColorPicker.tsx`)
-- Use `RadioGroup`, `RadioField`, `Radio` from `app/ui/radio.tsx`.
 - Data: `colorSchemes`, `colorScheme` from context; call `setColorScheme` on change.
-- Styling: map `paper_color` → `--radio-checked-bg`, `pen_color` → `--radio-checked-indicator`; label via visible text or `aria-label`.
+- Structure (Tailwind Plus style):
+  - Wrapper around each input: `"flex rounded-full outline -outline-offset-1 outline-black/10"`
+  - Radio input classes: `"size-8 appearance-none rounded-full forced-color-adjust-none checked:outline-2 checked:outline-offset-2 focus-visible:outline-3 focus-visible:outline-offset-3"`
+- Visual mapping:
+  - Use `paper_color` as the swatch background color for each radio (e.g., inline style `backgroundColor: scheme.paper_color`).
+  - Use `aria-label` of the scheme `name`. Only one can be selected at a time.
 
 ### Preview (`app/components/ArtboardPreview.tsx`)
 - Use context values in payload:
