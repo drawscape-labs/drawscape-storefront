@@ -28,10 +28,13 @@
 ### Component (`app/components/ArtboardColorPicker.tsx`)
 - Data: `colorSchemes`, `colorScheme` from context; call `setColorScheme` on change.
 - Structure (Tailwind Plus style):
-  - Wrapper around each input: `"flex rounded-full outline -outline-offset-1 outline-black/10"`
-  - Radio input classes: `"size-8 appearance-none rounded-full forced-color-adjust-none checked:outline-2 checked:outline-offset-2 focus-visible:outline-3 focus-visible:outline-offset-3"`
-- Visual mapping:
-  - Use `paper_color` as the swatch background color for each radio (e.g., inline style `backgroundColor: scheme.paper_color`).
+  - Each option is a `label` with a visually hidden radio and a styled square swatch.
+  - Wrapper around each option: `relative inline-flex items-center`.
+  - Radio input classes: `sr-only peer` (use the peer for focus/checked styles on the swatch).
+- Visual mapping (square swatches):
+  - Swatch is a square filled with the paper color: a `span` with `size-8 aspect-square rounded-none border border-black/10`; background set to `paper_color`.
+  - Pen color indicator is a smaller square in the bottom-right corner occupying 25% of the swatch area; absolutely positioned child with width/height set to 25% and background set to `pen_color`.
+  - Apply selection and focus styles to the swatch via the peer: e.g., `peer-checked:ring-2 peer-checked:ring-black/50 peer-focus-visible:ring-2`.
   - Use `aria-label` of the scheme `name`. Only one can be selected at a time.
 
 ### Preview (`app/components/ArtboardPreview.tsx`)
@@ -50,6 +53,7 @@
 
 ### Acceptance
 - Radio picker shows available schemes and selects one.
+- Swatch is square; paper color fills the swatch and pen color appears as a square overlay in the bottom-right occupying 25% of the swatch.
 - Preview updates and request includes chosen scheme.
 - React Router imports only; API calls via `~/lib/drawscapeApi`.
 

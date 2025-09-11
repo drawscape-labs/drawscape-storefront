@@ -3,7 +3,7 @@ import { useArtboards } from '~/context/artboards';
 import API from '~/lib/drawscapeApi';
 
 export function ArtboardPreview() {
-  const { schematicId, vectorId, selectedVector, legend, title, subtitle, status } = useArtboards();
+  const { schematicId, vectorId, selectedVector, legend, title, subtitle, status, colorScheme } = useArtboards();
   const [svgMarkup, setSvgMarkup] = useState<string | null>(null);
   const requestIdRef = useRef(0);
 
@@ -70,10 +70,10 @@ export function ArtboardPreview() {
           subtitle: subtitle || 'Preview Subtitle',
           schematic_url: schematicUrl,
           
-          // Optional presentation defaults
-          color_scheme: 'blue_white',
-          paper_color: 'navy',
-          pen_color: 'white',
+          // Use color scheme from context
+          color_scheme: colorScheme?.name || 'blue_white',
+          paper_color: colorScheme?.paper_color || 'navy',
+          pen_color: colorScheme?.pen_color || 'white',
           size: 'letter',
           orientation: 'portrait',
           legend,
@@ -128,7 +128,7 @@ export function ArtboardPreview() {
     }
 
     fetchArtboardRender();
-  }, [schematicId, vectorId, legend, title, subtitle]);
+  }, [schematicId, vectorId, legend, title, subtitle, colorScheme]);
 
   return (
     <div className="w-full">

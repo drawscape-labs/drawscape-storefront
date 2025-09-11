@@ -18,6 +18,7 @@ import { StarIcon } from '@heroicons/react/20/solid'
 import { ArtboardSelectSchematic, type Schematic } from '~/components/ArtboardSelectSchematic';
 import { ArtboardSelectVectors } from '~/components/ArtboardSelectVectors';
 import { ArtboardText } from '~/components/ArtboardText';
+import { ArtboardColorPicker } from '~/components/ArtboardColorPicker';
 import Tabs from '~/components/Tabs';
 
 function classNames(...classes: string[]) {
@@ -163,11 +164,16 @@ export default function Product() {
                   </Tabs.List>
 
                   <Tabs.Content value="design" className="mt-6">
-                    {/* Schematic Select */}
                     <ArtboardSelectSchematic category="sailboats" options={schematics} />
-
-                    {/* Vector Select */}
                     <ArtboardSelectVectors />
+                    
+                    {/* Color Picker */}
+                    <div className="mt-4">
+                      <h3 className="text-sm font-medium text-gray-900">Color</h3>
+                      <div className="mt-2">
+                        <ArtboardColorPicker />
+                      </div>
+                    </div>
                   </Tabs.Content>
                   
                   <Tabs.Content value="text" className="mt-6">

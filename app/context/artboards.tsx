@@ -16,6 +16,12 @@ export type LegendItem = {
   content: string;
 };
 
+export type ColorScheme = {
+  name: string;
+  paper_color: string;
+  pen_color: string;
+};
+
 // Internal type for schematic data coming from the API
 type Schematic = {
   id: string;
@@ -33,6 +39,11 @@ type ArtboardsContextValue = {
   
   vectorId: string | null;
   selectVector: (id: string | null) => void;
+  
+  // Color schemes
+  colorSchemes: ColorScheme[];
+  colorScheme: ColorScheme | null;
+  setColorScheme: (scheme: ColorScheme) => void;
   
   // Derived data
   vectors: VectorOption[];
@@ -77,6 +88,10 @@ export function ArtboardsProvider({
   const [legend, setLegend] = useState<LegendItem[]>([]);
   const [title, setTitle] = useState<string | undefined>(undefined);
   const [subtitle, setSubtitle] = useState<string | undefined>(undefined);
+  
+  // Color scheme state
+  const [colorSchemes, setColorSchemes] = useState<ColorScheme[]>([]);
+  const [colorScheme, setColorScheme] = useState<ColorScheme | null>(null);
   
 
   // Derived Data
@@ -180,6 +195,37 @@ export function ArtboardsProvider({
     }
   }, [vectors, vectorId]);
 
+  // Effect to fetch color schemes
+  useEffect(() => {
+    let isCancelled = false;
+
+    async function fetchColorSchemes() {
+      try {
+        const response = await API.get<{color_schemes: ColorScheme[]}>('/artboard/color-schemes');
+        if (!isCancelled && response?.color_schemes) {
+          setColorSchemes(response.color_schemes);
+          
+          // Initialize colorScheme to first result or preferred default
+          if (!colorScheme || !response.color_schemes.some(cs => cs.name === colorScheme.name)) {
+            const blueWhite = response.color_schemes.find(cs => cs.name === 'blue_white');
+            setColorScheme(blueWhite || response.color_schemes[0] || null);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch color schemes:', err);
+        if (!isCancelled) {
+          setColorSchemes([]);
+        }
+      }
+    }
+
+    fetchColorSchemes();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, []); // Fetch once on mount
+
 
   const value = useMemo<ArtboardsContextValue>(
     () => ({
@@ -189,6 +235,9 @@ export function ArtboardsProvider({
       selectVector,
       vectors,
       selectedVector,
+      colorSchemes,
+      colorScheme,
+      setColorScheme,
       legend,
       setLegend,
       title,
@@ -198,7 +247,7 @@ export function ArtboardsProvider({
       status,
       error,
     }),
-    [schematicId, vectorId, vectors, selectedVector, legend, title, subtitle, status, error],
+    [schematicId, vectorId, vectors, selectedVector, colorSchemes, colorScheme, legend, title, subtitle, status, error],
   );
 
   return (
