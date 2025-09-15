@@ -31,6 +31,22 @@ export default async function handleRequest(
     ],
     // Allow font files for Inter
     fontSrc: ["'self'", 'data:', 'https://rsms.me'],
+    
+    connectSrc: [
+      "'self'",
+      'https://cdn.judge.me',
+      'https://cdnwidget.judge.me',
+      'https://cdn.shopify.com'
+    ],
+    
+    scriptSrc: [
+      "'self'",
+      'https://cdn.judge.me',
+      'https://cdnwidget.judge.me',
+      'https://cdn.shopify.com',
+      "'unsafe-inline'"
+      // The nonce will be automatically added by createContentSecurityPolicy
+    ],
   });
 
   const body = await renderToReadableStream(
@@ -56,7 +72,9 @@ export default async function handleRequest(
   }
 
   responseHeaders.set('Content-Type', 'text/html');
-  responseHeaders.set('Content-Security-Policy', header);
+  
+  // TODO: Uncomment this when we have a valid CSP
+  // responseHeaders.set('Content-Security-Policy', header);
 
   return new Response(body, {
     headers: responseHeaders,

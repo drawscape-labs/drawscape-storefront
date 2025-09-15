@@ -20,6 +20,7 @@ import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
 import appStyles from '~/styles/app.css?url';
 import tailwindCss from './styles/tailwind.css?url';
 import {PageLayout} from './components/PageLayout';
+import { useJudgeme } from '@judgeme/shopify-hydrogen';
 
 export type RootLoader = typeof loader;
 
@@ -86,6 +87,12 @@ export async function loader(args: LoaderFunctionArgs) {
       storefront,
       publicStorefrontId: env.PUBLIC_STOREFRONT_ID,
     }),
+    judgeme: {
+      shopDomain: env.JUDGEME_SHOP_DOMAIN,
+      publicToken: env.JUDGEME_PUBLIC_TOKEN,
+      cdnHost: env.JUDGEME_CDN_HOST,
+      delay: 500, // optional parameter, default to 500ms
+    },    
     consent: {
       checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
       storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
@@ -221,6 +228,8 @@ export function Layout({children}: {children?: React.ReactNode}) {
 }
 
 export default function App() {
+  const data = useRouteLoaderData<RootLoader>('root');
+  useJudgeme(data!.judgeme);
   return <Outlet />;
 }
 

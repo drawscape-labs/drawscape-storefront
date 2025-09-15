@@ -8,13 +8,16 @@ import {
   getAdjacentAndFirstAvailableVariants,
   useSelectedOptionInUrlParam,
 } from '@shopify/hydrogen';
+import {
+  JudgemeAllReviewsCount,
+  JudgemeAllReviewsRating,
+} from "@judgeme/shopify-hydrogen";
+
 import {ProductPrice} from '~/components/ProductPrice';
 import {ProductForm} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {ArtboardsProvider} from '~/context/artboards';
 import {ArtboardPreview} from '~/components/ArtboardPreview';
-
-import { StarIcon } from '@heroicons/react/20/solid'
 import { ArtboardSelectSchematic, type Schematic } from '~/components/ArtboardSelectSchematic';
 import { ArtboardSelectVectors } from '~/components/ArtboardSelectVectors';
 import { ArtboardText } from '~/components/ArtboardText';
@@ -146,42 +149,47 @@ export default function Product() {
     <ArtboardsProvider initialSchematicId={initialSchematicId}>
       <div className="bg-white">
         <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
-          <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
+          <div className="lg:grid lg:grid-cols-6 lg:items-start lg:gap-x-8">
             
             {/* Artboard preview */}
-            <ArtboardPreview />
+            <div className="lg:col-span-4">
+              <ArtboardPreview />
+            </div>
 
             {/* Product info */}
-            <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
+            <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0 lg:col-span-2">
 
               {/* Product Information Tabs */}
 
-                <Tabs defaultValue="design" ariaLabel="Product Customization">
-                  <Tabs.List>
-                    <Tabs.Trigger value="design">Design</Tabs.Trigger>
-                    <Tabs.Trigger value="text">Text</Tabs.Trigger>
-                    <Tabs.Trigger value="legend">Legend</Tabs.Trigger>
-                  </Tabs.List>
+              <Tabs defaultValue="design" ariaLabel="Product Customization">
+                <Tabs.List>
+                  <Tabs.Trigger value="design">Design</Tabs.Trigger>
+                  <Tabs.Trigger value="text">Text</Tabs.Trigger>
+                  <Tabs.Trigger value="legend">Legend</Tabs.Trigger>
+                </Tabs.List>
 
-                  <Tabs.Content value="design" className="mt-6">
-                    <ArtboardSelectSchematic category="sailboats" options={schematics} />
-                    <ArtboardSelectVectors />
-                    
-                    {/* Color Picker */}
-                    <div className="mt-4">
-                      <h3 className="text-sm font-medium text-gray-900">Color</h3>
-                      <div className="mt-2">
-                        <ArtboardColorPicker />
-                      </div>
+                <Tabs.Content value="design" className="mt-6">
+                  <ArtboardSelectSchematic category="sailboats" options={schematics} />
+                  <ArtboardSelectVectors />
+                  
+                  {/* Color Picker */}
+                  <div className="mt-4">
+                    <h3 className="text-sm font-medium text-gray-900">Color</h3>
+                    <div className="mt-2">
+                      <ArtboardColorPicker />
                     </div>
-                  </Tabs.Content>
-                  
-                  <Tabs.Content value="text" className="mt-6">
-                    <ArtboardText />
-                  </Tabs.Content>
-                  
-                  <Tabs.Content value="legend" className="mt-6"></Tabs.Content>
-                </Tabs>
+                  </div>
+                </Tabs.Content>
+                
+                <Tabs.Content value="text" className="mt-6">
+                  <ArtboardText />
+                </Tabs.Content>
+                
+                <Tabs.Content value="legend" className="mt-6"></Tabs.Content>
+              </Tabs>
+
+              {/* Divider */}
+              <div className="my-8 border-t border-gray-200" aria-hidden="true" />
 
               {/* Title */}
               <h1 className="text-3xl font-bold tracking-tight text-gray-900">{title}</h1>
@@ -191,16 +199,8 @@ export default function Product() {
                 <h3 className="sr-only">Reviews</h3>
                 <div className="flex items-center">
                   <div className="flex items-center">
-                    {[0, 1, 2, 3, 4].map((rating) => (
-                      <StarIcon
-                        key={rating}
-                        aria-hidden="true"
-                        className={classNames(
-                          4 > rating ? 'text-indigo-500' : 'text-gray-300',
-                          'size-5 shrink-0',
-                        )}
-                      />
-                    ))}
+                    <JudgemeAllReviewsRating />
+                    <JudgemeAllReviewsCount /> Reviews
                   </div>
                   <p className="sr-only">4 out of 5 stars</p>
                 </div>
