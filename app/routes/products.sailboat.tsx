@@ -14,7 +14,7 @@ import {
 } from "@judgeme/shopify-hydrogen";
 
 import {ProductPrice} from '~/components/ProductPrice';
-import {ProductForm} from '~/components/ProductForm';
+import {ArtboardProductForm} from '~/components/ArtboardProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {ArtboardsProvider} from '~/context/artboards';
 import {ArtboardPreview} from '~/components/ArtboardPreview';
@@ -89,8 +89,6 @@ async function loadCriticalData({
 }: LoaderFunctionArgs) {
   const handle = 'sailboat';
   const {storefront} = context;
-
-  console.log('loadCriticalData')
 
   const [{product}] = await Promise.all([
     storefront.query(PRODUCT_QUERY, {
@@ -213,7 +211,7 @@ export default function Product() {
                     compareAtPrice={selectedVariant?.compareAtPrice}
                   />
                 </div>
-                <ProductForm
+                <ArtboardProductForm
                   productOptions={productOptions}
                   selectedVariant={selectedVariant}
                 />         

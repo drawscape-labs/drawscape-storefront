@@ -7,8 +7,9 @@ import type {
 import {AddToCartButton} from './AddToCartButton';
 import {useAside} from './Aside';
 import type {ProductFragment} from 'storefrontapi.generated';
+import {useArtboards} from '~/context/artboards';
 
-export function ProductForm({
+export function ArtboardProductForm({
   productOptions,
   selectedVariant,
 }: {
@@ -17,6 +18,17 @@ export function ProductForm({
 }) {
   const navigate = useNavigate();
   const {open} = useAside();
+  
+  
+  const {schematicId, vectorId, colorScheme, legend, title, subtitle} = useArtboards();
+  const artboardPayload = {
+    schematic_id: schematicId,
+    schematic_vector_id: vectorId,
+    title: title,
+    subtitle: subtitle,
+    color_scheme: colorScheme?.name,
+  }
+
   return (
     <div className="product-form">
       {productOptions.map((option) => {
@@ -84,7 +96,7 @@ export function ProductForm({
                       disabled={!exists}
                       onClick={() => {
                         if (!selected) {
-                          void navigate(`?${variantUriQuery}`, {
+                          navigate(`?${variantUriQuery}`, {
                             replace: true,
                             preventScrollReset: true,
                           });
@@ -113,6 +125,20 @@ export function ProductForm({
                   merchandiseId: selectedVariant.id,
                   quantity: 1,
                   selectedVariant,
+                  attributes: [
+                    ...(schematicId
+                      ? [
+                          {
+                            key: '_schematic_id',
+                            value: String(schematicId),
+                          },
+                          {
+                            key: '_artboard_payload',
+                            value: JSON.stringify(artboardPayload),
+                          },
+                        ]
+                      : []),
+                  ],
                 },
               ]
             : []

@@ -25,19 +25,31 @@ export function CartLineItem({
   const lineItemUrl = useVariantUrl(product.handle, selectedOptions);
   const {close} = useAside();
 
+  let previewUrl = line.attributes?.find((attribute) => attribute.key === '_preview_url')?.value;
+
   return (
     <li key={id} className="flex py-6">
       {image && (
         <div className="shrink-0">
-          <Image
-            alt={title}
-            aspectRatio="1/1"
-            data={image}
-            className="size-24 rounded-md object-cover sm:size-32"
-            height={100}
-            loading="lazy"
-            width={100}
-          />
+          {previewUrl ? (
+            <img
+              src={previewUrl}
+              className="size-24 rounded-md sm:size-32"
+              height={100}
+              loading="lazy"
+              width={100}
+            />
+          ) : (
+            <Image
+              alt={title}
+              aspectRatio="1/1"
+              data={image}
+              className="size-24 rounded-md object-cover sm:size-32"
+              height={100}
+              loading="lazy"
+              width={100}
+            />
+          )}
         </div>
       )}
 

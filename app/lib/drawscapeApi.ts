@@ -2,7 +2,8 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 
 /**
  * Drawscape API client
- * All requests are proxied through /api/drawscape/* to keep credentials server-side
+ * All requests are sent through the /api/drawscape/* route to keep .env variables server-side
+ * This is a simple wrapper around axios that adds a default base URL and handles errors
  */
 
 const DEFAULT_BASE = '/api/drawscape';

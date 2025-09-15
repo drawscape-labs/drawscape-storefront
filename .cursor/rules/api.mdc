@@ -4,10 +4,10 @@ globs:
 alwaysApply: true
 ---
 
-If we are needing to use the Drawscape API, please include this file: 
+Definiation of Drawscape API is in the api.yaml file.
 
-```
-import API from '~/lib/drawscapeApi';
-```
+If we are needing to use the Drawscape API from inside a component rendered in the browser
+Please use this library `lib/drawscapeApi.ts`
 
-If neededing to use the Drawscape API, please look at the api.yaml file in the root of this project for routes and model sturctures. 
+If we need to make calls to the drawscape api from our server side code ie loader() and action() functions. 
+Please use the `lib/drawscapeServerapi.ts` library
