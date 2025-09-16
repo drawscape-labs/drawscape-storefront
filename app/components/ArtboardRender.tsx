@@ -2,15 +2,13 @@ import { useEffect, useState, useRef } from 'react';
 import { useArtboards } from '~/context/artboards';
 import API from '~/lib/drawscapeApi';
 
-export function ArtboardPreview() {
-  const { schematicId, vectorId, selectedVector, legend, title, subtitle, status, colorScheme } = useArtboards();
+export function ArtboardRender() {
+  const { schematicId, vectorId, selectedVector, legend, title, subtitle, colorScheme } = useArtboards();
   const [svgBlobUrl, setSvgBlobUrl] = useState<string | null>(null);
-  const requestIdRef = useRef(0);
   const svgUrlRef = useRef<string | null>(null);
 
   useEffect(() => {
-    // Increment request ID to ignore stale responses
-    const currentRequestId = ++requestIdRef.current;
+    let cancelled = false;
 
     async function fetchArtboardRender() {
       if (!schematicId || !vectorId || !selectedVector) {
@@ -23,8 +21,6 @@ export function ArtboardPreview() {
       }
 
       try {
-
-        // Get the schematic URL - now typed on vector object
         const schematicUrl = (selectedVector as any).url || (selectedVector as any).public_url || (selectedVector as any).download_url;
         if (!schematicUrl) {
           if (svgUrlRef.current) {
@@ -35,14 +31,11 @@ export function ArtboardPreview() {
           return;
         }
 
-        // Build the payload
         const payload = {
           render_style: 'blueprint',
           title: title || 'Preview Title',
           subtitle: subtitle || 'Preview Subtitle',
           schematic_url: schematicUrl,
-          
-          // Use color scheme from context
           color_scheme: colorScheme?.name || 'blue_white',
           paper_color: colorScheme?.paper_color || 'navy',
           pen_color: colorScheme?.pen_color || 'white',
@@ -50,38 +43,24 @@ export function ArtboardPreview() {
           legend,
         };
 
-        // Call the API with text response type to handle raw SVG
         const result = await API.post<string>('artboard/render', payload, { responseType: 'text' });
 
-        // Check if this is still the current request
-        if (currentRequestId !== requestIdRef.current) {
-          return; // Ignore stale response
-        }
-
-        // Normalize the response
         let svg: string | null = null;
-
-        // Check if response is raw SVG string
         if (typeof result === 'string' && result.includes('<svg')) {
           svg = result;
         } else {
-          // Try to parse as JSON in case API returns JSON despite text responseType
           try {
             const jsonResult = typeof result === 'string' ? JSON.parse(result) : result;
             const parsed = jsonResult as { svg?: string; svg_text?: string; svg_url?: string };
-            
-            // Look for common SVG fields in JSON response
             if (parsed.svg && typeof parsed.svg === 'string') {
               svg = parsed.svg;
             } else if (parsed.svg_text && typeof parsed.svg_text === 'string') {
               svg = parsed.svg_text;
             } else if (parsed.svg_url && typeof parsed.svg_url === 'string') {
-              // If we get a URL, fetch the SVG content
               const svgResponse = await fetch(parsed.svg_url);
               svg = await svgResponse.text();
             }
           } catch {
-            // Not JSON, and not valid SVG
             throw new Error('Invalid response format from render API');
           }
         }
@@ -90,16 +69,15 @@ export function ArtboardPreview() {
           throw new Error('No valid SVG content in response');
         }
 
-        // Create/reuse Blob URL for the SVG text
         if (svgUrlRef.current) {
           URL.revokeObjectURL(svgUrlRef.current);
           svgUrlRef.current = null;
         }
         const url = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml' }));
         svgUrlRef.current = url;
-        setSvgBlobUrl(url);
-      } catch (err) {
-        if (currentRequestId === requestIdRef.current) {
+        if (!cancelled) setSvgBlobUrl(url);
+      } catch {
+        if (!cancelled) {
           if (svgUrlRef.current) {
             URL.revokeObjectURL(svgUrlRef.current);
             svgUrlRef.current = null;
@@ -110,7 +88,10 @@ export function ArtboardPreview() {
     }
 
     fetchArtboardRender();
-    // No cleanup here; separate effect handles URL revocation on unmount
+
+    return () => {
+      cancelled = true;
+    };
   }, [schematicId, vectorId, legend, title, subtitle, colorScheme]);
 
   // Cleanup Blob URL on unmount
@@ -123,28 +104,9 @@ export function ArtboardPreview() {
     };
   }, []);
 
+  if (!svgBlobUrl) return null;
+
   return (
-    <div className="w-full" style={{ minHeight: '70vh' }}>
-      <div className="w-full bg-gray-300 p-4 rounded overflow-hidden flex items-center justify-center relative" style={{ minHeight: '70vh', height: '70vh' }}>
-        {status === 'loading' && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-10">
-            <div className="text-gray-500">Loading schematic…</div>
-          </div>
-        )}
-        {status === 'error' && !svgBlobUrl && (
-          <div className="flex items-center justify-center w-full h-64">
-            <div className="text-red-600">Error loading schematic</div>
-          </div>
-        )}
-        {!svgBlobUrl && status !== 'loading' && status !== 'error' && (
-          <div className="flex items-center justify-center w-full h-64">
-            <div className="text-gray-400">Select a schematic and vector to preview</div>
-          </div>
-        )}
-        {svgBlobUrl && status !== 'loading' && (
-          <img src={svgBlobUrl} className="w-full h-full object-contain mx-auto" alt="Artboard preview" />
-        )}
-      </div>
-    </div>
+    <img src={svgBlobUrl} className="w-full h-full object-contain mx-auto" alt="Artboard preview" />
   );
 }

@@ -22,6 +22,7 @@ import { ArtboardSelectSchematic, type Schematic } from '~/components/ArtboardSe
 import { ArtboardSelectVectors } from '~/components/ArtboardSelectVectors';
 import { ArtboardText } from '~/components/ArtboardText';
 import { ArtboardColorPicker } from '~/components/ArtboardColorPicker';
+import ArtboardGallery from '~/components/ArtboardGallery';
 import Tabs from '~/components/Tabs';
 
 function classNames(...classes: string[]) {
@@ -151,7 +152,9 @@ export default function Product() {
             
             {/* Artboard preview */}
             <div className="lg:col-span-4">
-              <ArtboardPreview />
+              <ArtboardGallery />
+              {/* <br></br>
+              <ArtboardPreview /> */}
             </div>
 
             {/* Product info */}
