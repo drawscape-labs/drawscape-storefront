@@ -145,7 +145,7 @@ export default function Product() {
 
   return (
     <>
-    <ArtboardsProvider initialSchematicId={initialSchematicId}>
+    <ArtboardsProvider key={initialSchematicId ?? 'none'} initialSchematicId={initialSchematicId}>
       <div className="bg-white">
         <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
           <div className="lg:grid lg:grid-cols-6 lg:items-start lg:gap-x-8">

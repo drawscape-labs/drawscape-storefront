@@ -13,6 +13,7 @@ type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 type RequestOptions = Omit<AxiosRequestConfig, 'url' | 'method' | 'data' | 'params' | 'headers' | 'responseType'> & {
   headers?: Record<string, string>;
   responseType?: AxiosRequestConfig['responseType'];
+  signal?: AbortSignal;
 };
 
 async function request<T>(
@@ -34,6 +35,7 @@ async function request<T>(
     responseType: options.responseType || 'json',
     data,
     params,
+    signal: options.signal,
     ...options,
   };
 

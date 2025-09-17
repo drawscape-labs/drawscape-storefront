@@ -14,6 +14,7 @@ import {
   SearchFormPredictive,
 } from '~/components/SearchFormPredictive';
 import {SearchResultsPredictive} from '~/components/SearchResultsPredictive';
+import { SearchSchematics } from './SearchSchematics';
 
 interface PageLayoutProps {
   cart: Promise<CartApiQueryFragment | null>;
@@ -39,7 +40,8 @@ export function PageLayout({
   return (
     <Aside.Provider>
       <CartAside cart={cart} />
-      <SearchAside />
+      {/* <SearchAside /> */}
+      <SearchSchematicsAside />
       <MobileMenuAside header={header} publicStoreDomain={publicStoreDomain} />
       {header && (
         <Header
@@ -71,6 +73,14 @@ function CartAside({cart}: {cart: PageLayoutProps['cart']}) {
           }}
         </Await>
       </Suspense>
+    </Aside>
+  );
+}
+
+function SearchSchematicsAside() {
+  return (
+    <Aside type="search" heading="Search">
+      <SearchSchematics />
     </Aside>
   );
 }

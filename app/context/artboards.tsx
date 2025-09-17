@@ -217,6 +217,7 @@ export function ArtboardsProvider({
         }
       }
     }
+    console.log('fetching color schemes');
 
     fetchColorSchemes();
 
