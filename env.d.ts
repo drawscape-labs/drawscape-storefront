@@ -32,6 +32,9 @@ declare global {
     JUDGEME_SHOP_DOMAIN: string;
     JUDGEME_PUBLIC_TOKEN: string;
     JUDGEME_CDN_HOST: string;
+
+    // Postmark email service configuration
+    POSTMARK_API_KEY?: string;
   }
 }
 
