@@ -29,7 +29,7 @@ export default function ArtboardGallery() {
   const iconSizeClass = "h-8 w-8";
 
   return (
-    <div className="w-screen -mx-4 rounded-none sm:mx-0 sm:w-full sm:rounded-lg bg-gray-300 p-4 sm:p-6">
+    <div className="w-screen -mx-4 rounded-none sm:mx-0 sm:w-full sm:rounded-lg bg-gray-200 p-4 sm:p-6">
       <TabGroup>
         <div className="flex flex-col gap-4 lg:flex-row">
           {/* Thumbnail tabs - on the left on desktop, bottom on mobile */}
