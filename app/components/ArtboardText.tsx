@@ -5,7 +5,7 @@ import {Input} from '~/ui/input';
 import {Button} from '~/ui/button';
 
 export function ArtboardText() {
-  const {title, subtitle, setTitle, setSubtitle, status} = useArtboards();
+  const {title, subtitle, setTitle, setSubtitle, status, render} = useArtboards();
 
   const [localTitle, setLocalTitle] = useState(title ?? '');
   const [localSubtitle, setLocalSubtitle] = useState(subtitle ?? '');
@@ -26,6 +26,7 @@ export function ArtboardText() {
     e.preventDefault();
     setTitle(localTitle || undefined);
     setSubtitle(localSubtitle || undefined);
+    render();
   };
 
   return (

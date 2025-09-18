@@ -57,6 +57,11 @@ type ArtboardsContextValue = {
   legend: LegendItem[];
   setLegend: (items: LegendItem[]) => void;
   
+  // Render functionality
+  renderedSvg: string | null;
+  isRendering: boolean;
+  render: () => Promise<void>;
+  
   // Loading state
   status: 'idle' | 'loading' | 'ready' | 'error';
   error: string | null;
@@ -92,6 +97,10 @@ export function ArtboardsProvider({
   // Color scheme state
   const [colorSchemes, setColorSchemes] = useState<ColorScheme[]>([]);
   const [colorScheme, setColorScheme] = useState<ColorScheme | null>(null);
+  
+  // Render state
+  const [renderedSvg, setRenderedSvg] = useState<string | null>(null);
+  const [isRendering, setIsRendering] = useState<boolean>(false);
   
 
   // Derived Data
@@ -129,6 +138,52 @@ export function ArtboardsProvider({
   const selectVector = (id: string | null) => {
     setVectorId(id);
   };
+
+  // Render function
+  const render = async () => {
+    console.log('startin render process', schematicId, selectedVector?.url, colorScheme);
+    if (!schematicId || !selectedVector || !colorScheme) {
+      return;
+    }
+    console.log('rendering artboard', schematicId, selectedVector.url, colorScheme);
+
+    
+    setIsRendering(true);
+
+    try {
+      const renderData = {
+        title: title || schematic?.display_title || '',
+        subtitle: subtitle || schematic?.display_subtitle || '',
+        color_scheme: colorScheme.name,
+        paper_color: colorScheme.paper_color,
+        pen_color: colorScheme.pen_color,
+        orientation: selectedVector.orientation || 'portrait',
+        legend: legend,
+        schematic_url: selectedVector.url,
+        render_style: 'blueprint',
+      };
+
+      const response = await API.post('/artboard/render', renderData);
+      
+      if (response) {
+        setRenderedSvg(response);
+      }
+    } catch (err) {
+      console.error('Failed to render artboard:', err);
+    } finally {
+      setIsRendering(false);
+    }
+  };
+
+  // Auto-render effect - watches all relevant variables and triggers render
+  // Note - we might get double renders 
+  useEffect(() => {
+    // Only render if we have all required data and we're not already rendering
+    if (schematicId && selectedVector && colorScheme) {
+      render();
+    }
+  }, [schematicId, selectedVector, colorScheme, title, subtitle, legend]);
+
 
   // Effect 1: Handle schematic changes and fetching
   useEffect(() => {
@@ -194,6 +249,7 @@ export function ArtboardsProvider({
     }
   }, [vectors, vectorId]);
 
+
   // Effect to fetch color schemes
   useEffect(() => {
     let isCancelled = false;
@@ -217,7 +273,6 @@ export function ArtboardsProvider({
         }
       }
     }
-    console.log('fetching color schemes');
 
     fetchColorSchemes();
 
@@ -244,10 +299,13 @@ export function ArtboardsProvider({
       setTitle,
       subtitle,
       setSubtitle,
+      renderedSvg,
+      isRendering,
+      render,
       status,
       error,
     }),
-    [schematicId, vectorId, vectors, selectedVector, colorSchemes, colorScheme, legend, title, subtitle, status, error],
+    [schematicId, vectorId, vectors, selectedVector, colorSchemes, colorScheme, legend, title, subtitle, renderedSvg, isRendering, status, error],
   );
 
   return (

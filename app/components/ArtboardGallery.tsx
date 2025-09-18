@@ -1,7 +1,33 @@
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import { ArtboardRender } from './ArtboardRender';
+import { useArtboards } from '~/context/artboards';
+
+import { EyeIcon, PlayCircleIcon } from '@heroicons/react/24/outline';
 
 export default function ArtboardGallery() {
+  const { colorScheme } = useArtboards();
+  
+  // Color mapping for eye icon based on paper color
+  const getEyeIconColor = (paperColor: string) => {
+    const colorMap: Record<string, string> = {
+      navy: '#ffffff', // white on navy
+      white: '#000000', // black on white
+      blue: '#ffffff', // white on blue
+      red: '#ffffff', // white on red
+      black: '#ffffff', // white on black
+      tan: '#000000', // black on tan
+    };
+    
+    return colorMap[paperColor] || '#ffffff'; // default to white
+  };
+
+  const eyeIconColor = colorScheme 
+    ? getEyeIconColor(colorScheme.paper_color)
+    : '#ffffff';
+
+  // Set a consistent icon size for both EyeIcon and PlayCircleIcon
+  const iconSizeClass = "h-8 w-8";
+
   return (
     <div className="w-full rounded-lg bg-gray-300 p-4 sm:p-6">
       <TabGroup>
@@ -11,6 +37,35 @@ export default function ArtboardGallery() {
             <TabList
               className="flex max-w-full gap-3 overflow-x-auto rounded-md p-2 lg:flex-col lg:overflow-visible lg:bg-transparent lg:p-0"
             >
+              
+              {/* Artboard Render */}
+              <Tab
+                className="relative h-14 w-14 shrink-0 overflow-hidden rounded-md ring-2 ring-transparent transition data-selected:ring-white data-focus-visible:ring-blue-500 lg:h-16 lg:w-16 bg-gray-800 flex items-center justify-center"
+                title="Artboard Render"
+              >
+                <div className="relative flex h-full w-full items-center justify-center">
+                  <EyeIcon
+                    className={`absolute inset-0 m-auto z-10 pointer-events-none ${iconSizeClass}`}
+                    style={{ color: eyeIconColor }}
+                    aria-hidden="true"
+                  />
+                  <ArtboardRender />
+                </div>
+              </Tab>
+              
+              {/* Video */}
+              <Tab
+                className="relative h-14 w-14 shrink-0 overflow-hidden rounded-md ring-2 ring-transparent transition data-selected:ring-white data-focus-visible:ring-blue-500 lg:h-16 lg:w-16"
+                title="Select Video"
+              >
+                <div className="h-full w-full flex items-center justify-center bg-gray-800 rounded">
+                  <PlayCircleIcon
+                    className={`${iconSizeClass} text-white`}
+                    aria-hidden="true"
+                  />
+                </div>
+              </Tab>
+
               <Tab
                 className="relative h-14 w-14 shrink-0 overflow-hidden rounded-md ring-2 ring-transparent transition data-selected:ring-white data-focus-visible:ring-blue-500 lg:h-16 lg:w-16"
                 title="Select 1"
@@ -23,39 +78,6 @@ export default function ArtboardGallery() {
               >
                 <img src="https://picsum.photos/id/1025/200/200" alt="" className="h-full w-full object-cover" />
               </Tab>
-              <Tab
-                className="relative h-14 w-14 shrink-0 overflow-hidden rounded-md ring-2 ring-transparent transition data-selected:ring-white data-focus-visible:ring-blue-500 lg:h-16 lg:w-16"
-                title="Select Video"
-              >
-                <div className="h-full w-full flex items-center justify-center bg-black rounded">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-8 w-8 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <polygon points="9.5,7.5 16.5,12 9.5,16.5" fill="white" />
-                  </svg>
-                </div>
-              </Tab>
-              <Tab
-                className="relative h-14 w-14 shrink-0 overflow-hidden rounded-md ring-2 ring-transparent transition data-selected:ring-white data-focus-visible:ring-blue-500 lg:h-16 lg:w-16"
-                title="Artboard Render"
-              >
-                <div className="h-full w-full flex items-center justify-center bg-blue-900 rounded">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-8 w-8 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <rect x="4" y="4" width="16" height="16" rx="2" fill="white" stroke="none" />
-                    <rect x="7" y="7" width="10" height="10" rx="1" fill="#1e293b" stroke="none" />
-                  </svg>
-                </div>
-              </Tab>
             </TabList>
           </div>
 
@@ -63,25 +85,16 @@ export default function ArtboardGallery() {
           <div className="relative order-2 lg:order-none flex-1">
             <div className="flex h-[55vh] items-center justify-center rounded-md sm:h-[60vh] lg:h-[70vh]">
               <TabPanels className="h-full w-full">
+                
+                {/* Artboard Render */}
                 <TabPanel className="h-full w-full" unmount={false}>
                   <div className="flex h-full w-full items-center justify-center">
-                    <img
-                      src="https://picsum.photos/id/1015/800/1100"
-                      alt="Preview 1"
-                      className="max-h-full w-auto object-contain"
-                    />
+                    <ArtboardRender />
                   </div>
                 </TabPanel>
-                <TabPanel className="h-full w-full" unmount={false}>
-                  <div className="flex h-full w-full items-center justify-center">
-                    <img
-                      src="https://picsum.photos/id/1025/800/1100"
-                      alt="Preview 2"
-                      className="max-h-full w-auto object-contain"
-                    />
-                  </div>
-                </TabPanel>
-                <TabPanel className="h-full w-full" unmount={false}>
+
+                {/* Video */}
+                <TabPanel className="h-full w-full" >
                   <div className="flex h-full w-full items-center justify-center">
                     <video
                       controls
@@ -91,11 +104,28 @@ export default function ArtboardGallery() {
                     </video>
                   </div>
                 </TabPanel>
+
+
                 <TabPanel className="h-full w-full" unmount={false}>
                   <div className="flex h-full w-full items-center justify-center">
-                    <ArtboardRender />
+                    <img
+                      src="https://picsum.photos/id/1015/800/1100"
+                      alt="Preview 1"
+                      className="max-h-full w-auto object-contain"
+                    />
                   </div>
                 </TabPanel>
+
+                <TabPanel className="h-full w-full" unmount={false}>
+                  <div className="flex h-full w-full items-center justify-center">
+                    <img
+                      src="https://picsum.photos/id/1025/800/1100"
+                      alt="Preview 2"
+                      className="max-h-full w-auto object-contain"
+                    />
+                  </div>
+                </TabPanel>
+
               </TabPanels>
             </div>
           </div>
