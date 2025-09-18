@@ -17,13 +17,13 @@ import {ProductPrice} from '~/components/ProductPrice';
 import {ArtboardProductForm} from '~/components/ArtboardProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {ArtboardsProvider} from '~/context/artboards';
-import {ArtboardPreview} from '~/components/ArtboardPreview';
 import { ArtboardSelectSchematic, type Schematic } from '~/components/ArtboardSelectSchematic';
 import { ArtboardSelectVectors } from '~/components/ArtboardSelectVectors';
 import { ArtboardText } from '~/components/ArtboardText';
 import { ArtboardColorPicker } from '~/components/ArtboardColorPicker';
 import ArtboardGallery from '~/components/ArtboardGallery';
 import Tabs from '~/components/Tabs';
+import drawscapeServerApi from '~/lib/drawscapeServerApi';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -51,16 +51,15 @@ export async function loader(args: LoaderFunctionArgs) {
   const paramId = url.searchParams.get('schematic_id') || url.searchParams.get('schematicId');
   const envDefault = args.context.env.SAILBOAT_DEFAULT_SCHEMATIC_ID ?? null;
 
-  // Fetch schematics via app proxy with absolute URL (server-safe)
+  // Fetch schematics using Drawscape server API
   let schematics: Schematic[] = [];
   try {
-    const origin = url.origin;
-    const apiUrl = new URL('/api/drawscape/schematics', origin);
-    apiUrl.searchParams.set('published', 'true');
-    apiUrl.searchParams.set('sort', 'title');
-    apiUrl.searchParams.set('category', 'sailboats');
-    const res = await fetch(apiUrl.toString());
-    const raw = await res.json();
+    const api = drawscapeServerApi(args.context.env.DRAWSCAPE_API_URL);
+    const raw = await api.get('schematics', {
+      published: 'true',
+      sort: 'title',
+      category: 'sailboats'
+    });
     schematics = (Array.isArray(raw) ? raw : [])
       .filter(Boolean)
       .map((item: any) => ({ id: item?.id, name: item?.title || 'Untitled' }));
@@ -153,8 +152,6 @@ export default function Product() {
             {/* Artboard preview */}
             <div className="lg:col-span-4">
               <ArtboardGallery />
-              {/* <br></br>
-              <ArtboardPreview /> */}
             </div>
 
             {/* Product info */}

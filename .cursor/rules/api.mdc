@@ -1,13 +1,31 @@
 ---
-description:
+description: Instructions on how to use the Drawscape API
 globs:
 alwaysApply: true
 ---
 
-Definiation of Drawscape API is in the api.yaml file.
+Definiation of Drawscape API endpionts is in the api.yaml file.
 
 If we are needing to use the Drawscape API from inside a component rendered in the browser
-Please use this library `lib/drawscapeApi.ts`
+Please use the DrawscapeApi library `lib/drawscapeApi.ts`
 
 If we need to make calls to the drawscape api from our server side code ie loader() and action() functions. 
-Please use the `lib/drawscapeServerapi.ts` library
+Please use the DrawscapeServerAPI `lib/drawscapeServerapi.ts` library
+
+## Server-side Drawscape API Usage
+We need to access and base in the DRAWSCAPE_API_URL .env variable. 
+This will be available in the context object provide by react. 
+
+```
+import drawscapeServerApi from '~/lib/drawscapeServerApi';
+let baseUrl = context.env.DRAWSCAPE_API_URL;
+const api = drawscapeServerApi(baseUrl);
+
+// GET/DELETE: data becomes query params
+const data = await api.get('path', { foo: 'bar' }); 
+
+// POST/PUT: data becomes JSON body
+const saved = await api.post('path', { foo: 'bar' }); 
+```
+
+
