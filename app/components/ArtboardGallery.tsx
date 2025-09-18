@@ -29,11 +29,11 @@ export default function ArtboardGallery() {
   const iconSizeClass = "h-8 w-8";
 
   return (
-    <div className="w-full rounded-lg bg-gray-300 p-4 sm:p-6">
+    <div className="w-screen -mx-4 rounded-none sm:mx-0 sm:w-full sm:rounded-lg bg-gray-300 p-4 sm:p-6">
       <TabGroup>
         <div className="flex flex-col gap-4 lg:flex-row">
-          {/* Thumbnail tabs - now on the left */}
-          <div className="order-1 lg:order-none lg:mr-6">
+          {/* Thumbnail tabs - on the left on desktop, bottom on mobile */}
+          <div className="order-2 lg:order-none lg:mr-6">
             <TabList
               className="flex max-w-full gap-3 overflow-x-auto rounded-md p-2 lg:flex-col lg:overflow-visible lg:bg-transparent lg:p-0"
             >
@@ -78,11 +78,17 @@ export default function ArtboardGallery() {
               >
                 <img src="https://picsum.photos/id/1025/200/200" alt="" className="h-full w-full object-cover" />
               </Tab>
+              <Tab
+                className="relative h-14 w-14 shrink-0 overflow-hidden rounded-md ring-2 ring-transparent transition data-selected:ring-white data-focus-visible:ring-blue-500 lg:h-16 lg:w-16"
+                title="Select 2"
+              >
+                <img src="https://picsum.photos/id/1025/200/200" alt="" className="h-full w-full object-cover" />
+              </Tab>
             </TabList>
           </div>
 
           {/* Preview area */}
-          <div className="relative order-2 lg:order-none flex-1">
+          <div className="relative order-1 lg:order-none flex-1">
             <div className="flex h-[55vh] items-center justify-center rounded-md sm:h-[60vh] lg:h-[70vh]">
               <TabPanels className="h-full w-full">
                 
