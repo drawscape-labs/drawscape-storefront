@@ -101,7 +101,7 @@ export function SearchSchematics() {
   function getSchematicLink(schematic: any) {
     switch (schematic.category) {
       case 'sailboats':
-        return `/products/sailboat?schematic_id=${schematic.id}`;
+        return `/products/sailboats?schematic_id=${schematic.id}`;
       case 'airport_diagrams':
         return `/products/airports?schematic_id=${schematic.id}`;
       case 'aircraft':

@@ -1,0 +1,14 @@
+---
+description: Component Cleanup
+globs:
+alwaysApply: true
+---
+
+
+## File Cleanup
+when I prompt about cleaning up a file these are the usual requirments I'm looking for. Assume these unless otherwise requested
+- Prioritize readability and maintainabolity over short code
+- Clearly set an constant values towards the top
+- make sure what is being inputed outputed to the compoent is described. 
+- remove any unsued imports
+- remove any console.log debuggin statments

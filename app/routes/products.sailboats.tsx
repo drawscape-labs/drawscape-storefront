@@ -25,9 +25,7 @@ import ArtboardGallery from '~/components/ArtboardGallery';
 import Tabs from '~/components/Tabs';
 import drawscapeServerApi from '~/lib/drawscapeServerApi';
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
-}
+
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [
@@ -70,7 +68,7 @@ export async function loader(args: LoaderFunctionArgs) {
 
   // Compute initialSchematicId with proper precedence
   const validIds = new Set(schematics.map((s) => s.id));
-  const initialSchematicId = paramId && validIds.has(paramId)
+  const initialSchematicId = paramId && validIds.has(paramId) 
     ? paramId
     : envDefault && validIds.has(envDefault)
       ? envDefault
@@ -86,8 +84,9 @@ export async function loader(args: LoaderFunctionArgs) {
 async function loadCriticalData({
   context,
   request,
+  params,
 }: LoaderFunctionArgs) {
-  const handle = 'sailboat';
+  const handle = 'sailboats';
   const {storefront} = context;
 
   const [{product}] = await Promise.all([
@@ -140,7 +139,8 @@ export default function Product() {
     selectedOrFirstAvailableVariant: selectedVariant,
   });
 
-  const {title, descriptionHtml} = product;
+  const {title, media, descriptionHtml} = product;
+  
 
   return (
     <>
@@ -151,7 +151,11 @@ export default function Product() {
             
             {/* Artboard preview */}
             <div className="lg:col-span-4">
-              <ArtboardGallery />
+              <ArtboardGallery 
+                productMedia={media} 
+                variantImage={product?.selectedOrFirstAvailableVariant?.image}
+                limit={5}
+              />
             </div>
 
             {/* Product info */}
@@ -283,7 +287,7 @@ const PRODUCT_VARIANT_FRAGMENT = `#graphql
 ` as const;
 
 const PRODUCT_FRAGMENT = `#graphql
-  fragment Product on Product {
+  fragment ProductWithMedia on Product {
     id
     title
     vendor
@@ -292,6 +296,38 @@ const PRODUCT_FRAGMENT = `#graphql
     description
     encodedVariantExistence
     encodedVariantAvailability
+    media(first: 20) {
+      edges {
+        node {
+          ... on MediaImage {
+            id
+            image {
+              id
+              url
+              altText
+              width
+              height
+            }
+          }
+          ... on Video {
+            id
+            sources {
+              url
+              mimeType
+              format
+              height
+              width
+            }
+            previewImage {
+              url
+              altText
+              width
+              height
+            }
+          }
+        }
+      }
+    }
     options {
       name
       optionValues {
@@ -324,14 +360,14 @@ const PRODUCT_FRAGMENT = `#graphql
 ` as const;
 
 const PRODUCT_QUERY = `#graphql
-  query Product(
+  query ProductWithMedia(
     $country: CountryCode
     $handle: String!
     $language: LanguageCode
     $selectedOptions: [SelectedOptionInput!]!
   ) @inContext(country: $country, language: $language) {
     product(handle: $handle) {
-      ...Product
+      ...ProductWithMedia
     }
   }
   ${PRODUCT_FRAGMENT}
