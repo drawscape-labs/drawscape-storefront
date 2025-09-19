@@ -193,7 +193,7 @@ export default function ArtboardGallery({
                 {/* Artboard Render */}
                 <TabPanel className="h-full w-full" unmount={false}>
                   <div className="flex h-full w-full items-center justify-center">
-                    <ArtboardRender />
+                    <ArtboardRender showLoading={true} />
                   </div>
                 </TabPanel>
 
