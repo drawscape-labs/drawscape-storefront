@@ -51,9 +51,9 @@ export function ArtboardText() {
           placeholder="Enter subtitle"
         />
       </Field>
-      <div>
-        <Button type="submit" disabled={isDisabled}>Update Text</Button>
-      </div>
+      <Field>
+        <Button type="submit" outline disabled={isDisabled}>Update Text</Button>
+      </Field>
     </form>
   );
 }

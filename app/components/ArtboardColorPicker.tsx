@@ -17,7 +17,7 @@ export function ArtboardColorPicker() {
   };
 
   return (
-    <div role="group" className="flex flex-wrap gap-2">
+    <div role="group" className="flex flex-wrap gap-4">
       {colorSchemes.map((scheme) => {
         const paperColor = colorMap[scheme.paper_color] || scheme.paper_color;
         const penColor = colorMap[scheme.pen_color] || scheme.pen_color;

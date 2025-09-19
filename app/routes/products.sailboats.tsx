@@ -17,10 +17,9 @@ import {ProductPrice} from '~/components/ProductPrice';
 import {ArtboardProductForm} from '~/components/ArtboardProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {ArtboardsProvider} from '~/context/artboards';
-import { ArtboardSelectSchematic, type Schematic } from '~/components/ArtboardSelectSchematic';
-import { ArtboardSelectVectors } from '~/components/ArtboardSelectVectors';
+import { ArtboardDesign } from '~/components/ArtboardDesign';
 import { ArtboardText } from '~/components/ArtboardText';
-import { ArtboardColorPicker } from '~/components/ArtboardColorPicker';
+import { type Schematic } from '~/components/ArtboardSelectSchematic';
 import ArtboardGallery from '~/components/ArtboardGallery';
 import Tabs from '~/components/Tabs';
 import drawscapeServerApi from '~/lib/drawscapeServerApi';
@@ -171,16 +170,10 @@ export default function Product() {
                 </Tabs.List>
 
                 <Tabs.Content value="design" className="mt-6">
-                  <ArtboardSelectSchematic category="sailboats" options={schematics} />
-                  <ArtboardSelectVectors />
-                  
-                  {/* Color Picker */}
-                  <div className="mt-4">
-                    <h3 className="text-sm font-medium text-gray-900">Color</h3>
-                    <div className="mt-2">
-                      <ArtboardColorPicker />
-                    </div>
-                  </div>
+                  <ArtboardDesign 
+                    schematics={schematics}
+                    category="sailboats"
+                  />
                 </Tabs.Content>
                 
                 <Tabs.Content value="text" className="mt-6">

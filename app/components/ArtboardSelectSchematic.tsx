@@ -1,6 +1,5 @@
-import { Combobox, ComboboxOption, ComboboxLabel } from './combobox';
+import { Select } from '~/ui/select';
 import { useArtboards } from '~/context/artboards';
-import { Field, Label } from '../ui/fieldset';
 
 export type Schematic = {
   id: string;
@@ -9,39 +8,33 @@ export type Schematic = {
 
 type ArtboardSelectSchematicProps = {
   options: Schematic[];
-  category?: string;
   placeholder?: string;
 };
 
 export function ArtboardSelectSchematic({
   options,
-  category,
   placeholder,
 }: ArtboardSelectSchematicProps) {
   const { schematicId, selectSchematic } = useArtboards();
 
-  const selected = options.find((s) => s.id === schematicId) ?? null;
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedId = event.target.value;
+    selectSchematic(selectedId || null);
+  };
 
   return (
-    <div className="max-w-xs">
-      <Field>
-        <Label className="capitalize">{category ?? 'Schematic'}</Label>
-        <Combobox<Schematic>
-          by={(a, b) => (a as Schematic | null)?.id === (b as Schematic | null)?.id}
-          options={options}
-          value={selected ?? undefined}
-          onChange={(option) => selectSchematic(option?.id ?? null)}
-          displayValue={(option) => option?.name}
-          placeholder={placeholder ?? 'Select a schematic'}
-          aria-label="Select schematic"
-        >
-          {(option) => (
-            <ComboboxOption key={option.id} value={option}>
-              <ComboboxLabel>{option.name}</ComboboxLabel>
-            </ComboboxOption>
-          )}
-        </Combobox>
-      </Field>
-    </div>
+    <Select
+      value={schematicId || ''}
+      onChange={handleChange}
+    >
+      <option value="" disabled>
+        {placeholder ?? 'Select a Design'}
+      </option>
+      {options.map((option) => (
+        <option key={option.id} value={option.id}>
+          {option.name}
+        </option>
+      ))}
+    </Select>
   );
 }
