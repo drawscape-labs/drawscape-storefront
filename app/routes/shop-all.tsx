@@ -42,7 +42,7 @@ const products = [
   {
     id: 1,
     name: 'Aircraft',
-    href: '#',
+    href: '/products/aircraft',
     price: '$99',
     description: 'Commercial, General Aviation, and Military',
     imageSrc:
@@ -52,7 +52,7 @@ const products = [
   {
     id: 2,
     name: 'Airports',
-    href: '#',
+    href: '/products/airports',
     price: '$99',
     description: 'FAA Diagrams and Aero Charts',
     imageSrc:
@@ -62,7 +62,7 @@ const products = [
   {
     id: 3,
     name: 'Sailboats',
-    href: '/products/sailboat',
+    href: '/products/sailboats',
     price: '$99',
     description: 'Browse sailboat artwork',
     imageSrc:
