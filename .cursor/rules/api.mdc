@@ -22,10 +22,10 @@ let baseUrl = context.env.DRAWSCAPE_API_URL;
 const api = drawscapeServerApi(baseUrl);
 
 // GET/DELETE: data becomes query params
-const data = await api.get('path', { foo: 'bar' }); 
+const data = await api.get('schematics', { foo: 'bar' }); 
 
 // POST/PUT: data becomes JSON body
-const saved = await api.post('path', { foo: 'bar' }); 
+const saved = await api.post('schematics', { foo: 'bar' }); 
 ```
 
 
