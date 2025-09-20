@@ -187,7 +187,7 @@ function Hero() {
               Turn your passion into frame-worthy art
             </h1>
             <p className="mt-4 text-xl text-gray-500">
-              Create personalized art and then watch it be drawn on-demand with a plotting machine.
+              Create personalized art, and then watch it drawn (just for you) with a plotting machine.
             </p>
           </div>
           <div>
