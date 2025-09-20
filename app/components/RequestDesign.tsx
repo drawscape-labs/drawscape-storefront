@@ -14,9 +14,12 @@ import { Textarea } from '~/ui/textarea';
 import { Button } from '~/ui/button';
 import { Heading } from '~/ui/heading';
 import { Fieldset, Field, Label } from '~/ui/fieldset';
+import { useAside } from '~/components/Aside';
 import drawscapeApi from '~/lib/drawscapeApi';
 
 export const RequestDesign = () => {
+  const { close } = useAside();
+  
   // Form state
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -66,11 +69,22 @@ export const RequestDesign = () => {
       <br />
       
       {submitted ? (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
-          <p className="text-green-800 text-center">
-            Thank you for your request! We'll be in touch soon.
-          </p>
-        </div>
+        <>
+          <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
+            <p className="text-green-800 text-center">
+              Thank you for your request! We'll be in touch soon.
+            </p>
+          </div>
+          <div className="flex justify-center">
+            <Button 
+              onClick={close}
+              outline={true}
+              className="px-6 py-2"
+            >
+              Continue Shopping
+            </Button>
+          </div>
+        </>
       ) : (
         <>
           {error && (
