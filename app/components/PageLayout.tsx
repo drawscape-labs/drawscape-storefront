@@ -5,7 +5,7 @@ import type {
   FooterQuery,
   HeaderQuery,
 } from 'storefrontapi.generated';
-import {Aside} from '~/components/Aside';
+import {Aside, useAside} from '~/components/Aside';
 import {Footer} from '~/components/Footer';
 import {Header, HeaderMenu} from '~/components/Header';
 import {CartMain} from '~/components/CartMain';
@@ -15,6 +15,7 @@ import {
 } from '~/components/SearchFormPredictive';
 import {SearchResultsPredictive} from '~/components/SearchResultsPredictive';
 import { SearchSchematics } from './SearchSchematics';
+import RequestDesign from './RequestDesign';
 
 interface PageLayoutProps {
   cart: Promise<CartApiQueryFragment | null>;
@@ -42,6 +43,7 @@ export function PageLayout({
       <CartAside cart={cart} />
       {/* <SearchAside /> */}
       <SearchSchematicsAside />
+      <RequestDesignAside />
       <MobileMenuAside header={header} publicStoreDomain={publicStoreDomain} />
       {header && (
         <Header
@@ -81,6 +83,17 @@ function SearchSchematicsAside() {
   return (
     <Aside type="search" heading="Search">
       <SearchSchematics />
+    </Aside>
+  );
+}
+
+function RequestDesignAside() {
+  const {type} = useAside();
+  const isOpen = type === 'request-design';
+  
+  return (
+    <Aside type="request-design" heading="Request a Design">
+      {isOpen && <RequestDesign />}
     </Aside>
   );
 }

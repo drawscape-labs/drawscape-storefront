@@ -56,6 +56,8 @@ async function loadCriticalData({
     // Add other queries here, so that they are loaded in parallel
   ]);
 
+  console.log('product', product);
+  
   if (!product?.id) {
     throw new Response(null, {status: 404});
   }
