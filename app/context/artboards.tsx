@@ -40,6 +40,9 @@ type ArtboardsContextValue = {
   vectorId: string | null;
   selectVector: (id: string | null) => void;
   
+  // Raw data
+  schematic: Schematic | null;
+  
   // Color schemes
   colorSchemes: ColorScheme[];
   colorScheme: ColorScheme | null;
@@ -288,6 +291,7 @@ export function ArtboardsProvider({
       selectSchematic,
       vectorId,
       selectVector,
+      schematic,
       vectors,
       selectedVector,
       colorSchemes,
@@ -305,7 +309,7 @@ export function ArtboardsProvider({
       status,
       error,
     }),
-    [schematicId, vectorId, vectors, selectedVector, colorSchemes, colorScheme, legend, title, subtitle, renderedSvg, isRendering, status, error],
+    [schematicId, vectorId, schematic, vectors, selectedVector, colorSchemes, colorScheme, legend, title, subtitle, renderedSvg, isRendering, status, error],
   );
 
   return (

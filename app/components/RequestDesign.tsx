@@ -3,7 +3,7 @@
  * 
  * A form component for submitting a design request.
  * 
- * Collects: name, email address, and design request details.
+ * Collects: email address and design request details.
  * Submits to the Drawscape API endpoint /api/v1/schematics/request
  * 
  * Props: none
@@ -21,12 +21,14 @@ export const RequestDesign = () => {
   const { close } = useAside();
   
   // Form state
-  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [request, setRequest] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Determine if form is valid (all required fields filled)
+  const isFormValid = email.trim() !== '' && request.trim() !== '';
 
   // Submit handler with API integration
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -36,12 +38,9 @@ export const RequestDesign = () => {
 
     try {
       // Prepare the request payload according to API specification
-      // Note: The API expects 'request' field, but we'll include name in the request text
-      const requestText = name ? `Name: ${name}\n\nRequest: ${request}` : request;
-      
       const payload = {
         email: email,
-        request: requestText
+        request: request
       };
 
       // Submit to Drawscape API via the proxy
@@ -49,11 +48,9 @@ export const RequestDesign = () => {
       
       setSubmitted(true);
       // Clear form on success
-      setName('');
       setEmail('');
       setRequest('');
     } catch (err) {
-      console.error('Error submitting design request:', err);
       setError(err instanceof Error ? err.message : 'Failed to submit request. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -63,7 +60,7 @@ export const RequestDesign = () => {
   return (
     <div className="p-6">
       <Heading level={2} className="mb-4 text-2xl font-bold">
-        Can't find what you want?
+        Don't see what you need?
       </Heading>
       <p className="text-sm text-gray-500">Tell us what you are looking for and we'll notify you when it's added to the store.</p>
       <br />
@@ -97,22 +94,6 @@ export const RequestDesign = () => {
         <form onSubmit={handleSubmit} className="max-w-md">
           <Fieldset>
             <Field className="mb-6">
-              <Label htmlFor="request-name" className="block text-sm font-medium text-gray-700 mb-2">
-                Name
-              </Label>
-              <Input
-                id="request-name"
-                type="text"
-                value={name}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
-                required
-                autoComplete="name"
-                placeholder="Your name"
-                className="w-full"
-              />
-            </Field>
-
-            <Field className="mb-6">
               <Label htmlFor="request-email" className="block text-sm font-medium text-gray-700 mb-2">
                 Email Address
               </Label>
@@ -143,14 +124,23 @@ export const RequestDesign = () => {
               />
             </Field>
 
-            <div className="flex justify-center">
+            <div className="flex justify-center gap-4">
               <Button 
                 type="submit" 
                 color="indigo" 
                 className="px-8 py-3 text-lg font-semibold"
-                disabled={isSubmitting}
+                disabled={isSubmitting || !isFormValid}
               >
                 {isSubmitting ? 'Submitting...' : 'Submit Request'}
+              </Button>
+              <Button
+                type="button"
+                outline={true}
+                className="px-8 py-3 text-lg font-semibold"
+                onClick={close}
+                disabled={isSubmitting}
+              >
+                Cancel
               </Button>
             </div>
           </Fieldset>

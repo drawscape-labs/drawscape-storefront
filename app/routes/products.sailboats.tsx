@@ -8,21 +8,10 @@ import {
   getAdjacentAndFirstAvailableVariants,
   useSelectedOptionInUrlParam,
 } from '@shopify/hydrogen';
-import {
-  JudgemeAllReviewsCount,
-  JudgemeAllReviewsRating,
-} from "@judgeme/shopify-hydrogen";
 
-import {ProductPrice} from '~/components/ProductPrice';
-import {ArtboardProductForm} from '~/components/ArtboardProductForm';
+import {ProductSchematic} from '~/components/ProductSchematic';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
-import {ArtboardsProvider} from '~/context/artboards';
-import { ArtboardDesign } from '~/components/ArtboardDesign';
-import { ArtboardText } from '~/components/ArtboardText';
-import { ArtboardLegendManager } from '~/components/ArtboardLegendManager';
 import { type Schematic } from '~/components/ArtboardSelectSchematic';
-import ArtboardGallery from '~/components/ArtboardGallery';
-import Tabs from '~/components/Tabs';
 import drawscapeServerApi from '~/lib/drawscapeServerApi';
 
 
@@ -44,37 +33,8 @@ export async function loader(args: LoaderFunctionArgs) {
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  // Parse URL query params
-  const url = new URL(args.request.url);
-  const paramId = url.searchParams.get('schematic_id') || url.searchParams.get('schematicId');
-  const envDefault = args.context.env.SAILBOAT_DEFAULT_SCHEMATIC_ID ?? null;
 
-  // Fetch schematics using Drawscape server API
-  let schematics: Schematic[] = [];
-  try {
-    const api = drawscapeServerApi(args.context.env.DRAWSCAPE_API_URL);
-    const raw = await api.get('schematics', {
-      published: 'true',
-      sort: 'title',
-      category: 'sailboats'
-    });
-    schematics = (Array.isArray(raw) ? raw : [])
-      .filter(Boolean)
-      .map((item: any) => ({ id: item?.id, name: item?.title || 'Untitled' }));
-  } catch (error) {
-    console.error('Error fetching schematics', error);
-    schematics = [];
-  }
-
-  // Compute initialSchematicId with proper precedence
-  const validIds = new Set(schematics.map((s) => s.id));
-  const initialSchematicId = paramId && validIds.has(paramId) 
-    ? paramId
-    : envDefault && validIds.has(envDefault)
-      ? envDefault
-      : schematics[0]?.id ?? null;
-
-  return {...deferredData, ...criticalData, initialSchematicId, schematics};
+  return {...deferredData, ...criticalData};
 }
 
 /**
@@ -103,8 +63,41 @@ async function loadCriticalData({
   // The API handle might be localized, so redirect to the localized handle
   redirectIfHandleIsLocalized(request, {handle, data: product});
 
+  // Parse URL query params
+  const url = new URL(request.url);
+  const paramId = url.searchParams.get('schematic_id') || url.searchParams.get('schematicId');
+  const envDefault = context.env.SAILBOAT_DEFAULT_SCHEMATIC_ID ?? null;
+
+  // Fetch schematics using Drawscape server API
+  let schematics: Schematic[] = [];
+  try {
+    const api = drawscapeServerApi(context.env.DRAWSCAPE_API_URL);
+    const raw = await api.get('schematics', {
+      published: 'true',
+      sort: 'title',
+      category: 'sailboats'
+    });
+    schematics = (Array.isArray(raw) ? raw : [])
+      .filter(Boolean)
+      .map((item: any) => ({ id: item?.id, name: item?.title || 'Untitled' }));
+  } catch (error) {
+    console.error('Error fetching schematics', error);
+    schematics = [];
+  }
+
+  // Compute initialSchematicId with proper precedence
+  const validIds = new Set(schematics.map((s) => s.id));
+  const initialSchematicId = paramId && validIds.has(paramId) 
+    ? paramId
+    : envDefault && validIds.has(envDefault)
+      ? envDefault
+      : schematics[0]?.id ?? null;
+
+
   return {
     product,
+    initialSchematicId,
+    schematics,
   };
 }
 
@@ -138,110 +131,35 @@ export default function Product() {
     ...product,
     selectedOrFirstAvailableVariant: selectedVariant,
   });
-
-  const {title, media, descriptionHtml} = product;
   
 
   return (
     <>
-    <ArtboardsProvider key={initialSchematicId ?? 'none'} initialSchematicId={initialSchematicId}>
-      <div className="bg-white">
-        <div className="mx-auto max-w-2xl px-4 py-0 sm:px-6 md:py-12 lg:max-w-7xl lg:px-8 lg:py-12">
-          <div className="lg:grid lg:grid-cols-6 lg:items-start lg:gap-x-8">
-            
-            {/* Artboard preview */}
-            <div className="lg:col-span-4">
-              <ArtboardGallery 
-                productMedia={media} 
-                variantImage={product?.selectedOrFirstAvailableVariant?.image}
-                limit={5}
-              />
-            </div>
-
-            {/* Product info */}
-            <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0 lg:col-span-2">
-
-              {/* Product Information Tabs */}
-
-              <Tabs defaultValue="design" ariaLabel="Product Customization">
-                <Tabs.List>
-                  <Tabs.Trigger value="design">Design</Tabs.Trigger>
-                  <Tabs.Trigger value="text">Text</Tabs.Trigger>
-                  <Tabs.Trigger value="legend">Legend</Tabs.Trigger>
-                </Tabs.List>
-
-                <Tabs.Content value="design" className="mt-6">
-                  <ArtboardDesign 
-                    schematics={schematics}
-                    category="sailboats"
-                  />
-                </Tabs.Content>
-                
-                <Tabs.Content value="text" className="mt-6">
-                  <ArtboardText />
-                </Tabs.Content>
-                
-                <Tabs.Content value="legend" className="mt-6">
-                  <ArtboardLegendManager />
-                </Tabs.Content>
-              </Tabs>
-
-              {/* Divider */}
-              <div className="my-8 border-t border-gray-200" aria-hidden="true" />
-
-              {/* Title */}
-              <h1 className="text-3xl font-bold tracking-tight text-gray-900">{title}</h1>
-              
-              {/* Reviews */}
-              <div className="mt-3">
-                <h3 className="sr-only">Reviews</h3>
-                <div className="flex items-center">
-                  <div className="flex items-center">
-                    <JudgemeAllReviewsRating />
-                    <JudgemeAllReviewsCount /> Reviews
-                  </div>
-                  <p className="sr-only">4 out of 5 stars</p>
-                </div>
-              </div>            
-
-              <div className="mt-3">
-                <div className="text-3xl tracking-tight text-gray-900">
-                  <ProductPrice
-                    price={selectedVariant?.price}
-                    compareAtPrice={selectedVariant?.compareAtPrice}
-                  />
-                </div>
-                <ArtboardProductForm
-                  productOptions={productOptions}
-                  selectedVariant={selectedVariant}
-                />         
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-    </ArtboardsProvider>
-
-    {/* Analytics */}
+      <ProductSchematic
+        product={product}
+        initialSchematicId={initialSchematicId}
+        schematics={schematics}
+        productOptions={productOptions}
+        selectedVariant={selectedVariant}
+      />
+      
+      {/* Analytics */}
       <Analytics.ProductView
-      data={{
-        products: [
-          {
-            id: product.id,
-            title: product.title,
-            price: selectedVariant?.price.amount || '0',
-            vendor: product.vendor,
-            variantId: selectedVariant?.id || '',
-            variantTitle: selectedVariant?.title || '',
-            quantity: 1,
-          },
-        ],
-      }}
-    />
+        data={{
+          products: [
+            {
+              id: product.id,
+              title: product.title,
+              price: selectedVariant?.price.amount || '0',
+              vendor: product.vendor,
+              variantId: selectedVariant?.id || '',
+              variantTitle: selectedVariant?.title || '',
+              quantity: 1,
+            },
+          ],
+        }}
+      />
     </>
-    
   );
 }
 
