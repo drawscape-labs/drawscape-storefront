@@ -34,7 +34,7 @@ export function ProductSchematicForm({
 
   return (
     <div className="product-form">
-      {productOptions.map((option) => {
+      {/* {productOptions.map((option) => {
 
         // If there is only a single value in the option values, don't display the option
         if (option.optionValues.length === 1) return null;
@@ -116,7 +116,7 @@ export function ProductSchematicForm({
             <br />
           </div>
         );
-      })}
+      })} */}
       <AddToCartButton
         disabled={!selectedVariant || !selectedVariant.availableForSale || isRendering}
         onClick={() => {
