@@ -19,6 +19,7 @@ import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {ArtboardsProvider} from '~/context/artboards';
 import { ArtboardDesign } from '~/components/ArtboardDesign';
 import { ArtboardText } from '~/components/ArtboardText';
+import { ArtboardLegendManager } from '~/components/ArtboardLegendManager';
 import { type Schematic } from '~/components/ArtboardSelectSchematic';
 import ArtboardGallery from '~/components/ArtboardGallery';
 import Tabs from '~/components/Tabs';
@@ -180,7 +181,9 @@ export default function Product() {
                   <ArtboardText />
                 </Tabs.Content>
                 
-                <Tabs.Content value="legend" className="mt-6"></Tabs.Content>
+                <Tabs.Content value="legend" className="mt-6">
+                  <ArtboardLegendManager />
+                </Tabs.Content>
               </Tabs>
 
               {/* Divider */}
