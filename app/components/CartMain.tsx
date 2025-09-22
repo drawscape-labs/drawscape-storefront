@@ -4,7 +4,7 @@ import type {CartApiQueryFragment} from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
 import {CartLineItem} from '~/components/CartLineItem';
 import {CartSummary2} from '~/components/CartSummary2';
-import {Button} from '~/ui/Button';
+import {Button} from '~/ui/button';
 
 export type CartLayout = 'page' | 'aside';
 
