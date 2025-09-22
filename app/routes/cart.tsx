@@ -48,6 +48,10 @@ export async function action({request, context}: ActionFunctionArgs) {
           const payload = JSON.parse(artboardAttr.value);
           const artboardResponse = await drawscapeApi.post('artboards', payload).catch(console.log);
 
+          // Preserve all existing attributes except _artboard_payload
+          // (We no longer send `_preview_svg`; optimistic preview uses
+          // the inline variant image data URL, and persisted preview uses
+          // `_preview_url`.)
           const attributes =
             (line.attributes ?? []).filter((attr) => attr.key !== '_artboard_payload');
 
@@ -57,10 +61,12 @@ export async function action({request, context}: ActionFunctionArgs) {
               value: artboardResponse.id,
             });
 
+            console.log('artboardResponse', artboardResponse);
             // Preview URL
             if (context.env.DRAWSCAPE_API_URL) {
               const apiBase = context.env.DRAWSCAPE_API_URL.replace(/\/?$/, '/');
               const previewUrl = new URL(`artboards/${artboardResponse.id}/render`, apiBase).toString();
+              console.log('previewUrl', previewUrl);
               attributes.push({
                 key: '_preview_url',
                 value: previewUrl,

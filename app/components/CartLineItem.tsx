@@ -27,6 +27,21 @@ export function CartLineItem({
 
   let previewUrl = line.attributes?.find((attribute) => attribute.key === '_preview_url')?.value;
 
+  console.log(previewUrl);
+
+
+  // We no longer read `_preview_svg`. If present from legacy carts, it will
+  // simply be ignored in favor of `_preview_url` or the inline optimistic
+  // variant image.
+
+  // Detect if the merchandise image is an inline data/blob URL. In that case,
+  // render with a plain <img> instead of Hydrogen's <Image> helper.
+  const merchandiseImageUrl = (image as any)?.url as string | undefined;
+  const isInlineImage = Boolean(
+    merchandiseImageUrl &&
+      (merchandiseImageUrl.startsWith('data:') || merchandiseImageUrl.startsWith('blob:')),
+  );
+
   return (
     <li key={id} className="flex py-6">
       {image && (
@@ -38,6 +53,16 @@ export function CartLineItem({
               height={100}
               loading="lazy"
               width={100}
+              alt={`Custom design preview`}
+            />
+          ) : isInlineImage ? (
+            <img
+              src={merchandiseImageUrl}
+              className="size-24 rounded-md sm:size-32"
+              height={100}
+              loading="lazy"
+              width={100}
+              alt={title || 'Custom design preview'}
             />
           ) : (
             <Image
@@ -82,6 +107,7 @@ export function CartLineItem({
             ))}
             {(line.attributes ?? [])
               .filter((a) => a?.key && a?.value)
+              .filter((a) => !a.key.startsWith('_'))
               .map((attr) => (
                 <li key={`attr-${attr.key}`}>
                   {attr.key}: {attr.value}

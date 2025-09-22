@@ -20,18 +20,22 @@ export function ProductSchematicForm({
   const {open} = useAside();
   
   
-  const {schematicId, vectorId, colorScheme, legend, title, subtitle} = useArtboards();
+  const {schematicId, schematic, vectorId, colorScheme, legend, title, subtitle, renderedSvg, isRendering} = useArtboards();
   const artboardPayload = {
     schematic_id: schematicId,
     schematic_vector_id: vectorId,
     title: title,
     subtitle: subtitle,
     color_scheme: colorScheme?.name,
+    data: {
+      legend: legend
+    }
   }
 
   return (
     <div className="product-form">
       {productOptions.map((option) => {
+
         // If there is only a single value in the option values, don't display the option
         if (option.optionValues.length === 1) return null;
 
@@ -114,7 +118,7 @@ export function ProductSchematicForm({
         );
       })}
       <AddToCartButton
-        disabled={!selectedVariant || !selectedVariant.availableForSale}
+        disabled={!selectedVariant || !selectedVariant.availableForSale || isRendering}
         onClick={() => {
           open('cart');
         }}
@@ -124,10 +128,43 @@ export function ProductSchematicForm({
                 {
                   merchandiseId: selectedVariant.id,
                   quantity: 1,
-                  selectedVariant,
+                  
+                  // Override the variant image for optimistic UI so the cart
+                  // shows the rendered SVG immediately while the server
+                  // processes the request.
+                  selectedVariant: (() => {
+                    if (!renderedSvg) return selectedVariant;
+                    // Build a base64 data URL to avoid issues with special
+                    // characters in inline SVGs.
+                    const svgBase64 = typeof renderedSvg === 'string'
+                      ? btoa(unescape(encodeURIComponent(renderedSvg)))
+                      : '';
+                    const svgDataUrl = `data:image/svg+xml;base64,${svgBase64}`;
+                    const image = selectedVariant.image
+                      ? {
+                          ...selectedVariant.image,
+                          url: svgDataUrl,
+                          altText: 'Custom design preview',
+                        }
+                      : {
+                          id: 'preview',
+                          url: svgDataUrl,
+                          altText: 'Custom design preview',
+                          width: 100,
+                          height: 100,
+                        } as any;
+                    return {
+                      ...selectedVariant,
+                      image,
+                    } as typeof selectedVariant;
+                  })(),
                   attributes: [
                     ...(schematicId
                       ? [
+                          {
+                            key: 'Design',
+                            value: String(schematic?.display_title),
+                          },
                           {
                             key: '_schematic_id',
                             value: String(schematicId),
