@@ -9,7 +9,7 @@ import {useAside} from './Aside';
 import type {ProductFragment} from 'storefrontapi.generated';
 import {useArtboards} from '~/context/artboards';
 
-export function ArtboardProductForm({
+export function ProductSchematicForm({
   productOptions,
   selectedVariant,
 }: {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { ProductPrice } from '~/components/ProductPrice';
-import { ArtboardProductForm } from '~/components/ArtboardProductForm';
+import { ProductSchematicForm } from '~/components/ProductSchematicForm';
 import { ArtboardsProvider } from '~/context/artboards';
 import { ArtboardDesign } from '~/components/ArtboardDesign';
 import { ArtboardText } from '~/components/ArtboardText';
@@ -137,7 +137,7 @@ export function ProductSchematic({
                   <ProductSchematicDescription />
                 </div>
 
-                <ArtboardProductForm
+                <ProductSchematicForm
                   productOptions={productOptions}
                   selectedVariant={selectedVariant}
                 />
