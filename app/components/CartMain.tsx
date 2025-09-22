@@ -3,7 +3,8 @@ import {Link} from 'react-router';
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
 import {CartLineItem} from '~/components/CartLineItem';
-import {CartSummary2} from './CartSummary2';
+import {CartSummary2} from '~/components/CartSummary2';
+import {Button} from '~/ui/Button';
 
 export type CartLayout = 'page' | 'aside';
 
@@ -28,22 +29,49 @@ export function CartMain({layout, cart: originalCart}: CartMainProps) {
   const className = `cart-main ${withDiscount ? 'with-discount' : ''}`;
   const cartHasItems = cart?.totalQuantity ? cart.totalQuantity > 0 : false;
 
+  // For aside layout: use flex column to fill aside's main area properly
+  // For page layout: use full height
+  const containerClass = layout === 'aside' 
+    ? `${className} flex flex-col h-full` 
+    : `${className} h-full flex flex-col`;
+
   return (
-    <div className={className}>
+    <div className={containerClass}>
       <CartEmpty hidden={linesCount} layout={layout} />
-      <div className="cart-details">
-        <div
-          aria-labelledby="cart-lines"
-          className={layout === 'aside' ? 'cart-lines-scroll' : undefined}
-        >
-          <ul className="divide-y divide-gray-200 border-t border-b border-gray-200">
-            {(cart?.lines?.nodes ?? []).map((line) => (
-              <CartLineItem key={line.id} line={line} layout={layout} />
-            ))}
-          </ul>
+      {layout === 'aside' ? (
+        // Aside layout: Use CSS classes that work with aside's height constraints
+        <div className="cart-details flex flex-col flex-1 min-h-0">
+          <div className="cart-lines-scroll">
+            <ul className="divide-y divide-gray-200">
+              {(cart?.lines?.nodes ?? []).map((line) => (
+                <CartLineItem key={line.id} line={line} layout={layout} />
+              ))}
+            </ul>
+          </div>
+          {cartHasItems && (
+            <CartSummary2 cart={cart} layout={layout} />
+          )}
         </div>
-        {cartHasItems && <CartSummary2 cart={cart} layout={layout} />}
-      </div>
+      ) : (
+        // Page layout: Keep original structure
+        <div className="cart-details relative flex-1 flex flex-col h-full min-h-0">
+          <div
+            aria-labelledby="cart-lines"
+            className="flex-1 min-h-0 overflow-y-auto pb-[120px]"
+          >
+            <ul className="divide-y divide-gray-200">
+              {(cart?.lines?.nodes ?? []).map((line) => (
+                <CartLineItem key={line.id} line={line} layout={layout} />
+              ))}
+            </ul>
+          </div>
+          {cartHasItems && (
+            <div className="absolute left-0 right-0 bottom-0 z-10 bg-white py-4">
+              <CartSummary2 cart={cart} layout={layout} />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -56,12 +84,18 @@ function CartEmpty({
 }) {
   const {close} = useAside();
   return (
-    <div hidden={hidden}>
+    <div hidden={hidden} className="flex flex-col items-center justify-center py-8">
       <br />
-      <p>
-        Looks like you haven&rsquo;t added anything yet, let&rsquo;s get you
-        started!
+      <p className="text-lg text-gray-700 text-center">
+        Your Cart is Empty
       </p>
+      <Button
+        className="mt-6"
+        outline
+        onClick={close}
+      >
+        Continue Shopping
+      </Button>
     </div>
   );
 }

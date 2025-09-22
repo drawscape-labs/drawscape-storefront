@@ -5,6 +5,8 @@ import {
   useEffect,
   useState,
 } from 'react';
+import {Button} from '~/ui/button';
+import {XMarkIcon} from '@heroicons/react/24/outline';
 
 type AsideType = 'search' | 'cart' | 'mobile' | 'closed' | 'request-design';
 type AsideContextValue = {
@@ -62,9 +64,12 @@ export function Aside({
       <aside>
         <header>
           <h3>{heading}</h3>
-          <button className="close reset" onClick={close} aria-label="Close">
-            &times;
-          </button>
+          <Button
+            outline
+            onClick={close}
+          >
+            <XMarkIcon className="h-5 w-5" aria-hidden="true" />
+          </Button>
         </header>
         <main>{children}</main>
       </aside>
