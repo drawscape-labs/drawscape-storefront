@@ -17,20 +17,6 @@ export function ProductReviews() {
 
   return (
     <section>
-      {/* Judge.me star styling */}
-      <style dangerouslySetInnerHTML={{
-        __html: `
-          .jdgm-star.jdgm--on {
-            color: #fbbf24 !important; /* yellow-400 */
-          }
-          .jdgm-star.jdgm--off {
-            color: #e5e7eb !important; /* gray-200 */
-          }
-          .jdgm-star {
-            transition: color 0.2s ease;
-          }
-        `
-      }} />
       
       <div className="flex items-center gap-2">
         

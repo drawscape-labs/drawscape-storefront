@@ -593,3 +593,19 @@ aside .cart-lines-scroll {
 .account-logout {
   display: inline-block;
 }
+
+
+/* Judge.me star styling */
+.jdgm-star.jdgm--on {
+  color: #fbbf24 !important; /* yellow-400 */
+}
+.jdgm-star.jdgm--off {
+  color: #e5e7eb !important; /* gray-200 */
+}
+.jdgm-star {
+  transition: color 0.2s ease;
+}
+
+.jdgm-histogram__bar-content {
+  color: #fbbf24 !important;
+}
