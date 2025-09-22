@@ -9,6 +9,12 @@ import ArtboardGallery from '~/components/ArtboardGallery';
 import Tabs from '~/components/Tabs';
 import { ProductReviews } from '~/components/ProductReviews';
 import { ProductSchematicDescription } from './ProductSchematicDescription';
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+} from '@headlessui/react';
+import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
 
 export interface Schematic {
   id: string;
@@ -22,6 +28,28 @@ export interface ProductSchematicProps {
   productOptions: any[];
   selectedVariant: any;
 }
+
+// Product details for disclosure sections
+const productDetails = [
+  {
+    name: 'About the Drawing',
+    items: [
+      'Size: 11x17 Inches (Tabloid)',
+      'Pens: Stabilo Fineliners or Sakura Gelly Rolls',
+      'Paper: 120lb / 250gsm Stock Paper',
+      'Drawn with a NextDraw Plotting Machine'
+    ],
+  },
+  {
+    name: 'Shipping / Returns',
+    items: [
+      '🇺🇸 US and 🌎 International Shipping',
+      'Shipping is less than $10 in the US and $20 - $40 internationally',
+      '100% Money Back Guarantee (Free Returns)',
+      'Shipped in under 7 Days'
+    ],
+  }
+];
 
 /**
  * ProductSchematic
@@ -87,6 +115,8 @@ export function ProductSchematic({
 
               {/* Divider */}
               <div className="my-8 border-t border-gray-200" aria-hidden="true" />
+
+              {/* Product Information */}
               <div className="flex flex-col gap-3">
                 <h1 className="text-3xl font-bold tracking-tight text-gray-900">{title}</h1>
 
@@ -112,6 +142,46 @@ export function ProductSchematic({
                   selectedVariant={selectedVariant}
                 />
               </div>
+
+              {/* Additional Product Information */}
+              <section aria-labelledby="details-heading" className="mt-8">
+                <h2 id="details-heading" className="sr-only">
+                  Additional details
+                </h2>
+
+                <div className="divide-y divide-gray-200 border-t border-gray-200">
+                  {productDetails.map((detail) => (
+                    <Disclosure key={detail.name} as="div">
+                      <h3>
+                        <DisclosureButton className="group relative flex w-full items-center justify-between py-6 text-left">
+                          <span className="text-sm font-medium text-gray-900 group-data-open:text-indigo-600">
+                            {detail.name}
+                          </span>
+                          <span className="ml-6 flex items-center">
+                            <PlusIcon
+                              aria-hidden="true"
+                              className="block size-6 text-gray-400 group-hover:text-gray-500 group-data-open:hidden"
+                            />
+                            <MinusIcon
+                              aria-hidden="true"
+                              className="hidden size-6 text-indigo-400 group-hover:text-indigo-500 group-data-open:block"
+                            />
+                          </span>
+                        </DisclosureButton>
+                      </h3>
+                      <DisclosurePanel className="pb-6">
+                        <ul role="list" className="list-disc space-y-1 pl-5 text-sm/6 text-gray-700 marker:text-gray-300">
+                          {detail.items.map((item) => (
+                            <li key={item} className="pl-2">
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </DisclosurePanel>
+                    </Disclosure>
+                  ))}
+                </div>
+              </section>
 
             </div>
           </div>
