@@ -84,6 +84,97 @@ aside main {
   position: relative;
 }
 
+/* Make reviews aside content scrollable vertically */
+.reviews-content {
+  flex: 1;
+  min-height: 0; /* required for flex children to allow inner scrolling */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Force Judge.me to a mobile-friendly layout within the aside */
+.reviews-aside .jdgm-widget {
+  max-width: 380px; /* typical mobile width */
+  margin: 0 auto;
+}
+
+.reviews-aside .jdgm-widget * {
+  /* slightly tighter typography like mobile */
+  font-size: 14px;
+}
+
+/* Force top summary section to mobile layout on desktop */
+.reviews-aside .jdgm-widget .jdgm-row-stars {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+}
+
+.reviews-aside .jdgm-widget .jdgm-row-stars > * {
+  width: 100% !important;
+}
+
+/* Ensure histogram and summary don't overflow */
+.reviews-aside .jdgm-widget .jdgm-histogram,
+.reviews-aside .jdgm-widget .jdgm-all-reviews__summary,
+.reviews-aside .jdgm-widget .jdgm-rev-widg__summary {
+  margin: 0 !important;
+}
+
+/* Make the action button full-width like mobile */
+.reviews-aside .jdgm-widget .jdgm-widget-actions-wrapper,
+.reviews-aside .jdgm-widget .jdgm-write-rev,
+.reviews-aside .jdgm-widget .jdgm-btn--solid,
+.reviews-aside .jdgm-widget .jdgm-btn {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Tighter paddings at very top */
+.reviews-aside .jdgm-widget .jdgm-all-reviews__header {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Remove grey borders inside the widget for the aside layout */
+.reviews-aside .jdgm-widget .jdgm-row-media,
+.reviews-aside .jdgm-widget .jdgm-row-search,
+.reviews-aside .jdgm-widget .jdgm-subtab,
+.reviews-aside .jdgm-widget .jdgm-row-actions,
+.reviews-aside .jdgm-widget .jdgm-guest,
+.reviews-aside .jdgm-widget .jdgm-rev,
+.reviews-aside .jdgm-widget .jdgm-paginate {
+  border-top: 0 !important;
+  border-color: transparent !important;
+}
+
+/* Remove vertical divider between histogram and actions */
+.reviews-aside .jdgm-widget .jdgm-histogram,
+.reviews-aside .jdgm-widget .jdgm-widget-actions-wrapper {
+  border-left: 0 !important;
+}
+
+/* Make card paddings and gaps tighter for small width */
+.reviews-aside .jdgm-rev-widg,
+.reviews-aside .jdgm-rev-widg__header,
+.reviews-aside .jdgm-rev,
+.reviews-aside .jdgm-sort-dropdown,
+.reviews-aside .jdgm-row,
+.reviews-aside .jdgm-all-reviews__body {
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+}
+
+/* Ensure images and media fit */
+.reviews-aside .jdgm-rev__pics,
+.reviews-aside .jdgm-row img,
+.reviews-aside .jdgm-media {
+  max-width: 100%;
+  height: auto;
+}
+
 aside p {
   margin: 0 0 0.25rem;
 }

@@ -36,6 +36,15 @@ declare global {
     // Postmark email service configuration
     POSTMARK_API_KEY?: string;
   }
+
+  // Judge.me globals injected on the client
+  interface Window {
+    jdgm_preloader?: () => void;
+    jdgmCacheServer?: {
+      reloadAll: () => void;
+    };
+    jdgm_rerender?: number;
+  }
 }
 
 declare module 'react-router' {

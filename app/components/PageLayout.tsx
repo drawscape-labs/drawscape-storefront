@@ -16,6 +16,7 @@ import {
 import {SearchResultsPredictive} from '~/components/SearchResultsPredictive';
 import { SearchSchematics } from './SearchSchematics';
 import RequestDesign from './RequestDesign';
+import { ReviewsAside } from './ReviewsAside';
 
 interface PageLayoutProps {
   cart: Promise<CartApiQueryFragment | null>;
@@ -43,6 +44,7 @@ export function PageLayout({
       <CartAside cart={cart} />
       {/* <SearchAside /> */}
       <SearchSchematicsAside />
+      <ReviewsAside />
       <RequestDesignAside />
       <MobileMenuAside header={header} publicStoreDomain={publicStoreDomain} />
       {header && (

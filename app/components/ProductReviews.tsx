@@ -2,7 +2,7 @@ import {
   JudgemeAllReviewsCount,
   JudgemeAllReviewsRating,
 } from "@judgeme/shopify-hydrogen";
-import { Link } from 'react-router';
+import { useReviewsAside } from './ReviewsAside';
 
 /**
  * ProductReviews
@@ -13,6 +13,8 @@ import { Link } from 'react-router';
  * Props: none
  */
 export function ProductReviews() {
+  const { openReviews } = useReviewsAside();
+
   return (
     <section>
       {/* Judge.me star styling */}
@@ -36,13 +38,13 @@ export function ProductReviews() {
         
         <span className="text-gray-500">(4.8/5)</span>
 
-        <Link
-          to="/reviews"
-          className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 underline"
+        <button
+          onClick={openReviews}
+          className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 underline cursor-pointer"
         >
           <JudgemeAllReviewsCount />
           <span>Reviews</span>
-        </Link>
+        </button>
       </div>
 
     </section>

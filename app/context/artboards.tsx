@@ -144,12 +144,10 @@ export function ArtboardsProvider({
 
   // Render function
   const render = async () => {
-    console.log('startin render process', schematicId, selectedVector?.url, colorScheme);
+
     if (!schematicId || !selectedVector || !colorScheme) {
       return;
     }
-    console.log('rendering artboard', schematicId, selectedVector.url, colorScheme);
-
     
     setIsRendering(true);
 

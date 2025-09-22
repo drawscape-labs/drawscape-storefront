@@ -8,7 +8,7 @@ import {
 import {Button} from '~/ui/button';
 import {XMarkIcon} from '@heroicons/react/24/outline';
 
-type AsideType = 'search' | 'cart' | 'mobile' | 'closed' | 'request-design';
+type AsideType = 'search' | 'cart' | 'mobile' | 'closed' | 'request-design' | 'reviews';
 type AsideContextValue = {
   type: AsideType;
   open: (mode: AsideType) => void;
