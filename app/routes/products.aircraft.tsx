@@ -76,7 +76,8 @@ async function loadCriticalData({
     const raw = await api.get('schematics', {
       published: 'true',
       sort: 'title',
-      category: SCHEMATIC_CATEGORY
+      category: SCHEMATIC_CATEGORY, 
+      limit: 500
     });
     schematics = (Array.isArray(raw) ? raw : [])
       .filter(Boolean)

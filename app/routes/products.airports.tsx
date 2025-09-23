@@ -15,7 +15,7 @@ import { type Schematic } from '~/components/ArtboardSelectSchematic';
 import drawscapeServerApi from '~/lib/drawscapeServerApi';
 
 
-const SCHEMATIC_CATEGORY = 'sailboats';
+const SCHEMATIC_CATEGORY = 'airport_diagrams';
 
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
@@ -48,7 +48,8 @@ async function loadCriticalData({
   request,
   params,
 }: LoaderFunctionArgs) {
-  const handle = 'sailboats';
+  
+  const handle = 'airports';
   const {storefront} = context;
 
   const [{product}] = await Promise.all([
