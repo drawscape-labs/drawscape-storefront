@@ -1,5 +1,7 @@
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {Link, type MetaFunction} from 'react-router';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { byPrefixAndName } from '@awesome.me/kit-725782e741/icons'
 
 export const meta: MetaFunction = () => {
   return [{title: 'Drawscape | Plotter Art'}];
@@ -22,18 +24,18 @@ export default function Homepage() {
 
 const incentives = [
   {
-    name: 'Free shipping',
-    imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce/icons/icon-shipping-simple.svg',
-    description: "It's not actually free we just price it into the products. Someone's paying for it, and it's not us.",
+    name: 'Personalized',
+    icon: byPrefixAndName.fad['sliders'],
+    description: "Create a truly unique piece of art by personalizing your design with custom text, colors, and layout.",
   },
   {
-    name: '10-year warranty',
-    imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce/icons/icon-warranty-simple.svg',
-    description: "If it breaks in the first 10 years we'll replace it. After that you're on your own though.",
+    name: 'Plotted, Not Printed',
+    icon: byPrefixAndName.fad['pen-nib'],
+    description: "Drawn using a real pens and a plotting machine on high quality stock paper.",
   },
   {
-    name: 'Exchanges',
-    imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce/icons/icon-exchange-simple.svg',
+    name: 'Timelapse Video',
+    icon: byPrefixAndName.fad['video'],
     description:
       "If you don't like it, trade it to one of your friends for something of theirs. Don't send it here though.",
   },
@@ -55,17 +57,21 @@ function HowMade() {
                 headlines, then clarify in the small print but hope people don't actually read it.
               </p>
             </div>
-            <img
-              alt=""
-              src="https://tailwindcss.com/plus-assets/img/ecommerce-images/incentives-07-hero.jpg"
-              className="aspect-3/2 w-full rounded-lg bg-gray-100 object-cover"
-            />
+            <div className="aspect-3/2 w-full rounded-lg bg-gray-100 overflow-hidden">
+              <video
+                className="w-full h-full object-cover"
+                style={{ aspectRatio: '3/2', border: 0 }}
+                controls
+                poster="https://img.youtube.com/vi/2Vv-BfVoq4g/hqdefault.jpg">
+                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+              </video>
+            </div>
           </div>
           <div className="mt-16 grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-3">
             {incentives.map((incentive) => (
               <div key={incentive.name} className="sm:flex lg:block">
                 <div className="sm:shrink-0">
-                  <img alt="" src={incentive.imageSrc} className="size-16" />
+                  <FontAwesomeIcon icon={incentive.icon} size="3x" className="" />
                 </div>
                 <div className="mt-4 sm:mt-0 sm:ml-6 lg:mt-6 lg:ml-0">
                   <h3 className="text-sm font-medium text-gray-900">{incentive.name}</h3>
@@ -251,7 +257,7 @@ function Products() {
         </div>
 
         <div className="mt-6 sm:hidden">
-          <Link to="/shop-all" preload="intent" className="block text-sm font-semibold text-indigo-600 hover:text-indigo-500">
+          <Link to="/shop-all" prefetch="intent" className="block text-sm font-semibold text-indigo-600 hover:text-indigo-500">
             Browse all categories
             <span aria-hidden="true"> &rarr;</span>
           </Link>

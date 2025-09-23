@@ -4,3 +4,23 @@ globs:
 alwaysApply: true
 ---
 
+
+If we are using a FontAwesome Pro icon, here is an example of how to import and use: 
+
+```
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { byPrefixAndName } from '@awesome.me/kit-725782e741/icons'
+
+function getCategoryIcon(category: string) {
+  switch (category) {
+    case 'sailboats':
+      return <FontAwesomeIcon icon={byPrefixAndName.fad['sailboat']} />;
+    case 'airport_diagrams':
+      return <FontAwesomeIcon icon={byPrefixAndName.fad['map-location-dot']} />;
+    case 'aircraft':
+      return <FontAwesomeIcon icon={byPrefixAndName.fad['plane']} />
+    default:
+      return <FontAwesomeIcon icon={byPrefixAndName.fad['question']} />;
+  }
+}
+```

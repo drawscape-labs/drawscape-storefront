@@ -65,8 +65,7 @@ const products = [
     href: '/products/sailboats',
     price: '$99',
     description: 'Browse sailboat artwork',
-    imageSrc:
-      'https://drawscape.io/cdn/shop/files/DSC_0014_1.jpg',
+    imageSrc: 'https://drawscape.io/cdn/shop/files/DSC_0014_1.jpg',
     imageAlt: 'Sailboat themed artwork and accessories.',
   },
 ];
