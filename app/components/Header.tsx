@@ -141,17 +141,6 @@ export function HeaderMenu({
         <div className="mt-2 w-full">
           {/* Primary links */}
           <div className="space-y-6 border-b border-gray-200 px-4 py-6">
-            <div className="flow-root">
-              <NavLink
-                end
-                onClick={close}
-                prefetch="intent"
-                to="/"
-                className="-m-2 block p-2 text-base font-medium text-gray-900"
-              >
-                Home
-              </NavLink>
-            </div>
             {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
               if (!item.url) return null;
               const url =
@@ -176,52 +165,8 @@ export function HeaderMenu({
             })}
           </div>
 
-          {/* Account links */}
-          <div className="space-y-6 border-b border-gray-200 px-4 py-6">
-            <div className="flow-root">
-              <NavLink
-                onClick={close}
-                prefetch="intent"
-                to="/account/register"
-                className="-m-2 block p-2 font-medium text-gray-900"
-              >
-                Create an account
-              </NavLink>
-            </div>
-            <div className="flow-root">
-              <NavLink
-                onClick={close}
-                prefetch="intent"
-                to="/account/login"
-                className="-m-2 block p-2 font-medium text-gray-900"
-              >
-                Sign in
-              </NavLink>
-            </div>
-          </div>
 
-          {/* Currency selector */}
-          <div className="px-4 py-6">
-            <form>
-              <div className="-ml-2 inline-grid grid-cols-1">
-                <select
-                  id="mobile-currency"
-                  name="currency"
-                  aria-label="Currency"
-                  className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-0.5 pr-7 pl-2 text-base font-medium text-gray-700 focus:outline-2 sm:text-sm"
-                  defaultValue="USD"
-                >
-                  {['USD', 'CAD', 'AUD', 'EUR', 'GBP'].map((cur) => (
-                    <option key={cur}>{cur}</option>
-                  ))}
-                </select>
-                <ChevronDownIcon
-                  aria-hidden="true"
-                  className="pointer-events-none col-start-1 row-start-1 mr-1 h-5 w-5 self-center justify-self-end fill-gray-500"
-                />
-              </div>
-            </form>
-          </div>
+
         </div>
       )}
       {viewport === 'desktop' &&

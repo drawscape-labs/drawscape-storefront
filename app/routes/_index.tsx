@@ -31,13 +31,13 @@ const incentives = [
   {
     name: 'Plotted, Not Printed',
     icon: byPrefixAndName.fad['pen-nib'],
-    description: "Drawn using a real pens and a plotting machine on high quality stock paper.",
+    description: "Created using real ink pens and a high-precision plotting machine.",
   },
   {
     name: 'Timelapse Video',
     icon: byPrefixAndName.fad['video'],
     description:
-      "If you don't like it, trade it to one of your friends for something of theirs. Don't send it here though.",
+      "Every order comes with a timelapse video of your art being drawn.",
   },
 ]
 
@@ -52,7 +52,7 @@ function HowMade() {
                 How it's Made
               </h2>
               <p className="mt-4 text-gray-500">
-                Each line is physically drawn by a pen and our high-precision plotter.
+                Each line is physically drawn by an ink pen and our high-precision plotter. We use Sakura® & Stabilo® pens to draw your custom artwork on 120lb/250gsm stock paper.
               </p>
             </div>
             <div className="aspect-3/2 w-full rounded-lg bg-gray-100 overflow-hidden">
@@ -193,7 +193,6 @@ function Products() {
         <div className="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:grid-rows-2 sm:gap-x-6 lg:gap-8">
           <div className="group relative aspect-2/1 overflow-hidden rounded-lg sm:row-span-2 sm:aspect-square">
             <img
-              alt="Two models wearing women's black cotton crewneck tee and off-white cotton crewneck tee."
               src="https://drawscape.io/cdn/shop/files/DSC_0079_1.jpg"
               className="absolute size-full object-cover group-hover:opacity-75"
             />
@@ -201,10 +200,10 @@ function Products() {
             <div className="absolute inset-0 flex items-end p-6">
               <div>
                 <h3 className="font-semibold text-white">
-                  <a href="#">
+                  <Link to="/products/aircraft" prefetch="intent">
                     <span className="absolute inset-0" />
                     Aircraft
-                  </a>
+                  </Link>
                 </h3>
                 <p aria-hidden="true" className="mt-1 text-sm text-white">
                   Shop now
@@ -221,10 +220,10 @@ function Products() {
             <div className="absolute inset-0 flex items-end p-6">
               <div>
                 <h3 className="font-semibold text-white">
-                  <a href="#">
+                  <Link to="/products/airports" prefetch="intent">
                     <span className="absolute inset-0" />
                     Airports
-                  </a>
+                  </Link>
                 </h3>
                 <p aria-hidden="true" className="mt-1 text-sm text-white">
                   Shop now
@@ -241,10 +240,10 @@ function Products() {
             <div className="absolute inset-0 flex items-end p-6">
               <div>
                 <h3 className="font-semibold text-white">
-                  <a href="#">
+                  <Link to="/products/sailboats" prefetch="intent">
                     <span className="absolute inset-0" />
                     Sailboats
-                  </a>
+                  </Link>
                 </h3>
                 <p aria-hidden="true" className="mt-1 text-sm text-white">
                   Shop now
@@ -256,7 +255,7 @@ function Products() {
 
         <div className="mt-6 sm:hidden">
           <Link to="/shop-all" prefetch="intent" className="block text-sm font-semibold text-indigo-600 hover:text-indigo-500">
-            Browse all categories
+            Shop all Products
             <span aria-hidden="true"> &rarr;</span>
           </Link>
         </div>
