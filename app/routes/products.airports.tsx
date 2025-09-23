@@ -69,7 +69,7 @@ async function loadCriticalData({
   // Parse URL query params
   const url = new URL(request.url);
   const paramId = url.searchParams.get('schematic_id') || url.searchParams.get('schematicId');
-  const envDefault = context.env.SAILBOAT_DEFAULT_SCHEMATIC_ID ?? null;
+  const envDefault = context.env.AIRPORT_DEFAULT_SCHEMATIC_ID ?? null;
 
   // Fetch schematics using Drawscape server API
   let schematics: Schematic[] = [];

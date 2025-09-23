@@ -28,6 +28,7 @@ declare global {
     // Default schematic id for Sailboat product page
     SAILBOAT_DEFAULT_SCHEMATIC_ID?: string;
     AIRCRAFT_DEFAULT_SCHEMATIC_ID?: string;
+    AIRPORT_DEFAULT_SCHEMATIC_ID?: string;
     
     // Judgeme public configuration
     JUDGEME_SHOP_DOMAIN: string;
