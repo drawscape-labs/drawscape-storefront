@@ -52,9 +52,7 @@ function HowMade() {
                 How it's Made
               </h2>
               <p className="mt-4 text-gray-500">
-                At the beginning at least, but then we realized we could make a lot more money if we kinda stopped
-                caring about that. Our new strategy is to write a bunch of things that look really good in the
-                headlines, then clarify in the small print but hope people don't actually read it.
+                Each line is physically drawn by a pen and our high-precision plotter.
               </p>
             </div>
             <div className="aspect-3/2 w-full rounded-lg bg-gray-100 overflow-hidden">
@@ -62,8 +60,8 @@ function HowMade() {
                 className="w-full h-full object-cover"
                 style={{ aspectRatio: '3/2', border: 0 }}
                 controls
-                poster="https://img.youtube.com/vi/2Vv-BfVoq4g/hqdefault.jpg">
-                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+                poster="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/preview_images/bb7a8ed368cc4095afd2619c1c01be60.thumbnail.0000000000_800x800.jpg">
+                <source src="https://cdn.shopify.com/videos/c/o/v/bb7a8ed368cc4095afd2619c1c01be60.mp4" type="video/mp4" />
               </video>
             </div>
           </div>
