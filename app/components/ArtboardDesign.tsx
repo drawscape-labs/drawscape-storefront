@@ -13,25 +13,39 @@ type ArtboardDesignProps = {
   vectorPlaceholder?: string;
 };
 
+// Helper function to create readable category label
+function getCategoryLabel(category: string): string {
+  switch (category) {
+    case 'sailboats':
+      return 'Sailboats';
+    case 'airport_diagrams':
+      return 'Airport Diagrams';
+    case 'aircraft':
+      return 'Aircraft';
+    default:
+      return 'Design'
+  }
+}
+
 export function ArtboardDesign({
   schematics,
-  category = 'sailboats',
-  schematicPlaceholder,
-  vectorPlaceholder,
 }: ArtboardDesignProps) {
   const { vectors } = useArtboards();
   const { open } = useAside();
+
+  // Get category from first schematic and create readable label
+  const firstSchematic = schematics[0];
+  const categoryLabel = firstSchematic?.category 
+    ? getCategoryLabel(firstSchematic.category)
+    : 'Design';
   
   return (
     <div className="space-y-4">
       {/* Schematic Selection */}
       <Field>
-        <Label className="capitalize">{category}</Label>
+        <Label className="capitalize">{categoryLabel}</Label>
         <div className="flex items-center gap-2" data-slot="control">
-          <ArtboardSelectSchematic 
-            options={schematics} 
-            placeholder={schematicPlaceholder}
-          />
+          <ArtboardSelectSchematic  options={schematics} />
           <Button outline onClick={() => open('request-design')}>Request</Button>
         </div>
       </Field>
@@ -40,7 +54,7 @@ export function ArtboardDesign({
       {vectors.length > 1 && (
         <Field>
           <Label className="capitalize">Layout</Label>
-          <ArtboardSelectVectors placeholder={vectorPlaceholder} />
+          <ArtboardSelectVectors />
         </Field>
       )}
       

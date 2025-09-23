@@ -4,6 +4,7 @@ import { useArtboards } from '~/context/artboards';
 export type Schematic = {
   id: string;
   name: string;
+  category?: string;
 };
 
 type ArtboardSelectSchematicProps = {

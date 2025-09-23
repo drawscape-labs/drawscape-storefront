@@ -15,6 +15,7 @@ import { type Schematic } from '~/components/ArtboardSelectSchematic';
 import drawscapeServerApi from '~/lib/drawscapeServerApi';
 
 
+const SCHEMATIC_CATEGORY = 'aircraft';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [
@@ -75,11 +76,11 @@ async function loadCriticalData({
     const raw = await api.get('schematics', {
       published: 'true',
       sort: 'title',
-      category: 'aircraft'
+      category: SCHEMATIC_CATEGORY
     });
     schematics = (Array.isArray(raw) ? raw : [])
       .filter(Boolean)
-      .map((item: any) => ({ id: item?.id, name: item?.title || 'Untitled' }));
+      .map((item: any) => ({ id: item?.id, name: item?.title, category: item?.category || 'Untitled' }));
   } catch (error) {
     console.error('Error fetching schematics', error);
     schematics = [];

@@ -20,7 +20,8 @@ export function ArtboardSelectVectors({placeholder}: {placeholder?: string}) {
       </option>
       {vectors.map((option) => (
         <option key={option.id} value={option.id}>
-          {option.title || 'Untitled Layout'}
+          {option.title || 'Untitled Layout'} 
+          {option.orientation && (` - ${option.orientation.charAt(0).toUpperCase() + option.orientation.slice(1)}`)}
         </option>
       ))}
     </Select>

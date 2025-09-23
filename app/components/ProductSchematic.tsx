@@ -98,10 +98,7 @@ export function ProductSchematic({
                 </Tabs.List>
 
                 <Tabs.Content value="design" className="mt-6">
-                  <ArtboardDesign 
-                    schematics={schematics}
-                    category="sailboats"
-                  />
+                  <ArtboardDesign schematics={schematics}/>
                 </Tabs.Content>
                 
                 <Tabs.Content value="text" className="mt-6">
