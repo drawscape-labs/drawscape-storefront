@@ -255,8 +255,9 @@ function HeaderCtas({
 }: Pick<HeaderProps, 'cart'>) {
   return (
     <div className="flex flex-1 items-center justify-end">
-      <SearchToggleMobile />
-      <SearchToggleDesktop />
+      <div className="ml-2 flow-root lg:ml-0">
+        <SearchToggle />
+      </div>
       <div className="ml-4 flow-root lg:ml-8">
         <CartToggle cart={cart} />
       </div>
@@ -278,31 +279,32 @@ function HeaderMenuMobileToggle() {
   );
 }
 
-function SearchToggleMobile() {
+// SearchToggle matches CartToggle/CartBadge for style and functionality
+function SearchToggle() {
   const {open} = useAside();
-  return (
-    <button
-      type="button"
-      aria-label="Search"
-      onClick={() => open('search')}
-      className="ml-2 p-2 text-gray-400 hover:text-gray-500 lg:hidden"
-    >
-      <MagnifyingGlassIcon aria-hidden="true" className="h-6 w-6" />
-    </button>
-  );
-}
+  const {publish, shop} = useAnalytics();
 
-function SearchToggleDesktop() {
-  const {open} = useAside();
+  // For accessibility, we use a link and span structure like CartBadge
   return (
-    <button
-      type="button"
-      onClick={() => open('search')}
-      className="hidden px-1 py-4 lg:block"
-      aria-label="Search"
+    <a
+      href="/search"
+      onClick={e => {
+        e.preventDefault();
+        open('search');
+      }}
     >
-      <MagnifyingGlassIcon className="h-5 w-5 text-gray-700 hover:text-gray-800" aria-hidden="true" />
-    </button>
+      <span className="group -m-2 flex items-center p-2">
+        <MagnifyingGlassIcon
+          aria-hidden="true"
+          className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-gray-500"
+        />
+        {/* No badge/number for search, but keep spacing for visual consistency */}
+        <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
+          {/* visually hidden label for accessibility */}
+          <span className="sr-only">Search</span>
+        </span>
+      </span>
+    </a>
   );
 }
 

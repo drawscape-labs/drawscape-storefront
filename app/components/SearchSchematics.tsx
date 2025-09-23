@@ -1,15 +1,33 @@
 import React, {useState, useCallback, useEffect, useRef} from 'react';
-import { useNavigate } from 'react-router';
+import { Link } from 'react-router';
 import { useAside } from '~/components/Aside';
+import { Button } from '~/ui/button';
 import API from '~/lib/drawscapeApi';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { byPrefixAndName } from '@awesome.me/kit-725782e741/icons'
+
+
+// Helper: Return a Heroicon for each schematic category
+function getCategoryIcon(category: string) {
+  switch (category) {
+    case 'sailboats':
+      return <FontAwesomeIcon icon={byPrefixAndName.fad['sailboat']} />;
+    case 'airport_diagrams':
+      return <FontAwesomeIcon icon={byPrefixAndName.fad['map-location-dot']} />;
+    case 'aircraft':
+      return <FontAwesomeIcon icon={byPrefixAndName.fad['plane']} />
+    default:
+      return <FontAwesomeIcon icon={byPrefixAndName.fad['question']} />;
+  }
+}
 
 export function SearchSchematics() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
-  const { close } = useAside();
+  const { close, open } = useAside();
   
   // Refs to track current request and timeout
   const currentControllerRef = useRef<AbortController | null>(null);
@@ -105,17 +123,21 @@ export function SearchSchematics() {
       case 'airport_diagrams':
         return `/products/airports?schematic_id=${schematic.id}`;
       case 'aircraft':
-        return `/aircraft?schematic_id=${schematic.id}`;
+        return `/products/aircraft?schematic_id=${schematic.id}`;
       default:
-        return `/schematics/${schematic.id}`;
+        return `/`;
     }
   }
 
-  // Handle schematic click - close aside and navigate
-  function handleSchematicClick(schematic: any) {
-    const link = getSchematicLink(schematic);
-    close(); // Close the aside first
-    navigate(link); // Then navigate to trigger full page reinitialization
+  // Handle schematic click - close aside before navigation
+  function handleSchematicClick() {
+    close();
+  }
+
+  // Handle submit request button click - close search and open request modal
+  function handleSubmitRequestClick() {
+    close();
+    open('request-design');
   }
 
   return (
@@ -134,7 +156,7 @@ export function SearchSchematics() {
           className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:shadow-none dark:focus-visible:outline-indigo-500"
           disabled={loading}
         >
-          {loading ? 'Searching...' : 'Search'}
+          Search
         </button>
         {error && <div className="text-red-500 text-sm ml-2">{error}</div>}
       </form>
@@ -144,29 +166,33 @@ export function SearchSchematics() {
         <div className="flow-root">
           <div className="overflow-x-auto">
             <div className="inline-block min-w-full py-2 align-middle">
-              <table className="relative min-w-full divide-y divide-gray-300 dark:divide-white/15">
-                <tbody className="divide-y divide-gray-200 dark:divide-white/10">
-                  {results.map((schematic, index) => (
-                    <tr key={schematic.id || index}>
-                      <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-0 dark:text-white">
-                        <a 
-                          href={getSchematicLink(schematic)}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleSchematicClick(schematic);
-                          }}
-                          className="hover:underline text-left"
-                        >
-                          {schematic.title}
-                        </a>
-                      </td>
-                      <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400 text-right">
-                        {schematic.category}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <ul className="relative min-w-full divide-y divide-gray-300 dark:divide-white/15">
+                {results.map((schematic, index) => (
+                  <li key={schematic.id || index}>
+                    <Link
+                      to={getSchematicLink(schematic)}
+                      prefetch="intent"
+                      className="flex items-start w-full py-4 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group"
+                      onClick={handleSchematicClick}
+                      style={{ textDecoration: 'none' }}
+                    >
+                      {/* Title: allow wrapping to multiple lines without pushing category */}
+                      <span className="flex-1 min-w-0 pr-3 text-sm font-medium text-indigo-600 dark:text-indigo-400 group-hover:underline whitespace-normal break-words">
+                        {schematic.title}
+                      </span>
+                      {/* Category: fixed on right, does not move */}
+                      <span className="flex-shrink-0 px-3 text-sm whitespace-nowrap text-right flex items-center gap-2">
+                        {getCategoryIcon(schematic.category)}
+                        <span className="text-gray-500 dark:text-gray-400">
+                          {schematic.category
+                            .replace(/_.*/, '').replace(/_/g, ' ')
+                            .replace(/^./, (c: string) => c.toUpperCase())}
+                        </span>
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
@@ -178,6 +204,23 @@ export function SearchSchematics() {
           <p className="text-gray-500 dark:text-gray-400">No schematics found for "{query}"</p>
         </div>
       )}
+
+      {/* Request CTA - Fixed at bottom */}
+      <div className="fixed bottom-0 left-0 right-0 z-10">
+        <div className="bg-gray-50 sm:rounded-lg dark:bg-gray-800/50 mx-4 mb-4">
+          <div className="px-4 py-5 sm:p-6">
+            <h3 className="text-base font-semibold text-gray-900 dark:text-white">Don't see what you are looking for?</h3>
+            <div className="mt-2 max-w-xl text-sm text-gray-500 dark:text-gray-400">
+              <p>Submit a request and we'll notify you when it's added to the store.</p>
+            </div>
+            <div className="mt-5">
+              <Button color="light" onClick={handleSubmitRequestClick}>
+                Submit Request
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
