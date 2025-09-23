@@ -29,7 +29,7 @@ export function Footer({
                     <>
                       {footer?.menu && header.shop.primaryDomain?.url ? (
                         <div>
-                          <h3 className="text-sm/6 font-semibold text-gray-900 dark:text-white">Company</h3>
+                          <h3 className="text-sm/6 font-semibold text-gray-900">Company</h3>
                           <FooterMenu
                             menu={footer.menu}
                             primaryDomainUrl={header.shop.primaryDomain.url}
@@ -47,7 +47,7 @@ export function Footer({
                     <>
                       {footerProducts?.menu && header.shop.primaryDomain?.url ? (
                         <div>
-                          <h3 className="text-sm/6 font-semibold text-gray-900 dark:text-white">Products</h3>
+                          <h3 className="text-sm/6 font-semibold text-gray-900">Products</h3>
                           <FooterMenu
                             menu={footerProducts.menu}
                             primaryDomainUrl={header.shop.primaryDomain.url}
@@ -65,7 +65,7 @@ export function Footer({
                     <>
                       {footerLegal?.menu && header.shop.primaryDomain?.url ? (
                         <div>
-                          <h3 className="text-sm/6 font-semibold text-gray-900 dark:text-white">Legal</h3>
+                          <h3 className="text-sm/6 font-semibold text-gray-900">Legal</h3>
                           <FooterMenu
                             menu={footerLegal.menu}
                             primaryDomainUrl={header.shop.primaryDomain.url}
@@ -79,8 +79,8 @@ export function Footer({
               </div>
             </div>
             <div className="mt-10 xl:mt-0">
-              <h3 className="text-sm/6 font-semibold text-gray-900 dark:text-white">Subscribe to our newsletter</h3>
-              <p className="mt-2 text-sm/6 text-gray-600 dark:text-gray-400">
+              <h3 className="text-sm/6 font-semibold text-gray-900">Subscribe to our newsletter</h3>
+              <p className="mt-2 text-sm/6 text-gray-600">
                 The latest news, articles, and resources, sent to your inbox weekly.
               </p>
               <form className="mt-6 sm:flex sm:max-w-md">
@@ -94,12 +94,12 @@ export function Footer({
                   required
                   placeholder="Enter your email"
                   autoComplete="email"
-                  className="w-full min-w-0 rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:w-64 sm:text-sm/6 xl:w-full dark:bg-white/5 dark:text-white dark:outline-gray-700 dark:focus:outline-indigo-500"
+                  className="w-full min-w-0 rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:w-64 sm:text-sm/6 xl:w-full"
                 />
                 <div className="mt-4 sm:mt-0 sm:ml-4 sm:shrink-0">
                   <button
                     type="submit"
-                    className="flex w-full items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500"
+                    className="flex w-full items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   >
                     Subscribe
                   </button>
@@ -107,20 +107,20 @@ export function Footer({
               </form>
             </div>
           </div>
-          <div className="mt-16 border-t border-gray-900/10 pt-8 sm:mt-20 md:flex md:items-center md:justify-between lg:mt-24 dark:border-white/10">
+          <div className="mt-16 border-t border-gray-900/10 pt-8 sm:mt-20 md:flex md:items-center md:justify-between lg:mt-24">
             <div className="flex gap-x-6 md:order-2">
               {navigation.social.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
-                  className="text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white"
+                  className="text-gray-600 hover:text-gray-800"
                 >
                   <span className="sr-only">{item.name}</span>
                   <item.icon aria-hidden="true" className="size-6" />
                 </a>
               ))}
             </div>
-            <p className="mt-8 text-sm/6 text-gray-600 md:order-1 md:mt-0 dark:text-gray-400">
+            <p className="mt-8 text-sm/6 text-gray-600 md:order-1 md:mt-0">
               &copy; 2024 Your Company, Inc. All rights reserved.
             </p>
           </div>
@@ -148,7 +148,7 @@ function FooterMenu({
   const resolvedUlClassName = ulClassName ?? 'mt-6 space-y-4';
   const resolvedLinkClassName =
     linkClassName ??
-    'text-sm/6 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white';
+    'text-sm/6 text-gray-600 hover:text-gray-900';
   return (
     <nav className={className} role="navigation">
       <ul role="list" className={resolvedUlClassName}>
@@ -333,19 +333,19 @@ const navigation = {
 
 function FooterMain() {
   return (
-    <footer className="bg-white dark:bg-gray-900">
+    <footer className="bg-white">
       <div className="mx-auto max-w-7xl px-6 pt-20 pb-8 sm:pt-24 lg:px-8 lg:pt-32">
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
           <div className="grid grid-cols-2 gap-8 xl:col-span-2">
             <div className="md:grid md:grid-cols-2 md:gap-8">
               <div>
-                <h3 className="text-sm/6 font-semibold text-gray-900 dark:text-white">Solutions</h3>
+                <h3 className="text-sm/6 font-semibold text-gray-900">Solutions</h3>
                 <ul role="list" className="mt-6 space-y-4">
                   {navigation.solutions.map((item) => (
                     <li key={item.name}>
                       <a
                         href={item.href}
-                        className="text-sm/6 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                        className="text-sm/6 text-gray-600 hover:text-gray-900"
                       >
                         {item.name}
                       </a>
@@ -354,13 +354,13 @@ function FooterMain() {
                 </ul>
               </div>
               <div className="mt-10 md:mt-0">
-                <h3 className="text-sm/6 font-semibold text-gray-900 dark:text-white">Support</h3>
+                <h3 className="text-sm/6 font-semibold text-gray-900">Support</h3>
                 <ul role="list" className="mt-6 space-y-4">
                   {navigation.support.map((item) => (
                     <li key={item.name}>
                       <a
                         href={item.href}
-                        className="text-sm/6 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                        className="text-sm/6 text-gray-600 hover:text-gray-900"
                       >
                         {item.name}
                       </a>
@@ -371,13 +371,13 @@ function FooterMain() {
             </div>
             <div className="md:grid md:grid-cols-2 md:gap-8">
               <div>
-                <h3 className="text-sm/6 font-semibold text-gray-900 dark:text-white">Company</h3>
+                <h3 className="text-sm/6 font-semibold text-gray-900">Company</h3>
                 <ul role="list" className="mt-6 space-y-4">
                   {navigation.company.map((item) => (
                     <li key={item.name}>
                       <a
                         href={item.href}
-                        className="text-sm/6 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                        className="text-sm/6 text-gray-600 hover:text-gray-900"
                       >
                         {item.name}
                       </a>
@@ -386,13 +386,13 @@ function FooterMain() {
                 </ul>
               </div>
               <div className="mt-10 md:mt-0">
-                <h3 className="text-sm/6 font-semibold text-gray-900 dark:text-white">Legal</h3>
+                <h3 className="text-sm/6 font-semibold text-gray-900">Legal</h3>
                 <ul role="list" className="mt-6 space-y-4">
                   {navigation.legal.map((item) => (
                     <li key={item.name}>
                       <a
                         href={item.href}
-                        className="text-sm/6 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                        className="text-sm/6 text-gray-600 hover:text-gray-900"
                       >
                         {item.name}
                       </a>
@@ -403,8 +403,8 @@ function FooterMain() {
             </div>
           </div>
           <div className="mt-10 xl:mt-0">
-            <h3 className="text-sm/6 font-semibold text-gray-900 dark:text-white">Subscribe to our newsletter</h3>
-            <p className="mt-2 text-sm/6 text-gray-600 dark:text-gray-400">
+            <h3 className="text-sm/6 font-semibold text-gray-900">Subscribe to our newsletter</h3>
+            <p className="mt-2 text-sm/6 text-gray-600">
               The latest news, articles, and resources, sent to your inbox weekly.
             </p>
             <form className="mt-6 sm:flex sm:max-w-md">
@@ -418,12 +418,12 @@ function FooterMain() {
                 required
                 placeholder="Enter your email"
                 autoComplete="email"
-                className="w-full min-w-0 rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:w-64 sm:text-sm/6 xl:w-full dark:bg-white/5 dark:text-white dark:outline-gray-700 dark:focus:outline-indigo-500"
+                className="w-full min-w-0 rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:w-64 sm:text-sm/6 xl:w-full"
               />
               <div className="mt-4 sm:mt-0 sm:ml-4 sm:shrink-0">
                 <button
                   type="submit"
-                  className="flex w-full items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500"
+                  className="flex w-full items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   Subscribe
                 </button>
@@ -431,20 +431,20 @@ function FooterMain() {
             </form>
           </div>
         </div>
-        <div className="mt-16 border-t border-gray-900/10 pt-8 sm:mt-20 md:flex md:items-center md:justify-between lg:mt-24 dark:border-white/10">
+        <div className="mt-16 border-t border-gray-900/10 pt-8 sm:mt-20 md:flex md:items-center md:justify-between lg:mt-24">
           <div className="flex gap-x-6 md:order-2">
             {navigation.social.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
-                className="text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white"
+                className="text-gray-600 hover:text-gray-800"
               >
                 <span className="sr-only">{item.name}</span>
                 <item.icon aria-hidden="true" className="size-6" />
               </a>
             ))}
           </div>
-          <p className="mt-8 text-sm/6 text-gray-600 md:order-1 md:mt-0 dark:text-gray-400">
+          <p className="mt-8 text-sm/6 text-gray-600 md:order-1 md:mt-0">
             &copy; 2024 Your Company, Inc. All rights reserved.
           </p>
         </div>

@@ -5,10 +5,12 @@
 
 @import 'tailwindcss';
 
+/* Completely disable dark mode by making the dark variant never match */
+@custom-variant dark (&:not(*));
+
 @theme {
     --font-sans: InterVariable, sans-serif;
     --font-sans--font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
-    
   }
 
 
