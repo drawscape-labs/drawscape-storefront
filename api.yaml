@@ -482,16 +482,21 @@ paths:
           schema:
             type: boolean
         4:
+          name: style
+          in: query
+          schema:
+            type: string
+        5:
           name: offset
           in: query
           schema:
             type: number
-        5:
+        6:
           name: limit
           in: query
           schema:
             type: number
-        6:
+        7:
           name: sort
           in: query
           schema:
@@ -525,6 +530,8 @@ paths:
               type: boolean
             primary:
               type: boolean
+            style:
+              type: string
             size_human_readable:
               type: string
             created_at:
@@ -558,6 +565,8 @@ paths:
                 type: string
               primary:
                 type: boolean
+              style:
+                type: string
             required:
               0: schematic_id
               1: type
@@ -958,6 +967,10 @@ paths:
         properties:
           id:
             type: number
+  /api/v1/artboard/color-schemes:
+    get:
+      response:
+        type: object
   /api/v1/artboards/{id}:
     get:
       parameters:
@@ -1566,6 +1579,10 @@ paths:
         properties:
           message:
             type: string
+  /api/v1/schematic-vectors/schema:
+    get:
+      response:
+        type: object
   /api/v1/schematic-vectors/{id}:
     get:
       parameters:
@@ -1602,6 +1619,8 @@ paths:
             type: boolean
           primary:
             type: boolean
+          style:
+            type: string
           size_human_readable:
             type: string
           created_at:
@@ -1645,6 +1664,8 @@ paths:
                 type: boolean
               primary:
                 type: boolean
+              style:
+                type: string
       response:
         type: object
         properties:
@@ -1672,6 +1693,8 @@ paths:
             type: boolean
           primary:
             type: boolean
+          style:
+            type: string
           size_human_readable:
             type: string
           created_at:
@@ -2285,7 +2308,12 @@ paths:
               1: title
               2: schematic_url
       response:
-        type: object
+        type: string
+        format: svg
+        description: SVG render
+        contentType: image/svg+xml
+        headers:
+          Content-Disposition: inline; filename="artboard-render.svg"
   /api/v1/klaviyo/postcard-label:
     post:
       parameters:
