@@ -116,7 +116,7 @@ export function ArtboardsProvider({
       ? raw
           .map((v: any) => ({
             id: v?.id,
-            url: v?.url || v?.public_url || v?.download_url,
+            url: v?.url,
             title: v?.title,
             orientation: v?.orientation,
             primary: v?.primary,
@@ -242,6 +242,27 @@ export function ArtboardsProvider({
           setLegend(data?.legend ?? []);
           setTitle(data?.display_title);
           setSubtitle(data?.display_subtitle);
+          // Compute initial vector selection synchronously with schematic load
+          const rawVectors = (data?.vectors ?? []) as any[];
+          const mapped = Array.isArray(rawVectors)
+            ? rawVectors
+                .map((v: any) => ({
+                  id: v?.id,
+                  primary: v?.primary,
+                  published: v?.published !== false,
+                }))
+                .filter((v: { id: string | undefined; published: boolean }) => !!v.id && v.published)
+            : [];
+
+          let nextId: string | null = vectorId;
+          const hasCurrent = nextId && mapped.some((v) => v.id === nextId);
+          if (!hasCurrent) {
+            const primary = mapped.find((v) => v.primary === true);
+            nextId = (primary?.id as string | undefined) ?? (mapped[0]?.id as string | undefined) ?? null;
+          }
+          if (nextId !== vectorId) {
+            setVectorId(nextId);
+          }
           setStatus('ready');
         }
       } catch (err) {
@@ -260,22 +281,7 @@ export function ArtboardsProvider({
     };
   }, [schematicId]);
 
-  // Logic to select an initial vector
-  useEffect(() => {
-    const published = (vectors ?? []).filter(v => v?.id && v.published !== false);
-
-    let nextId: string | null = null;
-    if (vectorId && published.some(v => v.id === vectorId)) {
-      nextId = vectorId;
-    } else {
-      const primary = published.find(v => v.primary === true);
-      nextId = primary?.id ?? (published[0]?.id ?? null);
-    }
-
-    if (nextId !== vectorId) {
-      setVectorId(nextId);
-    }
-  }, [vectors, vectorId]);
+  // Initial vector selection now occurs synchronously when the schematic is loaded
 
 
   // Effect to fetch color schemes
