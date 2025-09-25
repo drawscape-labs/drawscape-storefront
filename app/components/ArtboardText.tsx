@@ -26,7 +26,6 @@ export function ArtboardText() {
     e.preventDefault();
     setTitle(localTitle || undefined);
     setSubtitle(localSubtitle || undefined);
-    render();
   };
 
   return (
