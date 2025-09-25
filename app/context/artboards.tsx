@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useMemo, useState} from 'react';
+import {createContext, useContext, useEffect, useMemo, useRef, useState} from 'react';
 import API from '~/lib/drawscapeApi';
 
 export type VectorOption = {
@@ -105,6 +105,7 @@ export function ArtboardsProvider({
   // Render state
   const [renderedSvg, setRenderedSvg] = useState<string | null>(null);
   const [isRendering, setIsRendering] = useState<boolean>(false);
+  const renderAbortControllerRef = useRef<AbortController | null>(null);
   
 
   // Derived Data
@@ -134,6 +135,12 @@ export function ArtboardsProvider({
   // Triggers when new schematic is selected from the select list
   const selectSchematic = (id: string | null) => {
     if (id !== schematicId) {
+      // Cancel any pending render requests when changing schematics
+      if (renderAbortControllerRef.current) {
+        renderAbortControllerRef.current.abort();
+        renderAbortControllerRef.current = null;
+      }
+      
       setSchematicId(id);
       // Reset vector selection immediately to prevent stale selections
       setVectorId(null);
@@ -146,10 +153,18 @@ export function ArtboardsProvider({
 
   // Render function
   const render = async () => {
-
     if (!schematicId || !selectedVector || !colorScheme) {
       return;
     }
+    
+    // Cancel any existing render request
+    if (renderAbortControllerRef.current) {
+      renderAbortControllerRef.current.abort();
+    }
+    
+    // Create new abort controller for this render request
+    const abortController = new AbortController();
+    renderAbortControllerRef.current = abortController;
     
     setIsRendering(true);
 
@@ -166,22 +181,32 @@ export function ArtboardsProvider({
         render_style: selectedVector.style || 'blueprint',
       };
 
-      const response = await API.post('/artboard/render', renderData);
+      const response = await API.post('/artboard/render', renderData, {
+        signal: abortController.signal
+      });
       
-      if (response) {
+      // Only update state if this request wasn't aborted
+      if (!abortController.signal.aborted && response) {
         setRenderedSvg(response);
       }
     } catch (err) {
-      console.error('Failed to render artboard:', err);
+      // Don't log errors for aborted requests
+      if (!abortController.signal.aborted) {
+        console.error('Failed to render artboard:', err);
+      }
     } finally {
-      setIsRendering(false);
+      // Only update rendering state if this request wasn't aborted
+      if (!abortController.signal.aborted) {
+        setIsRendering(false);
+        renderAbortControllerRef.current = null;
+      }
     }
   };
 
   // Auto-render effect - watches all relevant variables and triggers render
-  // Note - we might get double renders 
+  // Previous render requests are automatically cancelled when new ones start
   useEffect(() => {
-    // Only render if we have all required data and we're not already rendering
+    // Only render if we have all required data
     if (schematicId && selectedVector && colorScheme) {
       render();
     }
@@ -284,6 +309,15 @@ export function ArtboardsProvider({
     };
   }, []); // Fetch once on mount
 
+  // Cleanup effect - cancel any pending render requests on unmount
+  useEffect(() => {
+    return () => {
+      if (renderAbortControllerRef.current) {
+        renderAbortControllerRef.current.abort();
+        renderAbortControllerRef.current = null;
+      }
+    };
+  }, []);
 
   const value = useMemo<ArtboardsContextValue>(
     () => ({
