@@ -107,13 +107,14 @@ function Hero() {
                 <div className="absolute transform sm:left-16 sm:top-16 lg:left-0 lg:top-1/2 lg:-translate-y-1/2">
                 <div className="flex items-center space-x-6 lg:space-x-8">
                   <div className="grid shrink-0 grid-cols-1 gap-y-6 lg:gap-y-8">
-                    <div className="h-64 w-44 overflow-hidden rounded-lg sm:opacity-0 lg:opacity-100">
+                    <div className="h-64 w-44 overflow-hidden rounded-lg">
                       <img
                         alt=""
-                        src="https://drawscape.io/cdn/shop/files/IMG_7238.jpg?v=1747762413&width=750"
+                        src="https://drawscape.io/cdn/shop/files/DSC_0061_1.jpg?v=1752884807&width=750"
                         className="size-full object-cover"
                       />
                     </div>
+
                     <div className="h-64 w-44 overflow-hidden rounded-lg">
                       <img
                         alt=""
@@ -126,17 +127,19 @@ function Hero() {
                     <div className="h-64 w-44 overflow-hidden rounded-lg">
                       <img
                         alt=""
-                        src="https://drawscape.io/cdn/shop/files/DSC_0061_1.jpg?v=1752884807&width=750"
-                        className="size-full object-cover"
-                      />
-                    </div>
-                    <div className="h-64 w-44 overflow-hidden rounded-lg">
-                      <img
-                        alt=""
                         src="https://drawscape-projects.s3.us-west-2.amazonaws.com/projects/524/images/IMG_9939.jpeg"
                         className="size-full object-cover"
                       />
                     </div>
+
+                    <div className="h-64 w-44 overflow-hidden rounded-lg sm:opacity-0 lg:opacity-100">
+                      <img
+                        alt=""
+                        src="https://drawscape.io/cdn/shop/files/IMG_7238.jpg?v=1747762413&width=750"
+                        className="size-full object-cover"
+                      />
+                    </div>
+  
                     <div className="h-64 w-44 overflow-hidden rounded-lg">
                       <img
                         alt=""
