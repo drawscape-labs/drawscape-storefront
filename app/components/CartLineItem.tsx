@@ -106,6 +106,8 @@ export function CartLineItem({
             {(line.attributes ?? [])
               .filter((a) => a?.key && a?.value)
               .filter((a) => !a.key.startsWith('_'))
+              // Only show attributes that are not internal (do not start with '_') and are not color-related
+              .filter((a) => !a.key.startsWith('_') && !a.key.toLowerCase().includes('color'))
               .map((attr) => (
                 <li key={`attr-${attr.key}`}>
                   {attr.key}: {attr.value}
