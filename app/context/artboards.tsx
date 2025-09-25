@@ -62,7 +62,7 @@ type ArtboardsContextValue = {
   setLegend: (items: LegendItem[]) => void;
   
   // Render functionality
-  renderedSvg: string | null;
+  renderedImageDataUrl: string | null;
   isRendering: boolean;
   render: () => Promise<void>;
   
@@ -103,7 +103,7 @@ export function ArtboardsProvider({
   const [colorScheme, setColorScheme] = useState<ColorScheme | null>(null);
   
   // Render state
-  const [renderedSvg, setRenderedSvg] = useState<string | null>(null);
+  const [renderedImageDataUrl, setRenderedImageDataUrl] = useState<string | null>(null);
   const [isRendering, setIsRendering] = useState<boolean>(false);
   const renderAbortControllerRef = useRef<AbortController | null>(null);
   
@@ -177,17 +177,23 @@ export function ArtboardsProvider({
         pen_color: colorScheme.pen_color,
         orientation: selectedVector.orientation || 'portrait',
         legend: legend,
-        schematic_url: selectedVector.url,
+        schematic_url: selectedVector.url || '',
         render_style: selectedVector.style || 'blueprint',
       };
 
-      const response = await API.post('/artboard/render', renderData, {
+      const response = await API.renderArtboard(renderData, {
         signal: abortController.signal
       });
-      
+            
       // Only update state if this request wasn't aborted
       if (!abortController.signal.aborted && response) {
-        setRenderedSvg(response);
+        // Convert PNG blob to data URL
+        const reader = new FileReader();
+        reader.onload = () => {
+          const dataUrl = reader.result as string;
+          setRenderedImageDataUrl(dataUrl);
+        };
+        reader.readAsDataURL(response);
       }
     } catch (err) {
       // Don't log errors for aborted requests
@@ -343,13 +349,13 @@ export function ArtboardsProvider({
       setTitle,
       subtitle,
       setSubtitle,
-      renderedSvg,
+      renderedImageDataUrl,
       isRendering,
       render,
       status,
       error,
     }),
-    [schematicId, vectorId, schematic, vectors, selectedVector, colorSchemes, colorScheme, legend, title, subtitle, renderedSvg, isRendering, status, error],
+    [schematicId, vectorId, schematic, vectors, selectedVector, colorSchemes, colorScheme, legend, title, subtitle, renderedImageDataUrl, isRendering, status, error],
   );
 
   return (

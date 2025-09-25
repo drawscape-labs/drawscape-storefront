@@ -15,18 +15,6 @@ export async function action({ request, context }: ActionFunctionArgs) {
   const city = request.headers.get('CF-IPCity') || 'Unknown';
   const region = request.headers.get('CF-IPRegion') || 'Unknown';
 
-  // Console log the form data as requested
-  console.log('Contact form submission:', {
-    name,
-    email,
-    message,
-    countryCode,
-    countryName,
-    city,
-    region,
-    timestamp: new Date().toISOString(),
-  });
-
   // Basic validation
   if (!name || !email || !message) {
     return {
@@ -76,8 +64,6 @@ Timestamp: ${new Date().toISOString()}`,
       `,
       replyTo: email, // Allow team to reply directly to the sender
     });
-
-    console.log('Contact form email sent successfully to team@drawscape.io');
     
     return {
       success: true,

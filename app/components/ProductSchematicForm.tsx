@@ -20,7 +20,7 @@ export function ProductSchematicForm({
   const {open} = useAside();
   
   
-  const {schematicId, schematic, vectorId, colorScheme, legend, title, subtitle, renderedSvg, isRendering} = useArtboards();
+  const {schematicId, schematic, vectorId, colorScheme, legend, title, subtitle, renderedImageDataUrl, isRendering} = useArtboards();
   const artboardPayload = {
     schematic_id: schematicId,
     schematic_vector_id: vectorId,
@@ -130,25 +130,20 @@ export function ProductSchematicForm({
                   quantity: 1,
                   
                   // Override the variant image for optimistic UI so the cart
-                  // shows the rendered SVG immediately while the server
+                  // shows the rendered PNG immediately while the server
                   // processes the request.
                   selectedVariant: (() => {
-                    if (!renderedSvg) return selectedVariant;
-                    // Build a base64 data URL to avoid issues with special
-                    // characters in inline SVGs.
-                    const svgBase64 = typeof renderedSvg === 'string'
-                      ? btoa(unescape(encodeURIComponent(renderedSvg)))
-                      : '';
-                    const svgDataUrl = `data:image/svg+xml;base64,${svgBase64}`;
+                    if (!renderedImageDataUrl) return selectedVariant;
+                    // Use the PNG data URL directly
                     const image = selectedVariant.image
                       ? {
                           ...selectedVariant.image,
-                          url: svgDataUrl,
+                          url: renderedImageDataUrl,
                           altText: 'Custom design preview',
                         }
                       : {
                           id: 'preview',
-                          url: svgDataUrl,
+                          url: renderedImageDataUrl,
                           altText: 'Custom design preview',
                           width: 100,
                           height: 100,

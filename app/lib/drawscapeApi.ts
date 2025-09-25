@@ -41,7 +41,7 @@ async function request<T>(
 
   try {
     const response: AxiosResponse<T> = await axios(axiosConfig);
-    return options.responseType === 'blob' ? (response as unknown as T) : response.data;
+    return options.responseType === 'blob' ? (response.data as T) : response.data;
   } catch (error: unknown) {
     let errorMessage = 'An error has occurred';
     if (axios.isAxiosError(error)) {
@@ -61,4 +61,19 @@ export default {
     request<T>('PUT', endpoint, data, undefined, options),
   delete: <T = any>(endpoint: string, options?: RequestOptions) =>
     request<T>('DELETE', endpoint, undefined, undefined, options),
+  
+  // Convenience method for rendering artboards as PNG
+  renderArtboard: (data: {
+    render_style: string;
+    title: string;
+    subtitle?: string;
+    color_scheme?: string;
+    paper_color?: string;
+    pen_color?: string;
+    size?: string;
+    orientation?: string;
+    legend?: object;
+    schematic_url: string;
+  }, options?: RequestOptions) =>
+    request<Blob>('POST', 'artboard/render', data, undefined, { ...options, responseType: 'blob' }),
 };

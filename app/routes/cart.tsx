@@ -61,12 +61,10 @@ export async function action({request, context}: ActionFunctionArgs) {
               value: artboardResponse.id,
             });
 
-            console.log('artboardResponse', artboardResponse);
             // Preview URL
             if (context.env.DRAWSCAPE_API_URL) {
               const apiBase = context.env.DRAWSCAPE_API_URL.replace(/\/?$/, '/');
               const previewUrl = new URL(`artboards/${artboardResponse.id}/render`, apiBase).toString();
-              console.log('previewUrl', previewUrl);
               attributes.push({
                 key: '_preview_url',
                 value: previewUrl,

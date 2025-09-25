@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import React from 'react';
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import { useArtboards } from '~/context/artboards';
 
@@ -7,42 +7,13 @@ interface ArtboardRenderProps {
 }
 
 export function ArtboardRender({ showLoading = false }: ArtboardRenderProps) {
-  const { renderedSvg, isRendering } = useArtboards();
-  const [svgBlobUrl, setSvgBlobUrl] = useState<string | null>(null);
-  const svgUrlRef = useRef<string | null>(null);
+  const { renderedImageDataUrl, isRendering } = useArtboards();
 
-  useEffect(() => {
-    // Clean up previous blob URL
-    if (svgUrlRef.current) {
-      URL.revokeObjectURL(svgUrlRef.current);
-      svgUrlRef.current = null;
-    }
-
-    if (!renderedSvg || !renderedSvg.includes('<svg')) {
-      setSvgBlobUrl(null);
-      return;
-    }
-
-    // Create new blob URL from the SVG string
-    const url = URL.createObjectURL(new Blob([renderedSvg], { type: 'image/svg+xml' }));
-    svgUrlRef.current = url;
-    setSvgBlobUrl(url);
-  }, [renderedSvg]);
-
-  // Cleanup Blob URL on unmount
-  useEffect(() => {
-    return () => {
-      if (svgUrlRef.current) {
-        URL.revokeObjectURL(svgUrlRef.current);
-        svgUrlRef.current = null;
-      }
-    };
-  }, []);
 
   const shouldDim = showLoading && isRendering;
 
-  // Show loading icon when no SVG is available
-  if (!svgBlobUrl) {
+  // Show loading icon when no image is available
+  if (!renderedImageDataUrl) {
     return (
       <div className="w-full h-full flex items-center justify-center">
         <div className="flex flex-col items-center space-y-3">
@@ -56,7 +27,7 @@ export function ArtboardRender({ showLoading = false }: ArtboardRenderProps) {
   return (
     <div className="relative w-full h-full">
       <img 
-        src={svgBlobUrl} 
+        src={renderedImageDataUrl} 
         className={`w-full h-full object-contain mx-auto transition-opacity duration-200 ${
           shouldDim ? 'opacity-50' : 'opacity-100'
         }`} 
