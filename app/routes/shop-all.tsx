@@ -46,7 +46,7 @@ const products = [
     price: '$99',
     description: 'Commercial, General Aviation, and Military',
     imageSrc:
-      'https://drawscape.io/cdn/shop/files/DSC_0079_1.jpg',
+      'https://cdn.shopify.com/s/files/1/0905/0138/2438/files/DSC_0079_1.jpg',
     imageAlt: 'Aircraft artwork collage.',
   },
   {
@@ -56,7 +56,7 @@ const products = [
     price: '$99',
     description: 'FAA Diagrams and Aero Charts',
     imageSrc:
-      'https://drawscape.io/cdn/shop/files/DSC_0061_1.jpg?v=1752884807&width=400',
+      'https://cdn.shopify.com/s/files/1/0905/0138/2438/files/DSC_0061_1.jpg',
     imageAlt: 'Airport themed artwork on a shelf.',
   },
   {
@@ -65,7 +65,7 @@ const products = [
     href: '/products/sailboats',
     price: '$99',
     description: 'Browse sailboat artwork',
-    imageSrc: 'https://drawscape.io/cdn/shop/files/DSC_0014_1.jpg',
+    imageSrc: 'https://cdn.shopify.com/s/files/1/0905/0138/2438/files/DSC_0014_1.jpg',
     imageAlt: 'Sailboat themed artwork and accessories.',
   },
 ];
