@@ -44,7 +44,7 @@ export function ArtboardDesign({
       {/* Schematic Selection */}
       <Field>
         <Label className="capitalize">{categoryLabel}</Label>
-        <div className="flex items-center gap-2" data-slot="control">
+        <div className="flex items-center gap-2 mt-1 sm:mt-2">
           <ArtboardSelectSchematic  options={schematics} />
           <Button outline onClick={() => open('request-design')}>Request</Button>
         </div>
@@ -54,14 +54,16 @@ export function ArtboardDesign({
       {vectors.length > 1 && (
         <Field>
           <Label className="capitalize">Layout</Label>
-          <ArtboardSelectVectors />
+          <div className="mt-1 sm:mt-2">
+            <ArtboardSelectVectors />
+          </div>
         </Field>
       )}
       
       {/* Color Picker */}
       <Field>
         <Label className="capitalize">Color</Label>
-        <div data-slot="control">
+        <div className="mt-1 sm:mt-2">
           <ArtboardColorPicker />
         </div>
       </Field>

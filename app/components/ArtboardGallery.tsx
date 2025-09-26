@@ -129,7 +129,7 @@ export default function ArtboardGallery({
         <div className="flex flex-col gap-4 lg:flex-row">
           {/* Thumbnails: left on desktop, bottom on mobile */}
           <div className="order-2 lg:order-none lg:mr-6">
-            <TabList className="flex max-w-full gap-3 overflow-x-auto rounded-md p-2 lg:flex-col lg:overflow-visible lg:bg-transparent lg:p-0">
+            <TabList className="flex max-w-full gap-3 overflow-x-auto rounded-md p-0 lg:flex-col lg:overflow-visible lg:bg-transparent lg:p-0">
               {/* Artboard Render */}
               <Tab className={TAB_ARTBOARD_CLASS} title="Artboard Render">
                 <div className="relative flex h-full w-full items-center justify-center">
@@ -188,7 +188,7 @@ export default function ArtboardGallery({
 
           {/* Preview area */}
           <div className="relative order-1 lg:order-none flex-1">
-            <div className="flex h-[55vh] items-center justify-center rounded-md sm:h-[60vh] lg:h-[70vh]">
+            <div className="flex h-[50vh] items-center justify-center rounded-md sm:h-[60vh] lg:h-[60vh]">
               <TabPanels className="h-full w-full">
                 {/* Artboard Render */}
                 <TabPanel className="h-full w-full" unmount={false}>

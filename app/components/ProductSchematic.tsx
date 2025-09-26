@@ -86,7 +86,7 @@ export function ProductSchematic({
             </div>
 
             {/* Product info */}
-            <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0 lg:col-span-2">
+            <div className="mt-1 px-4 sm:mt-10 sm:px-0 lg:mt-0 lg:col-span-2">
 
               {/* Product Information Tabs */}
 

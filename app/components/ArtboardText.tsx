@@ -32,26 +32,30 @@ export function ArtboardText() {
     <form onSubmit={onSubmit} className="max-w-md space-y-4">
       <Field>
         <Label>Title</Label>
-        <Input
-          type="text"
-          name="artboardTitle"
-          value={localTitle}
-          onChange={(e) => setLocalTitle(e.target.value)}
-          placeholder="Enter title"
-        />
+        <div className="mt-1 sm:mt-2">
+          <Input
+            type="text"
+            name="artboardTitle"
+            value={localTitle}
+            onChange={(e) => setLocalTitle(e.target.value)}
+            placeholder="Enter title"
+          />
+        </div>
       </Field>
       <Field>
         <Label>Subtitle</Label>
-        <Input
-          type="text"
-          name="artboardSubtitle"
-          value={localSubtitle}
-          onChange={(e) => setLocalSubtitle(e.target.value)}
-          placeholder="Enter subtitle"
-        />
+        <div className="mt-1 sm:mt-2">
+          <Input
+            type="text"
+            name="artboardSubtitle"
+            value={localSubtitle}
+            onChange={(e) => setLocalSubtitle(e.target.value)}
+            placeholder="Enter subtitle"
+          />
+        </div>
       </Field>
       <Field>
-        <Button type="submit" outline disabled={isDisabled}>Update Text</Button>
+        <Button type="submit" outline disabled={isDisabled}>Update Rendering</Button>
       </Field>
     </form>
   );
