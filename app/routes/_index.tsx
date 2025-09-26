@@ -196,7 +196,7 @@ function Products() {
         <div className="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:grid-rows-2 sm:gap-x-6 lg:gap-8">
           <div className="group relative aspect-2/1 overflow-hidden rounded-lg sm:row-span-2 sm:aspect-square">
             <img
-              src="https://drawscape.io/cdn/shop/files/DSC_0079_1.jpg"
+              src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/DSC_0079_1.jpg"
               className="absolute size-full object-cover group-hover:opacity-75"
             />
             <div aria-hidden="true" className="absolute inset-0 bg-linear-to-b from-transparent to-black opacity-50" />
@@ -216,7 +216,7 @@ function Products() {
           </div>
           <div className="group relative aspect-2/1 overflow-hidden rounded-lg sm:aspect-auto">
             <img
-              src="https://drawscape.io/cdn/shop/files/DSC_0061_1.jpg"
+              src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/DSC_0061_1.jpg"
               className="absolute size-full object-cover group-hover:opacity-75"
             />
             <div aria-hidden="true" className="absolute inset-0 bg-linear-to-b from-transparent to-black opacity-50" />
@@ -236,7 +236,7 @@ function Products() {
           </div>
           <div className="group relative aspect-2/1 overflow-hidden rounded-lg sm:aspect-auto">
             <img
-              src="https://drawscape.io/cdn/shop/files/DSC_0014_1.jpg"
+              src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/DSC_0014_1.jpg"
               className="absolute size-full object-cover group-hover:opacity-75"
             />
             <div aria-hidden="true" className="absolute inset-0 bg-linear-to-b from-transparent to-black opacity-50" />
