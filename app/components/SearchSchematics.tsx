@@ -60,6 +60,7 @@ export function SearchSchematics() {
         limit: 25,
         published: true,
         tracking: true,
+        categories: ['airport_diagrams', 'aircraft', 'sailboats'],
       }, {
         signal: controller.signal
       });
