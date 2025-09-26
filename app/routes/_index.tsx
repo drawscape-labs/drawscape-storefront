@@ -110,7 +110,7 @@ function Hero() {
                     <div className="h-64 w-44 overflow-hidden rounded-lg">
                       <img
                         alt=""
-                        src="https://drawscape.io/cdn/shop/files/DSC_0061_1.jpg"
+                        src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/DSC_0061_1.jpg"
                         className="size-full object-cover"
                       />
                     </div>
@@ -118,7 +118,7 @@ function Hero() {
                     <div className="h-64 w-44 overflow-hidden rounded-lg">
                       <img
                         alt=""
-                        src="https://drawscape.io/cdn/shop/files/IMG_9916.jpg"
+                        src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/IMG_8726.jpg"
                         className="size-full object-cover"
                       />
                     </div>
@@ -135,7 +135,7 @@ function Hero() {
                     <div className="h-64 w-44 overflow-hidden rounded-lg sm:opacity-0 lg:opacity-100">
                       <img
                         alt=""
-                        src="https://drawscape.io/cdn/shop/files/IMG_7238.jpg"
+                        src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/IMG_7238.jpg"
                         className="size-full object-cover"
                       />
                     </div>
@@ -143,7 +143,7 @@ function Hero() {
                     <div className="h-64 w-44 overflow-hidden rounded-lg">
                       <img
                         alt=""
-                        src="https://drawscape.io/cdn/shop/files/DSC_0021.jpg"
+                        src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/DSC_0021.jpg"
                         className="size-full object-cover"
                       />
                     </div>
@@ -216,7 +216,7 @@ function Products() {
           </div>
           <div className="group relative aspect-2/1 overflow-hidden rounded-lg sm:aspect-auto">
             <img
-              src="https://drawscape.io/cdn/shop/files/DSC_0061_1.jpg?v=1752884807"
+              src="https://drawscape.io/cdn/shop/files/DSC_0061_1.jpg"
               className="absolute size-full object-cover group-hover:opacity-75"
             />
             <div aria-hidden="true" className="absolute inset-0 bg-linear-to-b from-transparent to-black opacity-50" />
