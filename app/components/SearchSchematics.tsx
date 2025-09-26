@@ -59,6 +59,7 @@ export function SearchSchematics() {
         q: searchQuery,
         limit: 25,
         published: true,
+        tracking: true,
       }, {
         signal: controller.signal
       });
