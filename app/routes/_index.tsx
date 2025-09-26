@@ -110,7 +110,7 @@ function Hero() {
                     <div className="h-64 w-44 overflow-hidden rounded-lg">
                       <img
                         alt=""
-                        src="https://drawscape.io/cdn/shop/files/DSC_0061_1.jpg?v=1752884807&width=750"
+                        src="https://drawscape.io/cdn/shop/files/DSC_0061_1.jpg"
                         className="size-full object-cover"
                       />
                     </div>
@@ -118,7 +118,7 @@ function Hero() {
                     <div className="h-64 w-44 overflow-hidden rounded-lg">
                       <img
                         alt=""
-                        src="https://drawscape.io/cdn/shop/files/IMG_9916.jpg?v=1747943596&width=750"
+                        src="https://drawscape.io/cdn/shop/files/IMG_9916.jpg"
                         className="size-full object-cover"
                       />
                     </div>
@@ -135,7 +135,7 @@ function Hero() {
                     <div className="h-64 w-44 overflow-hidden rounded-lg sm:opacity-0 lg:opacity-100">
                       <img
                         alt=""
-                        src="https://drawscape.io/cdn/shop/files/IMG_7238.jpg?v=1747762413&width=750"
+                        src="https://drawscape.io/cdn/shop/files/IMG_7238.jpg"
                         className="size-full object-cover"
                       />
                     </div>
@@ -143,7 +143,7 @@ function Hero() {
                     <div className="h-64 w-44 overflow-hidden rounded-lg">
                       <img
                         alt=""
-                        src="https://drawscape.io/cdn/shop/files/DSC_0021.jpg?v=1743016750&width=750"
+                        src="https://drawscape.io/cdn/shop/files/DSC_0021.jpg"
                         className="size-full object-cover"
                       />
                     </div>
