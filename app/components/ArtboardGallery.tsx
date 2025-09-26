@@ -186,7 +186,7 @@ export default function ArtboardGallery({
                       width={THUMBNAIL_SIZE}
                       height={THUMBNAIL_SIZE}
                       sizes="64px"
-                      loading="lazy"
+                      loading="eager"
                     />
                   </Tab>
                 ))}
@@ -228,7 +228,7 @@ export default function ArtboardGallery({
                           className="max-h-full w-auto object-contain"
                           width={PREVIEW_IMAGE_MAX_WIDTH}
                           sizes="(min-width: 1024px) 40vw, (min-width: 768px) 60vw, 90vw"
-                          loading="lazy"
+                          loading="eager"
                         />
                       </div>
                     </TabPanel>
