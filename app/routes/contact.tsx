@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, useActionData, useNavigation } from 'react-router';
 import type { ActionFunctionArgs } from 'react-router';
 import { sendPostmarkEmail } from '~/lib/postmark';
+import { Image } from '@shopify/hydrogen-react';
 
 export async function action({ request, context }: ActionFunctionArgs) {
   const formData = await request.formData();
@@ -82,13 +83,22 @@ export default function Contact() {
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
   const isSubmitting = navigation.state === 'submitting';
+
+  // Image data for optimization
+  const contactImage = {
+    url: 'https://cdn.shopify.com/s/files/1/0905/0138/2438/files/DSC_0027.jpg?v=1747759978',
+  };
+
   return (
     <div className="relative bg-white dark:bg-gray-900">
       <div className="lg:absolute lg:inset-0 lg:left-1/2">
-        <img
+        <Image
+          data={contactImage}
           alt=""
-          src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/DSC_0027.jpg?v=1747759978"
           className="h-64 w-full bg-gray-50 object-cover sm:h-80 lg:absolute lg:h-full dark:bg-gray-800"
+          width="800"  
+          sizes="(min-width: 1024px) 50vw, 100vw"
+          loading="eager"
         />
       </div>
       <div className="pt-16 pb-24 sm:pt-24 sm:pb-32 lg:mx-auto lg:grid lg:max-w-7xl lg:grid-cols-2 lg:pt-32">

@@ -2,13 +2,14 @@ import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {Link, type MetaFunction} from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { byPrefixAndName } from '@awesome.me/kit-725782e741/icons'
+import { Image } from '@shopify/hydrogen';
 
 export const meta: MetaFunction = () => {
   return [{title: 'Drawscape | Plotter Art'}];
 };
 
+
 export async function loader(args: LoaderFunctionArgs) {
-  // No critical data needed for initial render
   return {};
 }
 
@@ -41,6 +42,133 @@ const incentives = [
   },
 ]
 
+
+function Hero() {
+  return (
+    <div className="relative overflow-hidden">
+      <div className="pt-16 pb-80 sm:pt-24 sm:pb-40 lg:pt-40 lg:pb-48">
+        <div className="relative mx-auto max-w-7xl px-4 sm:static sm:px-6 lg:px-8">
+          <div className="sm:max-w-lg">
+            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+              Turn your passion into frame-worthy art
+            </h1>
+            <p className="mt-4 text-xl text-gray-500">
+              Create personalized art, and then watch it drawn (just for you) with a plotting machine.
+            </p>
+          </div>
+          <div>
+            <div className="mt-10">
+              {/* Decorative image grid */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2"
+              >
+                <div className="absolute transform sm:left-16 sm:top-16 lg:left-0 lg:top-1/2 lg:-translate-y-1/2">
+                <div className="flex items-center space-x-6 lg:space-x-8">
+                  <div className="grid shrink-0 grid-cols-1 gap-y-6 lg:gap-y-8">
+                    <div className="h-64 w-44 overflow-hidden rounded-lg">
+                      {/* Airports Blue */}
+                      <Image
+                        src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/DSC_0061_1.jpg"
+                        alt="Airport diagram blueprint art being drawn by plotting machine"
+                        className="size-full object-cover"
+                        sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
+                        width={176}
+                        height={256}
+                        loading="lazy"
+                      />
+                    </div>
+
+                    <div className="h-64 w-44 overflow-hidden rounded-lg">
+                      <Image
+                        src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/IMG_8726.jpg"
+                        alt="Couple holding framed blueprint artwork"
+                        className="size-full object-cover"
+                        sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
+                        width={176}
+                        height={256}
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+                  <div className="grid shrink-0 grid-cols-1 gap-y-6 lg:gap-y-8">
+                    <div className="h-64 w-44 overflow-hidden rounded-lg">
+                      <Image
+                        alt="Airbus A320 airplane blueprint being drawn by plotting machine"
+                        src="https://drawscape-projects.s3.us-west-2.amazonaws.com/projects/524/images/IMG_9939.jpeg"
+                        className="size-full object-cover"
+                        sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
+                        width={176}
+                        height={256}
+                        loading="lazy"
+                      />
+                    </div>
+
+                    <div className="h-64 w-44 overflow-hidden rounded-lg sm:opacity-0 lg:opacity-100">
+                      <Image
+                        alt="Framed sailboat blueprint artwork on display"
+                        src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/IMG_7238.jpg"
+                        className="size-full object-cover"
+                        sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
+                        width={176}
+                        height={256}
+                        loading="lazy"
+                      />
+                    </div>
+  
+                    <div className="h-64 w-44 overflow-hidden rounded-lg">
+                      <Image
+                        alt="White pen on airplane blueprint artwork"
+                        src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/DSC_0021.jpg"
+                        className="size-full object-cover"
+                        sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
+                        width={176}
+                        height={256}
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+                  <div className="grid shrink-0 grid-cols-1 gap-y-6 lg:gap-y-8">
+                    <div className="h-64 w-44 overflow-hidden rounded-lg">
+                      <Image
+                        alt="KOBELCO hydraulic crawler crane blueprint being drawn by plotting machine"
+                        src="https://drawscape-projects.s3.us-west-2.amazonaws.com/projects/842/images/IMG_6657.jpeg"
+                        className="size-full object-cover"
+                        sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
+                        width={176}
+                        height={256}
+                        loading="lazy"
+                      />
+                    </div>
+                    <div className="h-64 w-44 overflow-hidden rounded-lg">
+                      <Image
+                        alt="Red airplane blueprint artwork with detailed fuselage"
+                        src="https://drawscape-projects.s3.us-west-2.amazonaws.com/projects/414/images/DSC_0011.jpeg"
+                        className="size-full object-cover"
+                        sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
+                        width={176}
+                        height={256}
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
+
+            <Link
+              to="/shop-all"
+              className="inline-block rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-center font-medium text-white hover:bg-indigo-700">
+              Shop Now
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function HowMade() {
   return (
     <div className="bg-gray-50">
@@ -52,7 +180,7 @@ function HowMade() {
                 How it's Made
               </h2>
               <p className="mt-4 text-gray-500">
-                Each line is physically drawn by an ink pen and our high-precision plotter. We use Sakura® & Stabilo® pens to draw your custom artwork on 120lb/250gsm stock paper.
+                We create each art piece with ink pens and a high-precision plotter. Each line is drawn with Sakura® / Stabilo® pens on 120lb/250gsm stock paper.
               </p>
             </div>
             <div className="aspect-3/2 w-full rounded-lg bg-gray-100 overflow-hidden">
@@ -84,102 +212,6 @@ function HowMade() {
   )
 }
 
-function Hero() {
-  return (
-    <div className="relative overflow-hidden">
-      <div className="pt-16 pb-80 sm:pt-24 sm:pb-40 lg:pt-40 lg:pb-48">
-        <div className="relative mx-auto max-w-7xl px-4 sm:static sm:px-6 lg:px-8">
-          <div className="sm:max-w-lg">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-              Turn your passion into frame-worthy art
-            </h1>
-            <p className="mt-4 text-xl text-gray-500">
-              Create personalized art, and then watch it drawn (just for you) with a plotting machine.
-            </p>
-          </div>
-          <div>
-            <div className="mt-10">
-              {/* Decorative image grid */}
-              <div
-                aria-hidden="true"
-                className="pointer-events-none lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2"
-              >
-                <div className="absolute transform sm:left-16 sm:top-16 lg:left-0 lg:top-1/2 lg:-translate-y-1/2">
-                <div className="flex items-center space-x-6 lg:space-x-8">
-                  <div className="grid shrink-0 grid-cols-1 gap-y-6 lg:gap-y-8">
-                    <div className="h-64 w-44 overflow-hidden rounded-lg">
-                      <img
-                        alt=""
-                        src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/DSC_0061_1.jpg"
-                        className="size-full object-cover"
-                      />
-                    </div>
-
-                    <div className="h-64 w-44 overflow-hidden rounded-lg">
-                      <img
-                        alt=""
-                        src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/IMG_8726.jpg"
-                        className="size-full object-cover"
-                      />
-                    </div>
-                  </div>
-                  <div className="grid shrink-0 grid-cols-1 gap-y-6 lg:gap-y-8">
-                    <div className="h-64 w-44 overflow-hidden rounded-lg">
-                      <img
-                        alt=""
-                        src="https://drawscape-projects.s3.us-west-2.amazonaws.com/projects/524/images/IMG_9939.jpeg"
-                        className="size-full object-cover"
-                      />
-                    </div>
-
-                    <div className="h-64 w-44 overflow-hidden rounded-lg sm:opacity-0 lg:opacity-100">
-                      <img
-                        alt=""
-                        src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/IMG_7238.jpg"
-                        className="size-full object-cover"
-                      />
-                    </div>
-  
-                    <div className="h-64 w-44 overflow-hidden rounded-lg">
-                      <img
-                        alt=""
-                        src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/DSC_0021.jpg"
-                        className="size-full object-cover"
-                      />
-                    </div>
-                  </div>
-                  <div className="grid shrink-0 grid-cols-1 gap-y-6 lg:gap-y-8">
-                    <div className="h-64 w-44 overflow-hidden rounded-lg">
-                      <img
-                        alt=""
-                        src="https://drawscape-projects.s3.us-west-2.amazonaws.com/projects/842/images/IMG_6657.jpeg"
-                        className="size-full object-cover"
-                      />
-                    </div>
-                    <div className="h-64 w-44 overflow-hidden rounded-lg">
-                      <img
-                        alt=""
-                        src="https://drawscape-projects.s3.us-west-2.amazonaws.com/projects/414/images/DSC_0011.jpeg"
-                        className="size-full object-cover"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            </div>
-
-            <Link
-              to="/shop-all"
-              className="inline-block rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-center font-medium text-white hover:bg-indigo-700">
-              Shop Now
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function Products() {
   return (
@@ -195,9 +227,14 @@ function Products() {
 
         <div className="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:grid-rows-2 sm:gap-x-6 lg:gap-8">
           <div className="group relative aspect-2/1 overflow-hidden rounded-lg sm:row-span-2 sm:aspect-square">
-            <img
+            <Image
               src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/DSC_0079_1.jpg"
+              alt="Aircraft blueprint artwork collection"
               className="absolute size-full object-cover group-hover:opacity-75"
+              sizes="(min-width: 1024px) 50vw, (min-width: 768px) 100vw, 100vw"
+              width={400}
+              height={400}
+              loading="lazy"
             />
             <div aria-hidden="true" className="absolute inset-0 bg-linear-to-b from-transparent to-black opacity-50" />
             <div className="absolute inset-0 flex items-end p-6">
@@ -215,9 +252,14 @@ function Products() {
             </div>
           </div>
           <div className="group relative aspect-2/1 overflow-hidden rounded-lg sm:aspect-auto">
-            <img
+            <Image
               src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/DSC_0061_1.jpg"
+              alt="Airport diagram blueprint artwork"
               className="absolute size-full object-cover group-hover:opacity-75"
+              sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
+              width={400}
+              height={200}
+              loading="lazy"
             />
             <div aria-hidden="true" className="absolute inset-0 bg-linear-to-b from-transparent to-black opacity-50" />
             <div className="absolute inset-0 flex items-end p-6">
@@ -235,9 +277,14 @@ function Products() {
             </div>
           </div>
           <div className="group relative aspect-2/1 overflow-hidden rounded-lg sm:aspect-auto">
-            <img
+            <Image
               src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/DSC_0014_1.jpg"
+              alt="Sailboat blueprint artwork"
               className="absolute size-full object-cover group-hover:opacity-75"
+              sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
+              width={400}
+              height={200}
+              loading="lazy"
             />
             <div aria-hidden="true" className="absolute inset-0 bg-linear-to-b from-transparent to-black opacity-50" />
             <div className="absolute inset-0 flex items-end p-6">

@@ -1,7 +1,8 @@
-import {type MetaFunction} from 'react-router';
+import { type MetaFunction } from 'react-router';
+import { Image } from '@shopify/hydrogen-react';
 
 export const meta: MetaFunction = () => {
-  return [{title: 'Shop All'}];
+  return [{ title: 'Shop All' }];
 };
 
 export default function ShopAllPage() {
@@ -18,10 +19,15 @@ export default function ShopAllPage() {
           <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
             {products.map((product) => (
               <a key={product.id} href={product.href} className="group">
-                <img
-                  alt={product.imageAlt}
-                  src={product.imageSrc}
+                <Image
+                  data={{
+                    url: product.imageSrc,
+                    altText: product.imageAlt,
+                  }}
+                  aspectRatio="1/1"
                   className="aspect-square w-full overflow-hidden rounded-lg object-cover group-hover:opacity-75 sm:aspect-2/3"
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  loading="lazy"
                 />
                 <div className="mt-4 flex items-center justify-between text-base font-medium text-gray-900">
                   <h3>{product.name}</h3>
@@ -36,7 +42,6 @@ export default function ShopAllPage() {
     </div>
   );
 }
-
 
 const products = [
   {
@@ -69,5 +74,3 @@ const products = [
     imageAlt: 'Sailboat themed artwork and accessories.',
   },
 ];
-
-
