@@ -2,7 +2,8 @@ import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {Link, type MetaFunction} from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { byPrefixAndName } from '@awesome.me/kit-725782e741/icons'
-import { Image } from '@shopify/hydrogen';
+import { Image, Video } from '@shopify/hydrogen';
+import { ProductReviews } from '~/components/ProductReviews';
 
 export const meta: MetaFunction = () => {
   return [{title: 'Drawscape | Plotter Art'}];
@@ -30,9 +31,9 @@ const incentives = [
     description: "Create a truly unique piece of art by personalizing your design with custom text, colors, and layout.",
   },
   {
-    name: 'Plotted, Not Printed',
+    name: 'FAA Precision',
     icon: byPrefixAndName.fad['pen-nib'],
-    description: "Created using real ink pens and a high-precision plotting machine.",
+    description: "Each diagram is built from the latest FAA documents for True‑To‑Scale Geometry",
   },
   {
     name: 'Timelapse Video',
@@ -50,11 +51,14 @@ function Hero() {
         <div className="relative mx-auto max-w-7xl px-4 sm:static sm:px-6 lg:px-8">
           <div className="sm:max-w-lg">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-              Turn your passion into frame-worthy art
+              Turn any Airport into frame-worthy art
             </h1>
             <p className="mt-4 text-xl text-gray-500">
-              Create personalized art, and then watch it drawn (just for you) with a plotting machine.
+              Create custom airport art, and then watch it drawn with a plotting machine.
             </p>
+            <div className="mt-3 sm:mt-6">
+              <ProductReviews />
+            </div>
           </div>
           <div>
             <div className="mt-10">
@@ -81,7 +85,7 @@ function Hero() {
 
                     <div className="h-64 w-44 overflow-hidden rounded-lg">
                       <Image
-                        src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/IMG_8726.jpg"
+                        src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/whiteclose.png"
                         alt="Couple holding framed blueprint artwork"
                         className="size-full object-cover"
                         sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
@@ -94,8 +98,8 @@ function Hero() {
                   <div className="grid shrink-0 grid-cols-1 gap-y-6 lg:gap-y-8">
                     <div className="h-64 w-44 overflow-hidden rounded-lg">
                       <Image
-                        alt="Airbus A320 airplane blueprint being drawn by plotting machine"
-                        src="https://drawscape-projects.s3.us-west-2.amazonaws.com/projects/524/images/IMG_9939.jpeg"
+                        alt="Holding a framed airport diagram artwork"
+                        src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/IMG_9896_1.png?v=1758919432"
                         className="size-full object-cover"
                         sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
                         width={176}
@@ -107,7 +111,7 @@ function Hero() {
                     <div className="h-64 w-44 overflow-hidden rounded-lg">
                       <Image
                         alt="Framed sailboat blueprint artwork on display"
-                        src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/IMG_7238.jpg"
+                        src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/blue_white.png"
                         className="size-full object-cover"
                         sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
                         width={176}
@@ -118,8 +122,8 @@ function Hero() {
   
                     <div className="h-64 w-44 overflow-hidden rounded-lg">
                       <Image
-                        alt="White pen on airplane blueprint artwork"
-                        src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/DSC_0021.jpg"
+                        alt="Holding a framed airport diagram artwork"
+                        src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/IMG_8716_1.jpg"
                         className="size-full object-cover"
                         sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
                         width={176}
@@ -131,8 +135,8 @@ function Hero() {
                   <div className="grid shrink-0 grid-cols-1 gap-y-6 lg:gap-y-8">
                     <div className="h-64 w-44 overflow-hidden rounded-lg">
                       <Image
-                        alt="KOBELCO hydraulic crawler crane blueprint being drawn by plotting machine"
-                        src="https://drawscape-projects.s3.us-west-2.amazonaws.com/projects/842/images/IMG_6657.jpeg"
+                        alt="Holding a framed airport diagram artwork"
+                        src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/DSC_0002_2_1.jpg?v=1758749846"
                         className="size-full object-cover"
                         sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
                         width={176}
@@ -142,8 +146,8 @@ function Hero() {
                     </div>
                     <div className="h-64 w-44 overflow-hidden rounded-lg">
                       <Image
-                        alt="Red airplane blueprint artwork with detailed fuselage"
-                        src="https://drawscape-projects.s3.us-west-2.amazonaws.com/projects/414/images/DSC_0011.jpeg"
+                        alt="Holding a framed airport diagram artwork"
+                        src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/blueclose.png?v=1736646329"
                         className="size-full object-cover"
                         sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
                         width={176}
@@ -158,7 +162,7 @@ function Hero() {
             </div>
 
             <Link
-              to="/shop-all"
+              to="/products/airports"
               className="inline-block rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-center font-medium text-white hover:bg-indigo-700">
               Shop Now
             </Link>
@@ -184,13 +188,26 @@ function HowMade() {
               </p>
             </div>
             <div className="aspect-3/2 w-full rounded-lg bg-gray-100 overflow-hidden">
-              <video
+              <Video
+                data={{
+                  id: '35d38740ff1043cc9b9af765bdcff65e',
+                  sources: [
+                    {
+                      url: 'https://cdn.shopify.com/videos/c/o/v/35d38740ff1043cc9b9af765bdcff65e.mov',
+                      mimeType: 'video/mp4',
+                      height: 800,
+                      width: 1200,
+                    }
+                  ],
+                  previewImage: {
+                    url: 'https://cdn.shopify.com/s/files/1/0905/0138/2438/files/preview_images/35d38740ff1043cc9b9af765bdcff65e.thumbnail.0000000000_800x800.jpg',
+                    altText: 'Plotting machine drawing airport diagram timelapse video preview'
+                  }
+                }}
                 className="w-full h-full object-cover"
-                style={{ aspectRatio: '3/2', border: 0 }}
                 controls
-                poster="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/preview_images/bb7a8ed368cc4095afd2619c1c01be60.thumbnail.0000000000_800x800.jpg">
-                <source src="https://cdn.shopify.com/videos/c/o/v/bb7a8ed368cc4095afd2619c1c01be60.mp4" type="video/mp4" />
-              </video>
+                playsInline
+              />
             </div>
           </div>
           <div className="mt-16 grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-3">
@@ -215,100 +232,26 @@ function HowMade() {
 
 function Products() {
   return (
-    <div className="">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-        <div className="sm:flex sm:items-baseline sm:justify-between">
-          <h2 className="text-2xl font-bold tracking-tight text-gray-900">Shop by Product</h2>
-          <Link to="/shop-all" prefetch="intent" className="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-500 sm:block">
-            Shop all Products
-            <span aria-hidden="true"> &rarr;</span>
-          </Link>
-        </div>
-
-        <div className="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:grid-rows-2 sm:gap-x-6 lg:gap-8">
-          <div className="group relative aspect-2/1 overflow-hidden rounded-lg sm:row-span-2 sm:aspect-square">
-            <Image
-              src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/DSC_0079_1.jpg"
-              alt="Aircraft blueprint artwork collection"
-              className="absolute size-full object-cover group-hover:opacity-75"
-              sizes="(min-width: 1024px) 50vw, (min-width: 768px) 100vw, 100vw"
-              width={400}
-              height={400}
-              loading="lazy"
-            />
-            <div aria-hidden="true" className="absolute inset-0 bg-linear-to-b from-transparent to-black opacity-50" />
-            <div className="absolute inset-0 flex items-end p-6">
-              <div>
-                <h3 className="font-semibold text-white">
-                  <Link to="/products/aircraft" prefetch="intent">
-                    <span className="absolute inset-0" />
-                    Aircraft
-                  </Link>
-                </h3>
-                <p aria-hidden="true" className="mt-1 text-sm text-white">
-                  Shop now
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="group relative aspect-2/1 overflow-hidden rounded-lg sm:aspect-auto">
-            <Image
-              src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/DSC_0061_1.jpg"
-              alt="Airport diagram blueprint artwork"
-              className="absolute size-full object-cover group-hover:opacity-75"
-              sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
-              width={400}
-              height={200}
-              loading="lazy"
-            />
-            <div aria-hidden="true" className="absolute inset-0 bg-linear-to-b from-transparent to-black opacity-50" />
-            <div className="absolute inset-0 flex items-end p-6">
-              <div>
-                <h3 className="font-semibold text-white">
-                  <Link to="/products/airports" prefetch="intent">
-                    <span className="absolute inset-0" />
-                    Airports
-                  </Link>
-                </h3>
-                <p aria-hidden="true" className="mt-1 text-sm text-white">
-                  Shop now
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="group relative aspect-2/1 overflow-hidden rounded-lg sm:aspect-auto">
-            <Image
-              src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/DSC_0014_1.jpg"
-              alt="Sailboat blueprint artwork"
-              className="absolute size-full object-cover group-hover:opacity-75"
-              sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
-              width={400}
-              height={200}
-              loading="lazy"
-            />
-            <div aria-hidden="true" className="absolute inset-0 bg-linear-to-b from-transparent to-black opacity-50" />
-            <div className="absolute inset-0 flex items-end p-6">
-              <div>
-                <h3 className="font-semibold text-white">
-                  <Link to="/products/sailboats" prefetch="intent">
-                    <span className="absolute inset-0" />
-                    Sailboats
-                  </Link>
-                </h3>
-                <p aria-hidden="true" className="mt-1 text-sm text-white">
-                  Shop now
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-6 sm:hidden">
-          <Link to="/shop-all" prefetch="intent" className="block text-sm font-semibold text-indigo-600 hover:text-indigo-500">
-            Shop all Products
-            <span aria-hidden="true"> &rarr;</span>
-          </Link>
-        </div>
+    <div className="relative bg-gray-800 px-6 py-32 sm:px-12 sm:py-40 lg:px-16">
+      <div className="absolute inset-0 overflow-hidden">
+        <Image
+          alt="Airport blueprint art full-width background"
+          src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/Airport_Blue.jpg?v=1758920379"
+          className="size-full object-cover"
+        />
+      </div>
+      <div aria-hidden="true" className="absolute inset-0 bg-gray-900/70" />
+      <div className="relative mx-auto flex max-w-3xl flex-col items-center text-center">
+        <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">Perfect Gift For Pilots!</h2>
+        <p className="mt-3 text-xl text-white">
+          Tell the pilot or aviation enthusiast in your life that you care.
+        </p>
+        <Link
+          to="/products/airports"
+          className="mt-8 block w-full rounded-md border border-transparent bg-white px-8 py-3 text-base font-medium text-gray-900 hover:bg-gray-100 sm:w-auto"
+        >
+          Shop Now
+        </Link>
       </div>
     </div>
   )
