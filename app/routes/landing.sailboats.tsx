@@ -194,8 +194,8 @@ function HowMade() {
                     }
                   ],
                   previewImage: {
-                    url: 'https://cdn.shopify.com/s/files/1/0905/0138/2438/files/preview_images/bb7a8ed368cc4095afd2619c1c01be60.thumbnail.0000000000_800x800.jpg',
-                    altText: 'Plotting machine drawing aircraft art timelapse video preview'
+                    url: 'https://cdn.shopify.com/s/files/1/0905/0138/2438/files/preview_images/cd4377e13d444e6e95ff9f54fb01568e.thumbnail.0000000000_800x800.jpg?v=1747763824',
+                    altText: 'Plotting machine drawing sailboat art timelapse video preview'
                   }
                 }}
                 className="w-full h-full object-cover"
