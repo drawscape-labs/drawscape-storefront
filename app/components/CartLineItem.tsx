@@ -26,6 +26,7 @@ export function CartLineItem({
   const {close} = useAside();
 
   let previewUrl = line.attributes?.find((attribute) => attribute.key === '_preview_url')?.value;
+  console.log(line.attributes);
 
 
   // We no longer read `_preview_svg`. If present from legacy carts, it will
@@ -98,16 +99,16 @@ export function CartLineItem({
             </div>
           </div>
           <ul className="mt-1 text-sm text-gray-500">
-            {selectedOptions.map((option) => (
-              <li key={option.name}>
-                {option.name}: {option.value}
-              </li>
-            ))}
+            {selectedOptions
+              .filter((option) => option.name !== 'Title') // Temorary Fix utnil we setup variants properlyIgnore Title option
+              .map((option) => (
+                <li key={option.name}>
+                  {option.name}: {option.value}
+                </li>
+              ))}
             {(line.attributes ?? [])
               .filter((a) => a?.key && a?.value)
               .filter((a) => !a.key.startsWith('_'))
-              // Only show attributes that are not internal (do not start with '_') and are not color-related
-              .filter((a) => !a.key.startsWith('_') && !a.key.toLowerCase().includes('color'))
               .map((attr) => (
                 <li key={`attr-${attr.key}`}>
                   {attr.key}: {attr.value}
