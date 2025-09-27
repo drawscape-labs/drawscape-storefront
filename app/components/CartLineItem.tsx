@@ -26,8 +26,6 @@ export function CartLineItem({
   const {close} = useAside();
 
   let previewUrl = line.attributes?.find((attribute) => attribute.key === '_preview_url')?.value;
-  console.log(line.attributes);
-
 
   // We no longer read `_preview_svg`. If present from legacy carts, it will
   // simply be ignored in favor of `_preview_url` or the inline optimistic
