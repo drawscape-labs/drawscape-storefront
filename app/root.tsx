@@ -220,6 +220,9 @@ export function Layout({children}: {children?: React.ReactNode}) {
             </ClientOnly>
           </QueryClientProvider>
         )}
+
+        <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
       </body>
