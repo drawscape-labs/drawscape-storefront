@@ -4,21 +4,20 @@ import { useAside } from '~/components/Aside';
 import { Button } from '~/ui/button';
 import API from '~/lib/drawscapeApi';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { byPrefixAndName } from '@awesome.me/kit-725782e741/icons'
+import { FancyIcon } from '~/components/FancyIcons';
 
 
 // Helper: Return a Heroicon for each schematic category
 function getCategoryIcon(category: string) {
   switch (category) {
     case 'sailboats':
-      return <FontAwesomeIcon icon={byPrefixAndName.fad['sailboat']} />;
+      return <FancyIcon name="sailboat" />;
     case 'airport_diagrams':
-      return <FontAwesomeIcon icon={byPrefixAndName.fad['map-location-dot']} />;
+      return <FancyIcon name="map" />;
     case 'aircraft':
-      return <FontAwesomeIcon icon={byPrefixAndName.fad['plane']} />
+      return <FancyIcon name="plane" />
     default:
-      return <FontAwesomeIcon icon={byPrefixAndName.fad['question']} />;
+      return <FancyIcon name="map" />;
   }
 }
 

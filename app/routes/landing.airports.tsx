@@ -1,9 +1,8 @@
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {Link, type MetaFunction} from 'react-router';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { byPrefixAndName } from '@awesome.me/kit-725782e741/icons'
 import { Image, Video } from '@shopify/hydrogen';
 import { ProductReviews } from '~/components/ProductReviews';
+import { FancyIcon } from '~/components/FancyIcons';
 
 export const meta: MetaFunction = () => {
   return [{title: 'Drawscape | Plotter Art'}];
@@ -24,20 +23,24 @@ export default function Homepage() {
   );
 }
 
-const incentives = [
+const incentives: Array<{
+  name: string;
+  icon: 'sliders' | 'pen-nib' | 'video';
+  description: string;
+}> = [
   {
     name: 'Personalized',
-    icon: byPrefixAndName.fad['sliders'],
+    icon: 'sliders',
     description: "Create a truly unique piece of art by personalizing your design with custom text, colors, and layout.",
   },
   {
     name: 'FAA Precision',
-    icon: byPrefixAndName.fad['pen-nib'],
+    icon: 'pen-nib',
     description: "Each diagram is built from the latest FAA documents for True‑To‑Scale Geometry",
   },
   {
     name: 'Timelapse Video',
-    icon: byPrefixAndName.fad['video'],
+    icon: 'video',
     description:
       "Every order comes with a timelapse video of your art being drawn.",
   },
@@ -214,7 +217,7 @@ function HowMade() {
             {incentives.map((incentive) => (
               <div key={incentive.name} className="sm:flex lg:block">
                 <div className="sm:shrink-0">
-                  <FontAwesomeIcon icon={incentive.icon} size="3x" className="" />
+                  <FancyIcon name={incentive.icon} width={48} height={48} className="text-indigo-600" />
                 </div>
                 <div className="mt-4 sm:mt-0 sm:ml-6 lg:mt-6 lg:ml-0">
                   <h3 className="text-sm font-medium text-gray-900">{incentive.name}</h3>

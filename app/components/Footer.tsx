@@ -2,8 +2,7 @@ import {Suspense} from 'react';
 import {Await, NavLink} from 'react-router';
 import type {FooterQuery, HeaderQuery} from 'storefrontapi.generated';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { byPrefixAndName } from '@awesome.me/kit-725782e741/icons';
+import { FancyIcon } from './FancyIcons';
 
 const FALLBACK_FOOTER_MENU = {
   items: [
@@ -25,6 +24,11 @@ const navigation = {
       name: 'Instagram',
       href: 'https://www.instagram.com/_draw_scape',
       icon: 'instagram',
+    },
+    {
+      name: 'X (Twitter)',
+      href: 'https://x.com/draw_scape',
+      icon: 'x',
     },
     {
       name: 'GitHub',
@@ -173,7 +177,7 @@ export function Footer({
                   className="text-gray-600 hover:text-gray-800"
                 >
                   <span className="sr-only">{item.name}</span>
-                  <FontAwesomeIcon icon={byPrefixAndName.fab[item.icon]} />
+                  <FancyIcon name={item.icon as any} width={24} height={24} />
                 </a>
               ))}
             </div>
