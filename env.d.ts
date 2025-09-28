@@ -29,6 +29,7 @@ declare global {
     SAILBOAT_DEFAULT_SCHEMATIC_ID?: string;
     AIRCRAFT_DEFAULT_SCHEMATIC_ID?: string;
     AIRPORT_DEFAULT_SCHEMATIC_ID?: string;
+    AIRPORT_TRAFFIC_DEFAULT_SCHEMATIC_ID?: string;
     TRAIL_DEFAULT_SCHEMATIC_ID?: string;
     
     // Judgeme public configuration
