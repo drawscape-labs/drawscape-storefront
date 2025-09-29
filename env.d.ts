@@ -39,6 +39,7 @@ declare global {
 
     // Postmark email service configuration
     POSTMARK_API_KEY?: string;
+    KLAVIYO_API_KEY?: string;
   }
 
   // Judge.me globals injected on the client

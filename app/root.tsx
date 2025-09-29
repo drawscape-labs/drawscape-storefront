@@ -222,6 +222,9 @@ export function Layout({children}: {children?: React.ReactNode}) {
           />
         </noscript>
         {/* End Meta Pixel Code */}
+
+
+
       </head>
       <body>
         {data ? (
@@ -251,6 +254,7 @@ export function Layout({children}: {children?: React.ReactNode}) {
         )}
 
         <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+        <script async type="text/javascript" src="https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=WZP4fv"/>
 
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
