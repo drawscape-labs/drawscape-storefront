@@ -3,12 +3,12 @@
  * 
  * A form component for submitting a design request.
  * 
- * Collects: email address and design request details.
+ * Collects: name, email address, and design request details.
  * Submits to the Drawscape API endpoint /api/v1/schematics/request
  * 
  * Props: none
  */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Input } from '~/ui/input';
 import { Textarea } from '~/ui/textarea';
 import { Button } from '~/ui/button';
@@ -17,10 +17,22 @@ import { Fieldset, Field, Label } from '~/ui/fieldset';
 import { useAside } from '~/components/Aside';
 import drawscapeApi from '~/lib/drawscapeApi';
 
+// Declare Klaviyo global for TypeScript
+declare global {
+  interface Window {
+    klaviyo?: {
+      identify: (properties: Record<string, any>) => void;
+      track: (eventName: string, properties?: Record<string, any>) => void;
+      push: (args: any[]) => void;
+    };
+  }
+}
+
 export const RequestDesign = () => {
   const { close } = useAside();
   
   // Form state
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [request, setRequest] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -28,7 +40,7 @@ export const RequestDesign = () => {
   const [error, setError] = useState<string | null>(null);
 
   // Determine if form is valid (all required fields filled)
-  const isFormValid = email.trim() !== '' && request.trim() !== '';
+  const isFormValid = name.trim() !== '' && email.trim() !== '' && request.trim() !== '';
 
   // Submit handler with API integration
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -39,15 +51,31 @@ export const RequestDesign = () => {
     try {
       // Prepare the request payload according to API specification
       const payload = {
+        name: name,
         email: email,
         request: request
       };
 
       // Submit to Drawscape API via the proxy
       await drawscapeApi.post('schematics/request', payload);
+
+      if (window.klaviyo) {
+        let res = await window.klaviyo.identify({
+          email: payload.email,
+          first_name: payload.name.split(' ')[0],
+          last_name: payload.name.split(' ').slice(1).join(' '),
+        });
+        
+        await window.klaviyo.track('Requested Design', {
+          email: payload.email,
+          design_request: payload.request,
+        });
+        console.log('Klaviyo identify called successfully', res);
+      }
       
       setSubmitted(true);
       // Clear form on success
+      setName('');
       setEmail('');
       setRequest('');
     } catch (err) {
@@ -93,6 +121,21 @@ export const RequestDesign = () => {
           )}
         <form onSubmit={handleSubmit} className="max-w-md">
           <Fieldset>
+            <Field className="mb-6">
+              <Label htmlFor="request-name" className="block text-sm font-medium text-gray-700 mb-2">
+                Name
+              </Label>
+              <Input
+                id="request-name"
+                type="text"
+                value={name}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+                required
+                autoComplete="name"
+                placeholder="Your name"
+                className="w-full"
+              />
+            </Field>
             <Field className="mb-6">
               <Label htmlFor="request-email" className="block text-sm font-medium text-gray-700 mb-2">
                 Email Address
