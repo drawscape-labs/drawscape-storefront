@@ -128,9 +128,13 @@ export default function Contact() {
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
   const isSubmitting = navigation.state === 'submitting';
+  const [hasIdentified, setHasIdentified] = React.useState(false);
 
   // Identify user in Klaviyo when form is successfully submitted
   useEffect(() => {
+    // Skip on server-side or if we've already identified this submission
+    if (typeof window === 'undefined' || hasIdentified) return;
+    
     console.log('Contact form success effect triggered:', {
       success: actionData?.success,
       windowExists: typeof window !== 'undefined',
@@ -139,7 +143,7 @@ export default function Contact() {
       actionData: actionData,
     });
 
-    if (actionData?.success && typeof window !== 'undefined' && window.klaviyo) {
+    if (actionData?.success && window.klaviyo) {
       const email = actionData.email;
       const name = actionData.name;
       
@@ -157,21 +161,26 @@ export default function Contact() {
           last_name: lastName,
         });
         
-        // Identify the user in Klaviyo - this will capture UTM parameters
-        window.klaviyo.identify({
-          email: email,
-          first_name: firstName,
-          last_name: lastName,
-        });
+        // Use setTimeout to defer Klaviyo call until after hydration
+        setTimeout(() => {
+          if (window.klaviyo) {
+            window.klaviyo.identify({
+              email: email,
+              first_name: firstName,
+              last_name: lastName,
+            });
+            console.log('Klaviyo identify called successfully');
+          }
+        }, 0);
         
-        console.log('Klaviyo identify called successfully');
+        setHasIdentified(true);
       } else {
         console.warn('Email or name missing from action data');
       }
-    } else if (actionData?.success && typeof window !== 'undefined' && !window.klaviyo) {
+    } else if (actionData?.success && !window.klaviyo) {
       console.warn('Klaviyo script not loaded yet - window.klaviyo is undefined');
     }
-  }, [actionData]);
+  }, [actionData, hasIdentified]);
 
   // Image data for optimization
   const contactImage = {
