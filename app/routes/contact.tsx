@@ -17,12 +17,14 @@ declare global {
 }
 
 export async function action({ request, context }: ActionFunctionArgs) {
+  const klaviyoApiKey = context.env.KLAVIYO_API_KEY;
+
   const formData = await request.formData();
   const name = formData.get('name') as string;
   const email = formData.get('email') as string;
   const message = formData.get('message') as string;
   const joinNewsletter = formData.get('joinNewsletter') === 'on';
-
+  
   // Get country information from Cloudflare headers with graceful fallback
   const countryCode = request.headers.get('CF-IPCountry') || 'Unknown';
   const countryName = request.headers.get('CF-IPCountryName') || 'Unknown';
@@ -81,8 +83,6 @@ Timestamp: ${new Date().toISOString()}`,
       replyTo: email, // Allow team to reply directly to the sender
     });
 
-    // Always create/update Klaviyo profile
-    const klaviyoApiKey = context.env.KLAVIYO_API_KEY;
     if (klaviyoApiKey) {
       // Split name into first and last name
       const nameParts = name.trim().split(' ');
@@ -135,32 +135,16 @@ export default function Contact() {
     // Skip on server-side or if we've already identified this submission
     if (typeof window === 'undefined' || hasIdentified) return;
     
-    console.log('Contact form success effect triggered:', {
-      success: actionData?.success,
-      windowExists: typeof window !== 'undefined',
-      klaviyoExists: typeof window !== 'undefined' && !!window.klaviyo,
-      klaviyoObject: typeof window !== 'undefined' ? window.klaviyo : undefined,
-      actionData: actionData,
-    });
-
     if (actionData?.success && window.klaviyo) {
       const email = actionData.email;
       const name = actionData.name;
-      
-      console.log('User data from action response:', { email, name });
       
       if (email && name) {
         // Split name into first and last name
         const nameParts = name.trim().split(' ');
         const firstName = nameParts[0] || '';
         const lastName = nameParts.slice(1).join(' ') || '';
-        
-        console.log('Calling Klaviyo identify with:', {
-          email,
-          first_name: firstName,
-          last_name: lastName,
-        });
-        
+                
         // Use setTimeout to defer Klaviyo call until after hydration
         setTimeout(() => {
           if (window.klaviyo) {

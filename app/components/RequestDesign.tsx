@@ -60,7 +60,7 @@ export const RequestDesign = () => {
       await drawscapeApi.post('schematics/request', payload);
 
       if (window.klaviyo) {
-        let res = await window.klaviyo.identify({
+        await window.klaviyo.identify({
           email: payload.email,
           first_name: payload.name.split(' ')[0],
           last_name: payload.name.split(' ').slice(1).join(' '),
@@ -70,7 +70,6 @@ export const RequestDesign = () => {
           email: payload.email,
           design_request: payload.request,
         });
-        console.log('Klaviyo identify called successfully', res);
       }
       
       setSubmitted(true);
