@@ -153,7 +153,7 @@ export default function Product() {
           <div className="lg:grid lg:grid-cols-6 lg:items-start lg:gap-x-8">
 
             {/* Product image */}
-            <div className="lg:col-span-4">
+            <div className="px-4 sm:px-0 lg:col-span-4">
               {firstImage && (
                 <img
                   src={firstImage.url}
