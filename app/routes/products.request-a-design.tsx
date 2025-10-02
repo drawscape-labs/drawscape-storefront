@@ -87,7 +87,7 @@ const productDetails = [
     name: 'How it Works',
     items: [
       'A $5 down payment starts the design process.',
-      'Once your design is scanned created, we\'ll refund your $5.',
+      'Once your design is created, we\'ll refund your $5.',
       'After seeing the design, you can request changes or make a purchase.',
     ],
   },
