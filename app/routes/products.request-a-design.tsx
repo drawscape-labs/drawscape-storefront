@@ -1,5 +1,6 @@
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {useLoaderData, type MetaFunction} from 'react-router';
+import {useState} from 'react';
 import {
   getSelectedProductOptions,
   Analytics,
@@ -9,8 +10,9 @@ import {
   useSelectedOptionInUrlParam,
 } from '@shopify/hydrogen';
 import {ProductPrice} from '~/components/ProductPrice';
-import {ProductForm} from '~/components/ProductForm';
 import {ProductReviews} from '~/components/ProductReviews';
+import {AddToCartButton} from '~/components/AddToCartButton';
+import {useAside} from '~/components/Aside';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {
   Disclosure,
@@ -18,6 +20,8 @@ import {
   DisclosurePanel,
 } from '@headlessui/react';
 import {MinusIcon, PlusIcon} from '@heroicons/react/24/outline';
+import {Input} from '~/ui/input';
+import {Field, Label} from '~/ui/fieldset';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [
@@ -113,6 +117,10 @@ const productDetails = [
 
 export default function Product() {
   const {product} = useLoaderData<typeof loader>();
+  const {open} = useAside();
+
+  // State for design request input
+  const [designRequest, setDesignRequest] = useState('');
 
   // Optimistically selects a variant with given available variant information
   const selectedVariant = useOptimisticVariant(
@@ -180,10 +188,42 @@ export default function Product() {
                   />
                 </div>
 
-                <ProductForm
-                  productOptions={productOptions}
-                  selectedVariant={selectedVariant}
-                />
+                <Field>
+                  <Label htmlFor="design-request">Design Request</Label>
+                  <Input
+                    id="design-request"
+                    type="text"
+                    value={designRequest}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setDesignRequest(e.target.value)
+                    }
+                    placeholder="Describe your design request..."
+                    className="w-full"
+                  />
+                </Field>
+
+                <AddToCartButton
+                  disabled={!selectedVariant || !selectedVariant.availableForSale}
+                  onClick={() => {
+                    open('cart');
+                  }}
+                  lines={
+                    selectedVariant
+                      ? [
+                          {
+                            merchandiseId: selectedVariant.id,
+                            quantity: 1,
+                            selectedVariant,
+                            attributes: designRequest.trim()
+                              ? [{key: 'Design', value: designRequest.trim()}]
+                              : [],
+                          },
+                        ]
+                      : []
+                  }
+                >
+                  {selectedVariant?.availableForSale ? 'Add to cart' : 'Sold out'}
+                </AddToCartButton>
               </div>
 
               {/* Additional Product Information */}
