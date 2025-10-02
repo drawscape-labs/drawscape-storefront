@@ -104,7 +104,7 @@ const productDetails = [
     name: 'Shipping / Returns',
     items: [
       '🇺🇸 US and 🌎 International Shipping',
-      'Shipping is less than $10 in the US and $20 - $40 internationally',
+      'Shipping is less than $10 in the US and $20 internationally',
       '100% Money Back Guarantee (Free Returns)',
       'Shipped in under 7 Days',
     ],
@@ -133,7 +133,10 @@ export default function Product() {
   const {title, descriptionHtml, media} = product;
 
   // Get the first image from media gallery
-  const firstImage = media?.edges?.[0]?.node?.image || selectedVariant?.image;
+  const firstMediaNode = media?.edges?.[0]?.node;
+  const firstImage =
+    (firstMediaNode?.__typename === 'MediaImage' ? firstMediaNode.image : null) ||
+    selectedVariant?.image;
 
   return (
     <>
@@ -298,6 +301,7 @@ const PRODUCT_FRAGMENT = `#graphql
     media(first: 20) {
       edges {
         node {
+          __typename
           ... on MediaImage {
             id
             image {
