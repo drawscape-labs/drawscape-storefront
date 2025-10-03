@@ -135,10 +135,9 @@ export function SearchSchematics() {
     close();
   }
 
-  // Handle submit request button click - close search and open request modal
+  // Handle submit request button click - close search
   function handleSubmitRequestClick() {
     close();
-    open('request-design');
   }
 
   return (
@@ -219,9 +218,11 @@ export function SearchSchematics() {
               <p>Submit a request and we'll notify you when it's added to the store.</p>
             </div>
             <div className="mt-5">
-              <Button color="light" onClick={handleSubmitRequestClick}>
-                Submit Request
-              </Button>
+              <Link to="/products/request-a-design" onClick={handleSubmitRequestClick}>
+                <Button color="light">
+                  Submit Request
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
