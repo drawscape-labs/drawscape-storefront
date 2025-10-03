@@ -90,27 +90,36 @@ const productDetails = [
   {
     name: 'How it Works',
     items: [
-      'A $5 down payment starts the design process.',
-      'Once your design is created, we\'ll refund your $5.',
-      'After seeing the design, you can request changes or make a purchase.',
+      'Tell us your design request, and then pay the $5 down payment.',
+      'We will send you design renderings in 24-72 hours.',
+      'You can request changes if needed.',
+      'Make your purchase via the website when you are happy with the design.',
     ],
   },
   {
-    name: 'About the Drawing',
+    name: 'How Long Does it Take?',
     items: [
-      'Size: 11x17 Inches (Tabloid)',
-      'Pens: Stabilo Fineliners or Sakura Gelly Rolls',
-      'Paper: 120lb / 250gsm Stock Paper',
-      'Drawn with a NextDraw Plotting Machine',
+      'Our goal is 24-72 hours to show you the first rendering.',
+      'If you have requests or changes, it can take longer.',
     ],
   },
   {
-    name: 'Shipping / Returns',
+    name: '100% Refund Policy',
     items: [
-      '🇺🇸 US and 🌎 International Shipping',
-      'Shipping is less than $10 in the US and $20 internationally',
-      '100% Money Back Guarantee (Free Returns)',
-      'Shipped in under 7 Days',
+      `If you don't like the design, we'll refund your $5. No questions asked.`,
+    ],
+  },
+  {
+    name: 'Can I share designs files?',
+    items: [
+      `Yes, if you have an custom images/files of your design, please share them with us.`,
+    ],
+  },
+  {
+    name: 'What can I Request?',
+    items: [
+      `This is primarily meant for Airports, Airplanes, Helicopters, and Sailboats.`,
+      <>If you have a more custom request, please <a href="/contact" className="underline text-blue-600 hover:text-blue-800">contact us</a>.</>,
     ],
   },
 ];
@@ -254,8 +263,8 @@ export default function Product() {
                       </h3>
                       <DisclosurePanel className="pb-6">
                         <ul role="list" className="list-disc space-y-1 pl-5 text-sm/6 text-gray-700 marker:text-gray-300">
-                          {detail.items.map((item) => (
-                            <li key={item} className="pl-2">
+                          {detail.items.map((item, index) => (
+                            <li key={index} className="pl-2">
                               {item}
                             </li>
                           ))}
