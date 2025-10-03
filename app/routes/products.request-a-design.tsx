@@ -158,17 +158,19 @@ export default function Product() {
   return (
     <>
       <div className="bg-white">
-        <div className="mx-auto max-w-2xl px-4 py-0 sm:px-6 md:py-12 lg:max-w-7xl lg:px-8 lg:py-12">
+        <div className="mx-auto max-w-2xl px-4 sm:px-6 md:py-12 lg:max-w-7xl lg:px-8 lg:py-12">
           <div className="lg:grid lg:grid-cols-6 lg:items-start lg:gap-x-8">
 
             {/* Product image */}
-            <div className="px-4 sm:px-0 lg:col-span-4">
+            <div className="px-4 sm:px-0 lg:col-span-4 sm:mt-0">
               {firstImage && (
-                <img
-                  src={firstImage.url}
-                  alt={firstImage.altText || title}
-                  className="w-full h-auto rounded-lg"
-                />
+                <div className="h-40 sm:h-auto w-full overflow-hidden rounded-lg">
+                  <img
+                    src={firstImage.url}
+                    alt={firstImage.altText || title}
+                    className="w-full h-full object-cover object-center"
+                  />
+                </div>
               )}
             </div>
 
