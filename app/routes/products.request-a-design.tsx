@@ -112,7 +112,7 @@ const productDetails = [
   {
     name: 'Can I share designs files?',
     items: [
-      `Yes, if you have an custom images/files of your design, please share them with us.`,
+      `Yes, if you have any custom images/files of your design, please share them with us.`,
     ],
   },
   {
