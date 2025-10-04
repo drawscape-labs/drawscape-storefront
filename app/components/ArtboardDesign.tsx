@@ -4,7 +4,7 @@ import { ArtboardColorPicker } from './ArtboardColorPicker';
 import { Field, Label } from '../ui/fieldset';
 import { Button } from '../ui/button';
 import { useArtboards } from '../context/artboards';
-import { useAside } from './Aside';
+import { Link } from 'react-router';
 
 type ArtboardDesignProps = {
   schematics: Schematic[];
@@ -31,7 +31,6 @@ export function ArtboardDesign({
   schematics,
 }: ArtboardDesignProps) {
   const { vectors } = useArtboards();
-  const { open } = useAside();
 
   // Get category from first schematic and create readable label
   const firstSchematic = schematics[0];
@@ -46,7 +45,9 @@ export function ArtboardDesign({
         <Label className="capitalize">{categoryLabel}</Label>
         <div className="flex items-center gap-2 mt-1 sm:mt-2">
           <ArtboardSelectSchematic  options={schematics} />
-          <Button outline onClick={() => open('request-design')}>Request</Button>
+          <Link to="/products/request-a-design">
+            <Button outline>Request</Button>
+          </Link>
         </div>
       </Field>
       
