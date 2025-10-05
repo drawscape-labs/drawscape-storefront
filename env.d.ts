@@ -31,6 +31,7 @@ declare global {
     AIRPORT_DEFAULT_SCHEMATIC_ID?: string;
     AIRPORT_TRAFFIC_DEFAULT_SCHEMATIC_ID?: string;
     TRAIL_DEFAULT_SCHEMATIC_ID?: string;
+    CAR_DEFAULT_SCHEMATIC_ID?: string;
     
     // Judgeme public configuration
     JUDGEME_SHOP_DOMAIN: string;
