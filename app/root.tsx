@@ -20,6 +20,7 @@ import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
 import appStyles from '~/styles/app.css?url';
 import tailwindCss from './styles/tailwind.css?url';
 import {PageLayout} from './components/PageLayout';
+import {FrontChat} from './components/FrontChat';
 import { useJudgeme } from '@judgeme/shopify-hydrogen';
 
 export type RootLoader = typeof loader;
@@ -195,12 +196,6 @@ export function Layout({children}: {children?: React.ReactNode}) {
         <Links />
         {/* Meta Pixel Code */}
         <ClientOnly>
-          <script src='https://chat-assets.frontapp.com/v1/chat.bundle.js'></script>
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `window.FrontChat('init', {chatId: '70623342e449f67127b6dca1dbf0b3d8', useDefaultLauncher: true});`,
-            }}
-          />          
           <script
             dangerouslySetInnerHTML={{
               __html: `
@@ -242,6 +237,7 @@ export function Layout({children}: {children?: React.ReactNode}) {
             <QueryClientProvider client={queryClient}>
               <PageLayout {...data}>{children}</PageLayout>
               <ClientOnly>
+                <FrontChat />
                 {process.env.NODE_ENV === 'development' ? (
                   <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
                 ) : null}
@@ -252,6 +248,7 @@ export function Layout({children}: {children?: React.ReactNode}) {
           <QueryClientProvider client={queryClient}>
             {children}
             <ClientOnly>
+              <FrontChat />
               {process.env.NODE_ENV === 'development' ? (
                 <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
               ) : null}
