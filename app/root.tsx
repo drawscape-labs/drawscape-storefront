@@ -16,6 +16,10 @@ import {
   useRouteLoaderData,
 } from 'react-router';
 import favicon from '~/assets/favicon.ico';
+import favicon16 from '~/assets/favicon.png';
+import favicon32 from '~/assets/favicon.png';
+import appleTouchIcon from '~/assets/favicon.png';
+
 import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
 import appStyles from '~/styles/app.css?url';
 import tailwindCss from './styles/tailwind.css?url';
@@ -67,7 +71,11 @@ export function links() {
       rel: 'preconnect',
       href: 'https://shop.app',
     },
+    {rel: 'icon', type: 'image/png', sizes: '32x32', href: favicon32},
+    {rel: 'icon', type: 'image/png', sizes: '16x16', href: favicon16},
     {rel: 'icon', type: 'image/x-icon', href: favicon},
+    {rel: 'apple-touch-icon', sizes: '180x180', href: appleTouchIcon},
+    {rel: 'manifest', href: '/site.webmanifest'},
   ];
 }
 
