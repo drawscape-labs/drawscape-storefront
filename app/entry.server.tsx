@@ -18,7 +18,7 @@ export default async function handleRequest(
       storeDomain: context.env.PUBLIC_STORE_DOMAIN,
     },
     // Allow external stylesheet for Inter font
-    styleSrc: ['https://rsms.me'],
+    styleSrc: ['https://rsms.me', 'blob:', "'self'" ],
     // Allow images from Tailwind assets and Shopify domains
     imgSrc: [
       "'self'",
@@ -28,15 +28,19 @@ export default async function handleRequest(
       'https://tailwindcss.com',
       'https://drawscape.io',
       'https://drawscape-projects.s3.us-west-2.amazonaws.com',
+      'https://queue.simpleanalyticscdn.com',
     ],
     // Allow font files for Inter
-    fontSrc: ["'self'", 'data:', 'https://rsms.me'],
+    fontSrc: ["'self'", 'data:', 'https://rsms.me', 'https://static.klaviyo.com'],
     
     connectSrc: [
       "'self'",
       'https://cdn.judge.me',
       'https://cdnwidget.judge.me',
-      'https://cdn.shopify.com'
+      'https://cdn.shopify.com',
+      'https://scripts.simpleanalyticscdn.com',
+      'https://static-forms.klaviyo.com',
+      'https://fast.a.klaviyo.com'
     ],
     
     scriptSrc: [
@@ -44,7 +48,12 @@ export default async function handleRequest(
       'https://cdn.judge.me',
       'https://cdnwidget.judge.me',
       'https://cdn.shopify.com',
-      "'unsafe-inline'"
+      'https://scripts.simpleanalyticscdn.com',
+      'https://static.klaviyo.com',
+      'https://static-tracking.klaviyo.com',
+      'https://chat-assets.frontapp.com',
+      "'unsafe-inline'",
+      "'unsafe-eval'"
       // The nonce will be automatically added by createContentSecurityPolicy
     ],
   });
