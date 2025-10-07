@@ -195,6 +195,12 @@ export function Layout({children}: {children?: React.ReactNode}) {
         <Links />
         {/* Meta Pixel Code */}
         <ClientOnly>
+          <script src='https://chat-assets.frontapp.com/v1/chat.bundle.js'></script>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `window.FrontChat('init', {chatId: '70623342e449f67127b6dca1dbf0b3d8', useDefaultLauncher: true});`,
+            }}
+          />          
           <script
             dangerouslySetInnerHTML={{
               __html: `
