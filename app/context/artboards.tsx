@@ -187,7 +187,6 @@ export function ArtboardsProvider({
       const renderData = {
         title: title || schematic?.display_title || '',
         subtitle: subtitle || schematic?.display_subtitle || '',
-        color_scheme: colorScheme.key,
         paper_color: colorScheme.paper_color,
         pens: colorScheme.pens,
         orientation: selectedVector.orientation || 'portrait',
@@ -195,8 +194,6 @@ export function ArtboardsProvider({
         schematic_url: selectedVector.url || '',
         render_style: selectedVector.style || 'blueprint',
       };
-      
-      console.log('renderData', renderData);
 
       const response = await API.renderArtboard(renderData, {
         signal: abortController.signal
