@@ -20,18 +20,24 @@ export function ProductSchematicForm({
   const {open} = useAside();
   
   
-  const {schematicId, schematic, vectorId, colorScheme, legend, title, subtitle, renderedImageDataUrl, isRendering} = useArtboards();
+  const {productHandle, schematicId, schematic, vectorId, selectedVector, colorScheme, legend, title, subtitle, renderedImageDataUrl, isRendering} = useArtboards();
   const artboardPayload = {
     schematic_id: schematicId,
     schematic_vector_id: vectorId,
+    style: selectedVector?.style,
     title: title,
     subtitle: subtitle,
     color_scheme: colorScheme?.key,
+    paper_color: colorScheme?.paper_color,
+    pens: colorScheme?.pens,
+    product_handle: productHandle,
     data: {
       legend: legend
     }
   }
 
+  console.log('artboardPayload', artboardPayload);
+  
   return (
     <div className="product-form">
       {/* {productOptions.map((option) => {

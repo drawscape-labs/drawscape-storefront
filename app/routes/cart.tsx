@@ -47,6 +47,11 @@ export async function action({request, context}: ActionFunctionArgs) {
         if (typeof artboardAttr?.value === 'string') {
           const payload = JSON.parse(artboardAttr.value);
           const artboardResponse = await drawscapeApi.post('artboards', payload).catch(console.log);
+          
+          // Initiate locking process
+          if (artboardResponse?.id) {
+            drawscapeApi.post(`artboards/${artboardResponse.id}/lock`)
+          }
 
           // Preserve all existing attributes except _artboard_payload
           // (We no longer send `_preview_svg`; optimistic preview uses
