@@ -26,7 +26,7 @@ export function ProductSchematicForm({
     schematic_vector_id: vectorId,
     title: title,
     subtitle: subtitle,
-    color_scheme: colorScheme?.name,
+    color_scheme: colorScheme?.key,
     data: {
       legend: legend
     }

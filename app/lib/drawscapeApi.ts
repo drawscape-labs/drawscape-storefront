@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
+import { LegendItem, Pen } from '~/context/artboards';
 
 /**
  * Drawscape API client
@@ -65,14 +66,14 @@ export default {
   // Convenience method for rendering artboards as PNG
   renderArtboard: (data: {
     render_style: string;
-    title: string;
+    orientation: string;
+    size?: string;
+    title?: string;
     subtitle?: string;
     color_scheme?: string;
     paper_color?: string;
-    pen_color?: string;
-    size?: string;
-    orientation?: string;
-    legend?: object;
+    pens?: Array<Pen>;
+    legend?: Array<LegendItem>;
     schematic_url: string;
   }, options?: RequestOptions) =>
     request<Blob>('POST', 'artboard/render', data, undefined, { ...options, responseType: 'blob' }),

@@ -71,7 +71,11 @@ export function ProductSchematic({
   const { title, media } = product;
 
   return (
-    <ArtboardsProvider key={initialSchematicId ?? 'none'} initialSchematicId={initialSchematicId}>
+    <ArtboardsProvider
+      key={initialSchematicId ?? 'none'}
+      initialSchematicId={initialSchematicId}
+      productHandle={product?.handle ?? null}
+    >
       <div className="bg-white">
         <div className="mx-auto max-w-2xl px-4 py-0 sm:px-6 md:py-12 lg:max-w-7xl lg:px-8 lg:py-12">
           <div className="lg:grid lg:grid-cols-6 lg:items-start lg:gap-x-8">

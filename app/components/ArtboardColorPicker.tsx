@@ -20,21 +20,22 @@ export function ArtboardColorPicker() {
     <div role="group" className="flex flex-wrap gap-4">
       {colorSchemes.map((scheme) => {
         const paperColor = colorMap[scheme.paper_color] || scheme.paper_color;
-        const penColor = colorMap[scheme.pen_color] || scheme.pen_color;
-        const isSelected = colorScheme?.name === scheme.name;
+        const primaryPen = scheme.pens?.find((pen) => pen.key === 'primary');
+        const penColor = primaryPen ? (colorMap[primaryPen.color] || primaryPen.color) : '#000000';
+        const isSelected = colorScheme?.key === scheme.key;
         
         return (
           <label
-            key={scheme.name}
+            key={scheme.key}
             className="relative inline-flex items-center cursor-pointer"
           >
             <input
               type="radio"
               name="color-scheme"
-              value={scheme.name}
+              value={scheme.key}
               checked={isSelected}
               onChange={() => setColorScheme(scheme)}
-              aria-label={scheme.name.replace(/_/g, ' ')}
+              aria-label={scheme.key.replace(/_/g, ' ')}
               className="sr-only peer"
             />
             <span 

@@ -17,10 +17,17 @@ export type LegendItem = {
   content: string;
 };
 
+export type Pen = {
+  key: string;    // required
+  color: string;  // required
+  title?: string; // TODO: use to create titles in Inkspace
+};
+
 export type ColorScheme = {
-  name: string;
-  paper_color: string;
-  pen_color: string;
+  key: string; //required
+  paper_color: string; //required
+  pens: Pen[]; //required
+  variant?: string;  // TODO: map to a Shopify variant
 };
 
 // Internal type for schematic data coming from the API
@@ -34,25 +41,28 @@ type Schematic = {
 };
 
 type ArtboardsContextValue = {
+  // Product context
+  productHandle: string | null;
+
   // Selection
   schematicId: string | null;
   selectSchematic: (id: string | null) => void;
-  
+
   vectorId: string | null;
   selectVector: (id: string | null) => void;
-  
+
   // Raw data
   schematic: Schematic | null;
-  
+
   // Color schemes
   colorSchemes: ColorScheme[];
   colorScheme: ColorScheme | null;
   setColorScheme: (scheme: ColorScheme) => void;
-  
+
   // Derived data
   vectors: VectorOption[];
   selectedVector: VectorOption | null;
-  
+
   // Controlled presentation state
   title?: string;
   setTitle: (title?: string) => void;
@@ -60,12 +70,12 @@ type ArtboardsContextValue = {
   setSubtitle: (subtitle?: string) => void;
   legend: LegendItem[];
   setLegend: (items: LegendItem[]) => void;
-  
+
   // Render functionality
   renderedImageDataUrl: string | null;
   isRendering: boolean;
   render: () => Promise<void>;
-  
+
   // Loading state
   status: 'idle' | 'loading' | 'ready' | 'error';
   error: string | null;
@@ -78,10 +88,15 @@ const ArtboardsContext = createContext<ArtboardsContextValue | undefined>(
 export function ArtboardsProvider({
   children,
   initialSchematicId,
+  productHandle,
 }: {
   children: React.ReactNode;
   initialSchematicId?: string | null;
+  productHandle?: string | null;
 }) {
+  // Product context
+  const [storedProductHandle] = useState<string | null>(productHandle ?? null);
+
   // Selection state
   const [schematicId, setSchematicId] = useState<string | null>(
     initialSchematicId ?? null,
@@ -172,14 +187,16 @@ export function ArtboardsProvider({
       const renderData = {
         title: title || schematic?.display_title || '',
         subtitle: subtitle || schematic?.display_subtitle || '',
-        color_scheme: colorScheme.name,
+        color_scheme: colorScheme.key,
         paper_color: colorScheme.paper_color,
-        pen_color: colorScheme.pen_color,
+        pens: colorScheme.pens,
         orientation: selectedVector.orientation || 'portrait',
         legend: legend,
         schematic_url: selectedVector.url || '',
         render_style: selectedVector.style || 'blueprint',
       };
+      
+      console.log('renderData', renderData);
 
       const response = await API.renderArtboard(renderData, {
         signal: abortController.signal
@@ -296,13 +313,14 @@ export function ArtboardsProvider({
 
     async function fetchColorSchemes() {
       try {
-        const response = await API.get<{color_schemes: ColorScheme[]}>('/artboard/color-schemes');
+        const params = storedProductHandle ? { product: storedProductHandle } : undefined;
+        const response = await API.get<{color_schemes: ColorScheme[]}>('/artboard/color-schemes', params);
         if (!isCancelled && response?.color_schemes) {
           setColorSchemes(response.color_schemes);
-          
+
           // Initialize colorScheme to first result or preferred default
-          if (!colorScheme || !response.color_schemes.some(cs => cs.name === colorScheme.name)) {
-            const blueWhite = response.color_schemes.find(cs => cs.name === 'blue_white');
+          if (!colorScheme || !response.color_schemes.some(cs => cs.key === colorScheme.key)) {
+            const blueWhite = response.color_schemes.find(cs => cs.key === 'blue_white');
             setColorScheme(blueWhite || response.color_schemes[0] || null);
           }
         }
@@ -319,7 +337,7 @@ export function ArtboardsProvider({
     return () => {
       isCancelled = true;
     };
-  }, []); // Fetch once on mount
+  }, [storedProductHandle]); // Re-fetch when productHandle changes
 
   // Cleanup effect - cancel any pending render requests on unmount
   useEffect(() => {
@@ -333,6 +351,7 @@ export function ArtboardsProvider({
 
   const value = useMemo<ArtboardsContextValue>(
     () => ({
+      productHandle: storedProductHandle,
       schematicId,
       selectSchematic,
       vectorId,
@@ -355,7 +374,7 @@ export function ArtboardsProvider({
       status,
       error,
     }),
-    [schematicId, vectorId, schematic, vectors, selectedVector, colorSchemes, colorScheme, legend, title, subtitle, renderedImageDataUrl, isRendering, status, error],
+    [storedProductHandle, schematicId, vectorId, schematic, vectors, selectedVector, colorSchemes, colorScheme, legend, title, subtitle, renderedImageDataUrl, isRendering, status, error],
   );
 
   return (
