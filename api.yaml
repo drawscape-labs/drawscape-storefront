@@ -61,6 +61,8 @@ paths:
                   required:
                     0: key
                     1: color
+              product_handle:
+                type: string
               style:
                 type: string
               locked:
@@ -1113,6 +1115,8 @@ paths:
                   required:
                     0: key
                     1: color
+              product_handle:
+                type: string
               schematic_vector_id:
                 type: string
               style:
