@@ -65,6 +65,11 @@ async function loadCriticalData({
   // The API handle might be localized, so redirect to the localized handle
   redirectIfHandleIsLocalized(request, {handle, data: product});
 
+  // Extract schematic category from productType (format: schematic.sailboats)
+  const schematicCategory = product.productType?.startsWith('schematic.')
+    ? product.productType.split('.')[1]
+    : SCHEMATIC_CATEGORY;
+
   // Parse URL query params
   const url = new URL(request.url);
   const paramId = url.searchParams.get('schematic_id') || url.searchParams.get('schematicId');
@@ -77,7 +82,7 @@ async function loadCriticalData({
     const raw = await api.get('schematics', {
       published: 'true',
       sort: 'title',
-      category: SCHEMATIC_CATEGORY, 
+      category: schematicCategory,
       limit: 500
     });
     schematics = (Array.isArray(raw) ? raw : [])
@@ -101,6 +106,7 @@ async function loadCriticalData({
     product,
     initialSchematicId,
     schematics,
+    schematicCategory,
   };
 }
 
@@ -117,7 +123,7 @@ function loadDeferredData(_args: LoaderFunctionArgs) {
 }
 
 export default function Product() {
-  const {product, initialSchematicId, schematics} = useLoaderData<typeof loader>();
+  const {product, initialSchematicId, schematics, schematicCategory} = useLoaderData<typeof loader>();
 
   // Optimistically selects a variant with given available variant information
   const selectedVariant = useOptimisticVariant(
@@ -134,7 +140,7 @@ export default function Product() {
     ...product,
     selectedOrFirstAvailableVariant: selectedVariant,
   });
-  
+
 
   return (
     <>
@@ -144,6 +150,7 @@ export default function Product() {
         schematics={schematics}
         productOptions={productOptions}
         selectedVariant={selectedVariant}
+        schematicCategory={schematicCategory}
       />
       
       {/* Analytics */}
@@ -211,6 +218,7 @@ const PRODUCT_FRAGMENT = `#graphql
     handle
     descriptionHtml
     description
+    productType
     encodedVariantExistence
     encodedVariantAvailability
     media(first: 20) {

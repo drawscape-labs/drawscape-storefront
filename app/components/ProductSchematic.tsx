@@ -27,6 +27,7 @@ export interface ProductSchematicProps {
   schematics: Schematic[];
   productOptions: any[];
   selectedVariant: any;
+  schematicCategory: string;
 }
 
 // Product details for disclosure sections
@@ -67,6 +68,7 @@ export function ProductSchematic({
   schematics,
   productOptions,
   selectedVariant,
+  schematicCategory,
 }: ProductSchematicProps) {
   const { title, media } = product;
 
@@ -74,7 +76,7 @@ export function ProductSchematic({
     <ArtboardsProvider
       key={initialSchematicId ?? 'none'}
       initialSchematicId={initialSchematicId}
-      productHandle={product?.handle ?? null}
+      schematicCategory={schematicCategory}
     >
       <div className="bg-white">
         <div className="mx-auto max-w-2xl px-4 py-0 sm:px-6 md:py-12 lg:max-w-7xl lg:px-8 lg:py-12">

@@ -42,7 +42,7 @@ type Schematic = {
 
 type ArtboardsContextValue = {
   // Product context
-  productHandle: string | null;
+  schematicCategory: string | null;
 
   // Selection
   schematicId: string | null;
@@ -88,14 +88,14 @@ const ArtboardsContext = createContext<ArtboardsContextValue | undefined>(
 export function ArtboardsProvider({
   children,
   initialSchematicId,
-  productHandle,
+  schematicCategory,
 }: {
   children: React.ReactNode;
   initialSchematicId?: string | null;
-  productHandle?: string | null;
+  schematicCategory?: string | null;
 }) {
   // Product context
-  const [storedProductHandle] = useState<string | null>(productHandle ?? null);
+  const [storedSchematicCategory] = useState<string | null>(schematicCategory ?? null);
 
   // Selection state
   const [schematicId, setSchematicId] = useState<string | null>(
@@ -310,7 +310,7 @@ export function ArtboardsProvider({
 
     async function fetchColorSchemes() {
       try {
-        const params = storedProductHandle ? { product: storedProductHandle } : undefined;
+        const params = storedSchematicCategory ? { category: storedSchematicCategory } : undefined;
         const response = await API.get<{color_schemes: ColorScheme[]}>('/artboard/color-schemes', params);
         if (!isCancelled && response?.color_schemes) {
           setColorSchemes(response.color_schemes);
@@ -334,7 +334,7 @@ export function ArtboardsProvider({
     return () => {
       isCancelled = true;
     };
-  }, [storedProductHandle]); // Re-fetch when productHandle changes
+  }, [storedSchematicCategory]); // Re-fetch when schematicCategory changes
 
   // Cleanup effect - cancel any pending render requests on unmount
   useEffect(() => {
@@ -348,7 +348,7 @@ export function ArtboardsProvider({
 
   const value = useMemo<ArtboardsContextValue>(
     () => ({
-      productHandle: storedProductHandle,
+      schematicCategory: storedSchematicCategory,
       schematicId,
       selectSchematic,
       vectorId,
@@ -371,7 +371,7 @@ export function ArtboardsProvider({
       status,
       error,
     }),
-    [storedProductHandle, schematicId, vectorId, schematic, vectors, selectedVector, colorSchemes, colorScheme, legend, title, subtitle, renderedImageDataUrl, isRendering, status, error],
+    [storedSchematicCategory, schematicId, vectorId, schematic, vectors, selectedVector, colorSchemes, colorScheme, legend, title, subtitle, renderedImageDataUrl, isRendering, status, error],
   );
 
   return (
