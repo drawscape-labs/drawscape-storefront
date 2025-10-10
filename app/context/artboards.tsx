@@ -9,7 +9,7 @@ export type VectorOption = {
   primary?: boolean;
   optimized?: boolean;
   published?: boolean;
-  style?: string;
+  render_style?: string;
 };
 
 export type LegendItem = {
@@ -135,7 +135,7 @@ export function ArtboardsProvider({
             title: v?.title,
             orientation: v?.orientation,
             primary: v?.primary,
-            style: v?.style,
+            render_style: v?.render_style,
             published: v?.published,
           }))
           .filter((v: VectorOption) => !!v.id && v.published !== false)
@@ -192,7 +192,7 @@ export function ArtboardsProvider({
         orientation: selectedVector.orientation || 'portrait',
         legend: legend,
         schematic_url: selectedVector.url || '',
-        render_style: selectedVector.style || 'blueprint',
+        render_style: selectedVector.render_style || 'blueprint',
       };
 
       const response = await API.renderArtboard(renderData, {

@@ -12,19 +12,21 @@ import {useArtboards} from '~/context/artboards';
 export function ProductSchematicForm({
   productOptions,
   selectedVariant,
+  productHandle,
 }: {
   productOptions: MappedProductOptions[];
   selectedVariant: ProductFragment['selectedOrFirstAvailableVariant'];
+  productHandle?: string;
 }) {
   const navigate = useNavigate();
   const {open} = useAside();
-  
-  
-  const {productHandle, schematicId, schematic, vectorId, selectedVector, colorScheme, legend, title, subtitle, renderedImageDataUrl, isRendering} = useArtboards();
+
+
+  const {schematicId, schematic, vectorId, selectedVector, colorScheme, legend, title, subtitle, renderedImageDataUrl, isRendering} = useArtboards();
   const artboardPayload = {
     schematic_id: schematicId,
     schematic_vector_id: vectorId,
-    style: selectedVector?.style,
+    render_style: selectedVector?.render_style,
     title: title,
     subtitle: subtitle,
     color_scheme: colorScheme?.key,

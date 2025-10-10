@@ -143,6 +143,7 @@ export function ProductSchematic({
                 <ProductSchematicForm
                   productOptions={productOptions}
                   selectedVariant={selectedVariant}
+                  productHandle={product.handle}
                 />
               </div>
 
