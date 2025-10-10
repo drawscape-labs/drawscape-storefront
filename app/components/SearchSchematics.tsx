@@ -16,6 +16,8 @@ function getCategoryIcon(category: string) {
       return <FancyIcon name="map" />;
     case 'aircraft':
       return <FancyIcon name="plane" />
+    case 'cars':
+      return <FancyIcon name="car" />
     default:
       return <FancyIcon name="map" />;
   }
@@ -59,7 +61,7 @@ export function SearchSchematics() {
         limit: 25,
         published: true,
         tracking: true,
-        categories: ['airport_diagrams', 'aircraft', 'sailboats'],
+        categories: ['airport_diagrams', 'aircraft', 'sailboats', 'cars'],
       }, {
         signal: controller.signal
       });
@@ -125,6 +127,8 @@ export function SearchSchematics() {
         return `/products/airports?schematic_id=${schematic.id}`;
       case 'aircraft':
         return `/products/aircraft?schematic_id=${schematic.id}`;
+      case 'cars':
+        return `/products/cars?schematic_id=${schematic.id}`;
       default:
         return `/`;
     }
