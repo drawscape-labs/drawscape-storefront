@@ -1,8 +1,23 @@
-import {Suspense} from 'react';
+import {Suspense, useState} from 'react';
 import {Await, NavLink} from 'react-router';
 import type {FooterQuery, HeaderQuery} from 'storefrontapi.generated';
 
 import { FancyIcon } from './FancyIcons';
+import { Input } from '~/ui/input';
+import { Button } from '~/ui/button';
+import { subscribeToNewsletterClient } from '~/lib/klaviyo';
+
+// Declare Klaviyo global for TypeScript
+declare global {
+  interface Window {
+    klaviyo?: {
+      identify: (properties: Record<string, any>) => void;
+      track: (eventName: string, properties?: Record<string, any>) => void;
+      push: (args: any[]) => void;
+      isIdentified: () => boolean;
+    };
+  }
+}
 
 const FALLBACK_FOOTER_MENU = {
   items: [
@@ -138,32 +153,11 @@ export function Footer({
               </div>
             </div>
             <div className="mt-10 xl:mt-0">
-              <h3 className="text-sm/6 font-semibold text-gray-900">Subscribe to our newsletter</h3>
+              <h3 className="text-sm/6 font-semibold text-gray-900">Stay Updated!</h3>
               <p className="mt-2 text-sm/6 text-gray-600">
-                The latest news, articles, and resources, sent to your inbox weekly.
+              Don't miss new additions to the Drawscape library.
               </p>
-              <form className="mt-6 sm:flex sm:max-w-md">
-                <label htmlFor="email-address" className="sr-only">
-                  Email address
-                </label>
-                <input
-                  id="email-address"
-                  name="email-address"
-                  type="email"
-                  required
-                  placeholder="Enter your email"
-                  autoComplete="email"
-                  className="w-full min-w-0 rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:w-64 sm:text-sm/6 xl:w-full"
-                />
-                <div className="mt-4 sm:mt-0 sm:ml-4 sm:shrink-0">
-                  <button
-                    type="submit"
-                    className="flex w-full items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                  >
-                    Subscribe
-                  </button>
-                </div>
-              </form>
+              <NewsletterForm />
             </div>
           </div>
           <div className="mt-16 border-t border-gray-900/10 pt-8 sm:mt-20 md:flex md:items-center md:justify-between lg:mt-24">
@@ -188,6 +182,94 @@ export function Footer({
         </div>
       </footer>
     </Suspense>
+  );
+}
+
+function NewsletterForm() {
+  const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      const success = await subscribeToNewsletterClient({
+        email,
+        properties: {
+          source: 'Footer Newsletter',
+        },
+      });
+
+      if (success) {
+        // Identify the user in Klaviyo for session tracking
+        if (window.klaviyo) {
+          window.klaviyo.identify({
+            email: email,
+          });
+        }
+
+        setSubmitted(true);
+        setEmail('');
+      } else {
+        setError('Failed to subscribe. Please try again.');
+      }
+    } catch (err) {
+      setError('An error occurred. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (submitted) {
+    return (
+      <div className="mt-6 rounded-md bg-green-50 p-4">
+        <p className="text-sm font-medium text-green-800">
+          Thanks for subscribing! Check your email to confirm.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {error && (
+        <div className="mt-6 rounded-md bg-red-50 p-4">
+          <p className="text-sm font-medium text-red-800">{error}</p>
+        </div>
+      )}
+      <form onSubmit={handleSubmit} className="mt-6 sm:flex sm:max-w-md">
+        <label htmlFor="email-address" className="sr-only">
+          Email address
+        </label>
+        <div className="w-full sm:w-64 xl:w-full">
+          <Input
+            id="email-address"
+            name="email-address"
+            type="email"
+            value={email}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+            required
+            placeholder="Enter your email"
+            autoComplete="email"
+            className="w-full"
+          />
+        </div>
+        <div className="mt-4 sm:mt-0 sm:ml-4 sm:shrink-0">
+          <Button
+            type="submit"
+            color="indigo"
+            disabled={isSubmitting || !email.trim()}
+            className="w-full sm:w-auto"
+          >
+            {isSubmitting ? 'Subscribing...' : 'Subscribe'}
+          </Button>
+        </div>
+      </form>
+    </>
   );
 }
 
