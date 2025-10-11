@@ -13,9 +13,11 @@ import { Input } from '~/ui/input';
 import { Textarea } from '~/ui/textarea';
 import { Button } from '~/ui/button';
 import { Heading } from '~/ui/heading';
-import { Fieldset, Field, Label } from '~/ui/fieldset';
+import { Fieldset, Field, Label, Description } from '~/ui/fieldset';
+import { CheckboxField, Checkbox } from '~/ui/checkbox';
 import { useAside } from '~/components/Aside';
 import drawscapeApi from '~/lib/drawscapeApi';
+import { subscribeToNewsletterClient } from '~/lib/klaviyo';
 
 // Declare Klaviyo global for TypeScript
 declare global {
@@ -35,18 +37,20 @@ export const RequestDesign = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [request, setRequest] = useState('');
+  const [joinNewsletter, setJoinNewsletter] = useState(true);
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Determine if form is valid (all required fields filled)
   const isFormValid = name.trim() !== '' && email.trim() !== '' && request.trim() !== '';
-
+  
   // Submit handler with API integration
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError(null);
+
 
     try {
       // Prepare the request payload according to API specification
@@ -59,24 +63,47 @@ export const RequestDesign = () => {
       // Submit to Drawscape API via the proxy
       await drawscapeApi.post('schematics/request', payload);
 
+      // Split name into first and last name for Klaviyo
+      const nameParts = payload.name.trim().split(' ');
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || '';
+
       if (window.klaviyo) {
-        await window.klaviyo.identify({
+        window.klaviyo.identify({
           email: payload.email,
-          first_name: payload.name.split(' ')[0],
-          last_name: payload.name.split(' ').slice(1).join(' '),
+          first_name: firstName,
+          last_name: lastName,
         });
-        
-        await window.klaviyo.track('Requested Design', {
+
+        window.klaviyo.track('Requested Design', {
           email: payload.email,
           design_request: payload.request,
         });
       }
-      
+
+      // Subscribe to newsletter if user opted in
+      if (joinNewsletter) {
+        try {
+          await subscribeToNewsletterClient({
+            email: payload.email,
+            firstName,
+            lastName,
+            properties: {
+              source: 'Design Request Form',
+            },
+          });
+        } catch (error) {
+          // Log error but don't fail the form submission
+          console.error('Newsletter subscription failed:', error);
+        }
+      }
+
       setSubmitted(true);
       // Clear form on success
       setName('');
       setEmail('');
       setRequest('');
+      setJoinNewsletter(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to submit request. Please try again.');
     } finally {
@@ -165,6 +192,21 @@ export const RequestDesign = () => {
                 className="w-full resize-none"
               />
             </Field>
+
+            {/* Newsletter Signup */}
+            <CheckboxField className="mb-8">
+              <Checkbox
+                id="joinNewsletter"
+                name="joinNewsletter"
+                color="indigo"
+                checked={joinNewsletter}
+                onChange={setJoinNewsletter}
+              />
+              <Label>Stay Updated!</Label>
+              <Description>
+                Stay update on all the latest additions.
+              </Description>
+            </CheckboxField>
 
             <div className="flex justify-center gap-4">
               <Button 
