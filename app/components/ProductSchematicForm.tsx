@@ -37,8 +37,6 @@ export function ProductSchematicForm({
       legend: legend
     }
   }
-
-  console.log('artboardPayload', artboardPayload);
   
   return (
     <div className="product-form">

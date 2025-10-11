@@ -2,6 +2,9 @@
 const KLAVIYO_API_BASE_URL = 'https://a.klaviyo.com/api';
 const KLAVIYO_API_REVISION = '2025-07-15';
 
+// Klaviyo public company ID for client-side API calls
+const KLAVIYO_COMPANY_ID = 'WZP4fv';
+
 // Klaviyo newsletter list ID
 export const KLAVIYO_NEWSLETTER_LIST_ID = 'TL5yEt';
 
@@ -170,11 +173,11 @@ export async function updateProfile(
 
 /**
  * Subscribes a user to the Klaviyo newsletter list.
- * 
+ *
  * This function performs two operations:
  * 1. Creates or updates the profile with their information
  * 2. Subscribes them to the specified list with SUBSCRIBED consent
- * 
+ *
  * @param apiKey - Klaviyo API key
  * @param params - Profile information including email and optional name/properties
  * @param listId - Optional list ID (defaults to KLAVIYO_NEWSLETTER_LIST_ID)
@@ -188,11 +191,11 @@ export async function subscribeToNewsletter(
   try {
     // Step 1: Create or get existing profile
     const profileId = await getOrCreateProfile(apiKey, params);
-    
+
     if (!profileId) {
       return false;
     }
-    
+
     // Step 2: Subscribe the profile to the newsletter list
     const subscribed = await subscribeProfileToList(
       apiKey,
@@ -203,6 +206,81 @@ export async function subscribeToNewsletter(
 
     return subscribed;
   } catch (error) {
+    return false;
+  }
+}
+
+/**
+ * Subscribes a user to the Klaviyo newsletter list from the client-side.
+ *
+ * This function uses Klaviyo's public Client Subscriptions API which is safe to call
+ * from the browser without exposing any private API keys. It only requires the public
+ * company ID.
+ *
+ * @param params - Profile information including email and optional name/properties
+ * @param listId - Optional list ID (defaults to KLAVIYO_NEWSLETTER_LIST_ID)
+ * @returns Promise that resolves to true if successful, false otherwise
+ */
+export async function subscribeToNewsletterClient(
+  params: KlaviyoSubscribeParams,
+  listId: string = KLAVIYO_NEWSLETTER_LIST_ID,
+): Promise<boolean> {
+  try {
+
+    console.log('Subscribing to Klaviyo newsletter', params);
+    const response = await fetch(
+      `https://a.klaviyo.com/client/subscriptions/?company_id=${KLAVIYO_COMPANY_ID}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'revision': '2024-06-15',  // Use a stable revision
+        },
+        body: JSON.stringify({
+          data: {
+            type: 'subscription',
+            attributes: {
+              profile: {
+                data: {
+                  type: 'profile',
+                  attributes: {
+                    email: params.email,
+                    ...(params.firstName && { first_name: params.firstName }),
+                    ...(params.lastName && { last_name: params.lastName }),
+                  },
+                },
+              },
+              custom_source: params.properties?.source || 'Website',
+            },
+            relationships: {
+              list: {
+                data: {
+                  type: 'list',
+                  id: listId,
+                },
+              },
+            },
+          },
+        }),
+      }
+    );
+
+    // Klaviyo returns 202 Accepted for successful subscriptions
+    if (response.status === 202 || response.ok) {
+      console.log('Successfully subscribed to Klaviyo newsletter');
+      return true;
+    } else {
+      // Try to get error details if available
+      try {
+        const errorData = await response.json();
+        console.error('Klaviyo subscription failed:', errorData);
+      } catch {
+        console.error('Klaviyo subscription failed with status:', response.status);
+      }
+      return false;
+    }
+  } catch (error) {
+    console.error('Error subscribing to Klaviyo newsletter:', error);
     return false;
   }
 }

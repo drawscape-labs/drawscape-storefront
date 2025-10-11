@@ -8,14 +8,16 @@
  * 
  * Props: none
  */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Input } from '~/ui/input';
 import { Textarea } from '~/ui/textarea';
 import { Button } from '~/ui/button';
 import { Heading } from '~/ui/heading';
-import { Fieldset, Field, Label } from '~/ui/fieldset';
+import { Fieldset, Field, Label, Description } from '~/ui/fieldset';
+import { CheckboxField, Checkbox } from '~/ui/checkbox';
 import { useAside } from '~/components/Aside';
 import drawscapeApi from '~/lib/drawscapeApi';
+import { subscribeToNewsletterClient } from '~/lib/klaviyo';
 
 // Declare Klaviyo global for TypeScript
 declare global {
@@ -35,18 +37,20 @@ export const RequestDesign = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [request, setRequest] = useState('');
+  const [joinNewsletter, setJoinNewsletter] = useState(true);
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Determine if form is valid (all required fields filled)
   const isFormValid = name.trim() !== '' && email.trim() !== '' && request.trim() !== '';
-
+  
   // Submit handler with API integration
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError(null);
+
 
     try {
       // Prepare the request payload according to API specification
@@ -59,24 +63,47 @@ export const RequestDesign = () => {
       // Submit to Drawscape API via the proxy
       await drawscapeApi.post('schematics/request', payload);
 
+      // Split name into first and last name for Klaviyo
+      const nameParts = payload.name.trim().split(' ');
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || '';
+
       if (window.klaviyo) {
-        await window.klaviyo.identify({
+        window.klaviyo.identify({
           email: payload.email,
-          first_name: payload.name.split(' ')[0],
-          last_name: payload.name.split(' ').slice(1).join(' '),
+          first_name: firstName,
+          last_name: lastName,
         });
-        
-        await window.klaviyo.track('Requested Design', {
+
+        window.klaviyo.track('Requested Design', {
           email: payload.email,
           design_request: payload.request,
         });
       }
-      
+
+      // Subscribe to newsletter if user opted in
+      if (joinNewsletter) {
+        try {
+          await subscribeToNewsletterClient({
+            email: payload.email,
+            firstName,
+            lastName,
+            properties: {
+              source: 'Design Request Form',
+            },
+          });
+        } catch (error) {
+          // Log error but don't fail the form submission
+          console.error('Newsletter subscription failed:', error);
+        }
+      }
+
       setSubmitted(true);
       // Clear form on success
       setName('');
       setEmail('');
       setRequest('');
+      setJoinNewsletter(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to submit request. Please try again.');
     } finally {
@@ -85,25 +112,26 @@ export const RequestDesign = () => {
   };
 
   return (
-    <div className="p-6">
-      <Heading level={2} className="mb-4 text-2xl font-bold">
+    <div className="p-4 sm:p-6">
+      <Heading level={2} className="mb-2 sm:mb-4 text-xl sm:text-2xl font-bold">
         Don't see what you need?
       </Heading>
-      <p className="text-sm text-gray-500">Tell us what you are looking for and we'll notify you when it's added to the store.</p>
-      <br />
+      <p className="text-xs sm:text-sm text-gray-500">Tell us what you are looking for and we'll notify you when it's added to the store.</p>
+      <br className="hidden sm:block" />
+      <div className="h-2 sm:hidden" />
       
       {submitted ? (
         <>
-          <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
-            <p className="text-green-800 text-center">
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4 sm:p-6 mb-4 sm:mb-6">
+            <p className="text-green-800 text-center text-sm sm:text-base">
               Thank you for your request! We'll be in touch soon.
             </p>
           </div>
           <div className="flex justify-center">
-            <Button 
+            <Button
               onClick={close}
               outline={true}
-              className="px-6 py-2"
+              className="px-4 sm:px-6 py-2 text-sm sm:text-base"
             >
               Continue Shopping
             </Button>
@@ -112,16 +140,16 @@ export const RequestDesign = () => {
       ) : (
         <>
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-              <p className="text-red-800 text-center">
+            <div className="bg-red-50 border border-red-200 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6">
+              <p className="text-red-800 text-center text-xs sm:text-sm">
                 {error}
               </p>
             </div>
           )}
         <form onSubmit={handleSubmit} className="max-w-md">
           <Fieldset>
-            <Field className="mb-6">
-              <Label htmlFor="request-name" className="block text-sm font-medium text-gray-700 mb-2">
+            <Field className="mb-4 sm:mb-6">
+              <Label htmlFor="request-name" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                 Name
               </Label>
               <Input
@@ -132,11 +160,11 @@ export const RequestDesign = () => {
                 required
                 autoComplete="name"
                 placeholder="Your name"
-                className="w-full"
+                className="w-full text-sm sm:text-base"
               />
             </Field>
-            <Field className="mb-6">
-              <Label htmlFor="request-email" className="block text-sm font-medium text-gray-700 mb-2">
+            <Field className="mb-4 sm:mb-6">
+              <Label htmlFor="request-email" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                 Email Address
               </Label>
               <Input
@@ -147,12 +175,12 @@ export const RequestDesign = () => {
                 required
                 autoComplete="email"
                 placeholder="you@email.com"
-                className="w-full"
+                className="w-full text-sm sm:text-base"
               />
             </Field>
 
-            <Field className="mb-8">
-              <Label htmlFor="request-details" className="block text-sm font-medium text-gray-700 mb-2">
+            <Field className="mb-4 sm:mb-8">
+              <Label htmlFor="request-details" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                 Design Request
               </Label>
               <Textarea
@@ -160,17 +188,32 @@ export const RequestDesign = () => {
                 value={request}
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setRequest(e.target.value)}
                 required
-                rows={4}
+                rows={3}
                 placeholder="Describe your design request..."
-                className="w-full resize-none"
+                className="w-full resize-none text-sm sm:text-base"
               />
             </Field>
 
-            <div className="flex justify-center gap-4">
-              <Button 
-                type="submit" 
-                color="indigo" 
-                className="px-8 py-3 text-lg font-semibold"
+            {/* Newsletter Signup */}
+            <CheckboxField className="mb-4 sm:mb-8">
+              <Checkbox
+                id="joinNewsletter"
+                name="joinNewsletter"
+                color="indigo"
+                checked={joinNewsletter}
+                onChange={setJoinNewsletter}
+              />
+              <Label className="text-sm sm:text-base">Stay Updated!</Label>
+              <Description className="text-xs sm:text-sm">
+                Stay update on all the latest additions.
+              </Description>
+            </CheckboxField>
+
+            <div className="flex justify-center gap-2 sm:gap-4">
+              <Button
+                type="submit"
+                color="indigo"
+                className="px-4 sm:px-8 py-2 sm:py-3 text-sm sm:text-lg font-semibold"
                 disabled={isSubmitting || !isFormValid}
               >
                 {isSubmitting ? 'Submitting...' : 'Submit Request'}
@@ -178,7 +221,7 @@ export const RequestDesign = () => {
               <Button
                 type="button"
                 outline={true}
-                className="px-8 py-3 text-lg font-semibold"
+                className="px-4 sm:px-8 py-2 sm:py-3 text-sm sm:text-lg font-semibold"
                 onClick={close}
                 disabled={isSubmitting}
               >

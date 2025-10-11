@@ -310,7 +310,7 @@ export default function Contact() {
                           Join our newsletter
                         </label>
                         <p id="joinNewsletter-description" className="text-gray-500 dark:text-gray-400">
-                          Get notified about new products, sales, and company updates.
+                          Get notified about the latest additions to the Drawscape library.
                         </p>
                       </div>
                     </div>
