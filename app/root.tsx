@@ -245,7 +245,6 @@ export function Layout({children}: {children?: React.ReactNode}) {
             <QueryClientProvider client={queryClient}>
               <PageLayout {...data}>{children}</PageLayout>
               <ClientOnly>
-                <FrontChat />
                 {process.env.NODE_ENV === 'development' ? (
                   <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
                 ) : null}
@@ -256,7 +255,6 @@ export function Layout({children}: {children?: React.ReactNode}) {
           <QueryClientProvider client={queryClient}>
             {children}
             <ClientOnly>
-              <FrontChat />
               {process.env.NODE_ENV === 'development' ? (
                 <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
               ) : null}
