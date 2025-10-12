@@ -1,5 +1,6 @@
 import React, {useState, useCallback, useEffect, useRef} from 'react';
 import { Link } from 'react-router';
+import { Analytics } from '@shopify/hydrogen';
 import { useAside } from '~/components/Aside';
 import { Button } from '~/ui/button';
 import API from '~/lib/drawscapeApi';
@@ -28,8 +29,9 @@ export function SearchSchematics() {
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [lastSearchedTerm, setLastSearchedTerm] = useState('');
   const { close, open } = useAside();
-  
+
   // Refs to track current request and timeout
   const currentControllerRef = useRef<AbortController | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -39,6 +41,7 @@ export function SearchSchematics() {
     if (!searchQuery.trim() || searchQuery.trim().length < 2) {
       setResults([]);
       setError(null);
+      setLastSearchedTerm('');
       return;
     }
 
@@ -65,8 +68,10 @@ export function SearchSchematics() {
       }, {
         signal: controller.signal
       });
-      
+
       setResults(data || []);
+      // Only set the last searched term after successful search
+      setLastSearchedTerm(searchQuery);
     } catch (err: any) {
       // Don't set error if request was aborted
       if (err.name !== 'AbortError' && err.name !== 'CanceledError') {
@@ -230,6 +235,19 @@ export function SearchSchematics() {
           </div>
         </div>
       </div>
+
+      {/* Analytics tracking for search - only track completed searches */}
+      {lastSearchedTerm && (
+        <Analytics.SearchView
+          data={{
+            searchTerm: lastSearchedTerm,
+            searchResults: {
+              results,
+              totalResults: results.length
+            }
+          }}
+        />
+      )}
     </div>
   );
 }
