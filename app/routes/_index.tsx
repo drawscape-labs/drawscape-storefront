@@ -306,6 +306,35 @@ function Products() {
           </div>
         </div>
 
+        <div className="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:grid-rows-2 sm:gap-x-6 lg:gap-8">
+          <div className="group relative aspect-2/1 overflow-hidden rounded-lg sm:row-span-2 sm:aspect-square">
+            <Image
+              src="https://cdn.shopify.com/s/files/1/0905/0138/2438/files/IMG_0085.jpg"
+              alt="Aircraft blueprint artwork collection"
+              className="absolute size-full object-cover group-hover:opacity-75"
+              sizes="(min-width: 1024px) 50vw, (min-width: 768px) 100vw, 100vw"
+              width={400}
+              height={400}
+              loading="lazy"
+            />
+            <div aria-hidden="true" className="absolute inset-0 bg-linear-to-b from-transparent to-black opacity-50" />
+            <div className="absolute inset-0 flex items-end p-6">
+              <div>
+                <h3 className="font-semibold text-white">
+                  <Link to="/products/cars" prefetch="intent">
+                    <span className="absolute inset-0" />
+                    Cars
+                  </Link>
+                </h3>
+                <p aria-hidden="true" className="mt-1 text-sm text-white">
+                  Shop now
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
         <div className="mt-6 sm:hidden">
           <Link to="/shop-all" prefetch="intent" className="block text-sm font-semibold text-indigo-600 hover:text-indigo-500">
             Shop all Products
