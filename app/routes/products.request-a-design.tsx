@@ -1,6 +1,6 @@
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {useLoaderData, type MetaFunction} from 'react-router';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {
   getSelectedProductOptions,
   Analytics,
@@ -14,6 +14,7 @@ import {ProductReviews} from '~/components/ProductReviews';
 import {AddToCartButton} from '~/components/AddToCartButton';
 import {useAside} from '~/components/Aside';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import drawscapeServerApi from '~/lib/drawscapeServerApi';
 import {
   Disclosure,
   DisclosureButton,
@@ -68,8 +69,31 @@ async function loadCriticalData({
   // The API handle might be localized, so redirect to the localized handle
   redirectIfHandleIsLocalized(request, {handle, data: product});
 
+  // Parse URL query params for schematic_id
+  const url = new URL(request.url);
+  const schematicId = url.searchParams.get('schematic_id') || url.searchParams.get('schematicId');
+
+  // Fetch schematic data if schematic_id is provided
+  let schematic: {id: string; title: string} | null = null;
+  if (schematicId) {
+    try {
+      const api = drawscapeServerApi(context.env.DRAWSCAPE_API_URL);
+      const schematicData = await api.get<any>(`schematics/${schematicId}`);
+      if (schematicData?.id && schematicData?.title) {
+        schematic = {
+          id: schematicData.id,
+          title: schematicData.title,
+        };
+      }
+    } catch (error) {
+      console.error('Error fetching schematic:', error);
+      // Continue without schematic data - gracefully degrade
+    }
+  }
+
   return {
     product,
+    schematic,
   };
 }
 
@@ -125,11 +149,18 @@ const productDetails = [
 ];
 
 export default function Product() {
-  const {product} = useLoaderData<typeof loader>();
+  const {product, schematic} = useLoaderData<typeof loader>();
   const {open} = useAside();
 
-  // State for design request input
-  const [designRequest, setDesignRequest] = useState('');
+  // State for design request input - initialize with schematic title if available
+  const [designRequest, setDesignRequest] = useState(schematic?.title || '');
+
+  // Update the design request when schematic changes (for client-side navigation)
+  useEffect(() => {
+    if (schematic?.title) {
+      setDesignRequest(schematic.title);
+    }
+  }, [schematic]);
 
   // Optimistically selects a variant with given available variant information
   const selectedVariant = useOptimisticVariant(
@@ -225,9 +256,14 @@ export default function Product() {
                             merchandiseId: selectedVariant.id,
                             quantity: 1,
                             selectedVariant,
-                            attributes: designRequest.trim()
-                              ? [{key: 'Design', value: designRequest.trim()}]
-                              : [],
+                            attributes: [
+                              ...(designRequest.trim()
+                                ? [{key: 'Design', value: designRequest.trim()}]
+                                : []),
+                              ...(schematic?.id
+                                ? [{key: '_schematic_id', value: schematic.id}]
+                                : []),
+                            ],
                           },
                         ]
                       : []
