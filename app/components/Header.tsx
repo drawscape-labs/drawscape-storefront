@@ -111,6 +111,15 @@ export function HeaderMenu({
             "id": "gid://shopify/MenuItem/717103038758",
             "resourceId": "gid://shopify/Page/149251293478",
             "tags": [],
+            "title": "Gallery",
+            "type": "PAGE",
+            "url": "/gallery",
+            "items": []
+        },
+        {
+            "id": "gid://shopify/MenuItem/717103038758",
+            "resourceId": "gid://shopify/Page/149251293478",
+            "tags": [],
             "title": "Reviews",
             "type": "PAGE",
             "url": "/reviews",
