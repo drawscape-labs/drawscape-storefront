@@ -1,6 +1,8 @@
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {useLoaderData, useSearchParams, type MetaFunction} from 'react-router';
+import {useState, useEffect} from 'react';
 import drawscapeServerApi from '~/lib/drawscapeServerApi';
+import drawscapeApi from '~/lib/drawscapeApi';
 import {Select} from '~/ui/select';
 
 export const meta: MetaFunction<typeof loader> = () => {
@@ -30,13 +32,15 @@ interface Project {
 export async function loader({context, request}: LoaderFunctionArgs) {
   let projects: Project[] = [];
   let categories: string[] = [];
+  let hasMore = false;
 
   try {
     const api = drawscapeServerApi(context.env.DRAWSCAPE_API_URL);
 
-    // Get category filter from URL search params
+    // Get category filter and offset from URL search params
     const url = new URL(request.url);
     const selectedCategory = url.searchParams.get('category');
+    const offset = parseInt(url.searchParams.get('offset') || '0', 10);
 
     // Fetch categories
     const categoriesResponse = await api.get<{categories: string[]}>('projects/categories');
@@ -45,7 +49,8 @@ export async function loader({context, request}: LoaderFunctionArgs) {
     // Fetch projects with optional category filter
     const projectParams: Record<string, any> = {
       published: true,
-      limit: 10,
+      limit: 3,
+      offset: offset,
       sort: '-created_at',
     };
 
@@ -55,18 +60,31 @@ export async function loader({context, request}: LoaderFunctionArgs) {
 
     const response = await api.get<Project[]>('projects', projectParams);
     projects = Array.isArray(response) ? response : [];
+
+    // Check if there are more results
+    hasMore = projects.length === 3;
   } catch (error) {
     console.error('Error fetching projects from Drawscape API:', error);
     projects = [];
   }
 
-  return {projects, categories};
+  return {projects, categories, hasMore};
 }
 
 export default function Gallery() {
-  const {projects, categories} = useLoaderData<typeof loader>();
+  const {projects: initialProjects, categories, hasMore: initialHasMore} = useLoaderData<typeof loader>();
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedCategory = searchParams.get('category') || 'all';
+
+  const [projects, setProjects] = useState(initialProjects);
+  const [hasMore, setHasMore] = useState(initialHasMore);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Reset projects when category changes
+  useEffect(() => {
+    setProjects(initialProjects);
+    setHasMore(initialHasMore);
+  }, [initialProjects, initialHasMore]);
 
   // Helper function to format date
   const formatDate = (dateString?: string) => {
@@ -96,6 +114,36 @@ export default function Gallery() {
       setSearchParams({});
     } else {
       setSearchParams({category});
+    }
+  };
+
+  // Handle load more
+  const handleLoadMore = async () => {
+    setIsLoading(true);
+    try {
+      const newOffset = projects.length;
+
+      const queryParams: Record<string, any> = {
+        published: true,
+        limit: 3,
+        offset: newOffset,
+        sort: '-created_at',
+      };
+
+      if (selectedCategory && selectedCategory !== 'all') {
+        queryParams.category = selectedCategory;
+      }
+
+      // Use drawscapeApi client-side to fetch more projects
+      const response = await drawscapeApi.get<Project[]>('projects', queryParams);
+
+      const newProjects = Array.isArray(response) ? response : [];
+      setProjects([...projects, ...newProjects]);
+      setHasMore(newProjects.length === 3);
+    } catch (error) {
+      console.error('Error loading more projects:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -175,6 +223,19 @@ export default function Gallery() {
             <p className="text-lg text-gray-600 dark:text-gray-400">
               No projects found.
             </p>
+          </div>
+        )}
+
+        {/* Show More Button */}
+        {hasMore && projects.length > 0 && (
+          <div className="mt-12 flex justify-center">
+            <button
+              onClick={handleLoadMore}
+              disabled={isLoading}
+              className="rounded-md bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-indigo-500 dark:hover:bg-indigo-400"
+            >
+              {isLoading ? 'Loading...' : 'Show More'}
+            </button>
           </div>
         )}
       </div>

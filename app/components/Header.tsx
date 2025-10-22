@@ -108,8 +108,7 @@ export function HeaderMenu({
             "items": []
         },
         {
-            "id": "gid://shopify/MenuItem/717103038758",
-            "resourceId": "gid://shopify/Page/149251293478",
+            "id": "gid://shopify/MenuItem/717103038752",
             "tags": [],
             "title": "Gallery",
             "type": "PAGE",
