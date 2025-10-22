@@ -42,6 +42,9 @@ interface Project {
 export async function loader({context, params}: LoaderFunctionArgs) {
   const {id} = params;
 
+
+  console.log('ID:', id);
+  
   if (!id) {
     throw new Response('Project ID required', {status: 400});
   }
