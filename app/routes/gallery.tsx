@@ -133,7 +133,7 @@ export default function Gallery() {
             {projects.map((project) => (
               <article
                 key={project.id}
-                className="relative isolate flex flex-col justify-end overflow-hidden rounded-2xl bg-gray-900 px-8 pt-80 pb-8 sm:pt-48 lg:pt-80 dark:bg-gray-800"
+                className="relative isolate flex flex-col justify-end overflow-hidden rounded-2xl bg-gray-900 px-8 pt-[60%] pb-8 sm:pt-48 lg:pt-80 dark:bg-gray-800"
               >
                 <img
                   alt={project.title}
