@@ -1,5 +1,5 @@
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {useLoaderData, useSearchParams, type MetaFunction} from 'react-router';
+import {useLoaderData, useSearchParams, Link, type MetaFunction} from 'react-router';
 import {useState, useEffect} from 'react';
 import drawscapeServerApi from '~/lib/drawscapeServerApi';
 import drawscapeApi from '~/lib/drawscapeApi';
@@ -212,7 +212,9 @@ export default function Gallery() {
                   )}
                 </div>
                 <h3 className="mt-3 text-lg/6 font-semibold text-white">
-                  <span className="absolute inset-0" />
+                  <Link to={`/gallery/${project.id}`} className="absolute inset-0">
+                    <span className="sr-only">View details for {project.title}</span>
+                  </Link>
                   {project.title}
                 </h3>
               </article>
