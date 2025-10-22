@@ -14,8 +14,8 @@ export interface BreadcrumbProps {
 
 export default function Breadcrumb({pages, homeHref = '/'}: BreadcrumbProps) {
   return (
-    <nav aria-label="Breadcrumb" className="flex">
-      <ol role="list" className="flex items-center space-x-4">
+    <nav aria-label="Breadcrumb" className="flex min-w-0 overflow-hidden">
+      <ol role="list" className="flex items-center space-x-4 flex-nowrap min-w-0 overflow-hidden">
         <li className="shrink-0">
           <div>
             <Link
