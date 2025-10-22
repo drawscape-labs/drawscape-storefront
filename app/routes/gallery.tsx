@@ -21,7 +21,8 @@ interface Project {
   updated_at?: string;
   published?: boolean;
   image_url?: string;
-  images?: Array<{url: string; thumbnail_url?: string}>;
+  thumbnail?: string | null;
+  images?: Array<{url: string; thumbnail?: string | null}>;
   // Add other project fields as needed based on API response
 }
 
@@ -63,10 +64,11 @@ export default function Gallery() {
 
   // Helper function to get project image
   const getProjectImage = (project: Project) => {
-    // Priority: image_url, first image in images array, fallback placeholder
+    // Priority: thumbnail, image_url, first image in images array, fallback placeholder
+    if (project.thumbnail) return project.thumbnail;
     if (project.image_url) return project.image_url;
     if (project.images && project.images.length > 0) {
-      return project.images[0].thumbnail_url || project.images[0].url;
+      return project.images[0].thumbnail || project.images[0].url;
     }
     return 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-4.0.3&auto=format&fit=crop&w=3270&q=80'; // Fallback image
   };
