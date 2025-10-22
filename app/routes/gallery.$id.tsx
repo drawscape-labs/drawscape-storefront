@@ -148,15 +148,15 @@ export default function GalleryDetail() {
           )}
         </div>
 
-        {/* Images Grid */}
+        {/* Images Grid - Masonry Layout */}
         {images.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="columns-1 sm:columns-2 lg:columns-3 gap-4">
             {images.map((image) => (
-              <div key={image.id} className="relative overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
+              <div key={image.id} className="relative overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800 mb-4 break-inside-avoid">
                 <img
                   src={image.thumbnail || image.url}
                   alt={image.title || project.title}
-                  className="w-full sm:w-auto h-auto"
+                  className="w-full h-auto"
                   loading="lazy"
                 />
               </div>
