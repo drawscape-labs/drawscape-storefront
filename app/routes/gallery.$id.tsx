@@ -1,6 +1,7 @@
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {useLoaderData, type MetaFunction} from 'react-router';
 import drawscapeServerApi from '~/lib/drawscapeServerApi';
+import Breadcrumb from '~/components/Breadcrumb';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [
@@ -92,57 +93,45 @@ export default function GalleryDetail() {
   };
 
   return (
-    <div className="bg-white py-24 sm:py-32 dark:bg-gray-900">
+    <div className="bg-white py-8 sm:py-12 dark:bg-gray-900">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="mb-8">
-          <ol className="flex items-center space-x-2 text-sm">
-            <li>
-              <a href="/gallery" className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
-                Gallery
-              </a>
-            </li>
-            <li className="text-gray-400">/</li>
-            <li className="text-gray-900 dark:text-white">{project.title}</li>
-          </ol>
-        </nav>
+        <div className="mb-8">
+          <Breadcrumb
+            pages={[
+              {name: 'Gallery', href: '/gallery', current: false},
+              {name: project.title, href: `/gallery/${project.id}`, current: true},
+            ]}
+          />
+        </div>
 
         {/* Project Header */}
         <div className="mb-12">
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-white">
             {project.title}
           </h1>
-          {project.description && (
-            <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
-              {project.description}
-            </p>
-          )}
 
           {/* Project Metadata */}
-          <div className="mt-6 flex flex-wrap gap-4 text-sm">
-            {project.category && (
-              <div className="flex items-center gap-2">
-                <span className="text-gray-500 dark:text-gray-400">Category:</span>
-                <span className="font-medium text-gray-900 dark:text-white">{project.category}</span>
-              </div>
-            )}
-            {project.artist && (
-              <div className="flex items-center gap-2">
-                <span className="text-gray-500 dark:text-gray-400">Artist:</span>
-                <span className="font-medium text-gray-900 dark:text-white">{project.artist}</span>
-              </div>
-            )}
-            {project.created_at && (
-              <div className="flex items-center gap-2">
-                <span className="text-gray-500 dark:text-gray-400">Created:</span>
-                <span className="font-medium text-gray-900 dark:text-white">{formatDate(project.created_at)}</span>
-              </div>
-            )}
-          </div>
-
-          {/* Additional Details */}
-          {(project.pens || project.paper) && (
-            <div className="mt-6 flex flex-wrap gap-4 text-sm">
+          {(project.category || project.artist || project.created_at || project.pens || project.paper) && (
+            <div className="mt-6 flex flex-col gap-2 text-sm sm:flex-row sm:flex-wrap sm:gap-4">
+              {project.category && (
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-500 dark:text-gray-400">Category:</span>
+                  <span className="font-medium text-gray-900 dark:text-white">{project.category}</span>
+                </div>
+              )}
+              {project.artist && (
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-500 dark:text-gray-400">Artist:</span>
+                  <span className="font-medium text-gray-900 dark:text-white">{project.artist}</span>
+                </div>
+              )}
+              {project.created_at && (
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-500 dark:text-gray-400">Created:</span>
+                  <span className="font-medium text-gray-900 dark:text-white">{formatDate(project.created_at)}</span>
+                </div>
+              )}
               {project.pens && (
                 <div className="flex items-center gap-2">
                   <span className="text-gray-500 dark:text-gray-400">Pens:</span>
