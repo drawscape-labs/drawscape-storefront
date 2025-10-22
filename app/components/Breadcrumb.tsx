@@ -34,13 +34,21 @@ export default function Breadcrumb({pages, homeHref = '/'}: BreadcrumbProps) {
                 aria-hidden="true"
                 className="size-5 shrink-0 text-gray-400 dark:text-gray-500"
               />
-              <Link
-                to={page.href}
-                aria-current={page.current ? 'page' : undefined}
-                className="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-              >
-                {page.name}
-              </Link>
+              {page.current ? (
+                <span
+                  aria-current="page"
+                  className="ml-4 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  {page.name}
+                </span>
+              ) : (
+                <Link
+                  to={page.href}
+                  className="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                >
+                  {page.name}
+                </Link>
+              )}
             </div>
           </li>
         ))}
