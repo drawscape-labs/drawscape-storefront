@@ -152,11 +152,11 @@ export default function GalleryDetail() {
         {images.length > 0 ? (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {images.map((image) => (
-              <div key={image.id} className="relative aspect-square overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
+              <div key={image.id} className="relative overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
                 <img
-                  src={image.url}
+                  src={image.thumbnail || image.url}
                   alt={image.title || project.title}
-                  className="size-full object-cover"
+                  className="w-full sm:w-auto h-auto"
                   loading="lazy"
                 />
               </div>
