@@ -49,7 +49,7 @@ export async function loader({context, request}: LoaderFunctionArgs) {
     // Fetch projects with optional category filter
     const projectParams: Record<string, any> = {
       published: true,
-      limit: 3,
+      limit: 9,
       offset: offset,
       sort: '-created_at',
     };
@@ -62,7 +62,7 @@ export async function loader({context, request}: LoaderFunctionArgs) {
     projects = Array.isArray(response) ? response : [];
 
     // Check if there are more results
-    hasMore = projects.length === 3;
+    hasMore = projects.length === 9;
   } catch (error) {
     console.error('Error fetching projects from Drawscape API:', error);
     projects = [];
@@ -125,7 +125,7 @@ export default function Gallery() {
 
       const queryParams: Record<string, any> = {
         published: true,
-        limit: 3,
+        limit: 9,
         offset: newOffset,
         sort: '-created_at',
       };
@@ -139,7 +139,7 @@ export default function Gallery() {
 
       const newProjects = Array.isArray(response) ? response : [];
       setProjects([...projects, ...newProjects]);
-      setHasMore(newProjects.length === 3);
+      setHasMore(newProjects.length === 9);
     } catch (error) {
       console.error('Error loading more projects:', error);
     } finally {
