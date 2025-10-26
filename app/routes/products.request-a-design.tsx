@@ -130,7 +130,7 @@ const productDetails = [
   {
     name: '100% Refund Policy',
     items: [
-      `If you don't like the design, we'll refund your $5. No questions asked.`,
+      `If you don't like the design, we'll refund your purchase. No questions asked.`,
     ],
   },
   {
