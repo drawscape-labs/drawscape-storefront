@@ -114,10 +114,10 @@ const productDetails = [
   {
     name: 'How it Works',
     items: [
-      'Tell us your design request, and then pay the $5 down payment.',
+      'Tell us your design request.',
       'We will send you design renderings in 24-72 hours.',
-      'You can request changes if needed.',
-      'Make your purchase via the website when you are happy with the design.',
+      'Personalize your design with text, colors, and layout.',
+      'Request changes if needed.'
     ],
   },
   {
