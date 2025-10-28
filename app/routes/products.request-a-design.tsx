@@ -180,7 +180,16 @@ export default function Product() {
 
   const {title, descriptionHtml, media} = product;
 
-  // Get the first image from media gallery
+  // Get the first video from media gallery
+  const firstVideo = media?.edges?.find(
+    (edge: any) => edge.node.__typename === 'Video'
+  )?.node;
+
+  const videoSource = firstVideo?.__typename === 'Video'
+    ? firstVideo.sources?.[0]
+    : null;
+
+  // Fallback to first image if no video is present
   const firstMediaNode = media?.edges?.[0]?.node;
   const firstImage =
     (firstMediaNode?.__typename === 'MediaImage' ? firstMediaNode.image : null) ||
@@ -192,9 +201,20 @@ export default function Product() {
         <div className="mx-auto max-w-2xl px-4 sm:px-6 md:py-12 lg:max-w-7xl lg:px-8 lg:py-12">
           <div className="lg:grid lg:grid-cols-6 lg:items-start lg:gap-x-8">
 
-            {/* Product image */}
-            <div className="px-4 sm:px-0 lg:col-span-4 sm:mt-0">
-              {firstImage && (
+            {/* Product video or image */}
+            <div className="px-4 sm:px-0 lg:col-span-4 mt-6 mb-6 sm:mt-0 sm:mb-0">
+              {videoSource ? (
+                <div className="w-full rounded-lg">
+                  <video
+                    src={videoSource.url}
+                    poster={firstVideo?.__typename === 'Video' ? firstVideo.previewImage?.url : undefined}
+                    controls
+                    className="w-full h-auto rounded-lg"
+                  >
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              ) : firstImage ? (
                 <div className="h-40 sm:h-auto w-full overflow-hidden rounded-lg">
                   <img
                     src={firstImage.url}
@@ -202,7 +222,7 @@ export default function Product() {
                     className="w-full h-full object-cover object-center"
                   />
                 </div>
-              )}
+              ) : null}
             </div>
 
             {/* Product info */}
