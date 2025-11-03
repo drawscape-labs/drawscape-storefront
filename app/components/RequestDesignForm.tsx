@@ -96,6 +96,9 @@ export const RequestDesignForm = ({ schematicTitle, actionData }: RequestDesignF
   // Store submitted name and email to preserve on next request
   React.useEffect(() => {
     if (actionData?.success) {
+      // Scroll to top to show success message
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
       // Store name and email in localStorage when form is successfully submitted
       if (name) localStorage.setItem('designRequest_name', name);
       if (email) localStorage.setItem('designRequest_email', email);
