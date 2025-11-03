@@ -733,7 +733,8 @@ export const RequestDesignForm = ({ schematicTitle, actionData }: RequestDesignF
                     </Field>
                   )}
 
-                  {/* Image Upload */}
+                  {/* Image Upload - Hide for airport-diagrams */}
+                  {category !== 'airport-diagrams' && (
                   <Field className="mb-8">
                     <Label htmlFor="images" className="block text-sm font-medium text-gray-700 mb-2">
                       Reference Images (Optional)
@@ -789,6 +790,7 @@ export const RequestDesignForm = ({ schematicTitle, actionData }: RequestDesignF
                       </div>
                     )}
                   </Field>
+                  )}
 
                   {/* Newsletter Signup */}
                   <CheckboxField className="mb-8">
