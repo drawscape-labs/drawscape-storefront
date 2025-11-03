@@ -22,7 +22,7 @@ import { CheckboxField, Checkbox } from '~/ui/checkbox';
 import { Select } from '~/ui/select';
 import { subscribeToNewsletterClient } from '~/lib/klaviyo';
 
-// Declare Klaviyo global for TypeScript
+// Declare Klaviyo and Simple Analytics globals for TypeScript
 declare global {
   interface Window {
     klaviyo?: {
@@ -31,6 +31,7 @@ declare global {
       push: (args: any[]) => void;
       isIdentified: () => boolean;
     };
+    sa_event?: (eventName: string, metadata?: Record<string, any> | (() => void)) => void;
   }
 }
 
@@ -76,7 +77,6 @@ export const RequestDesignForm = ({ schematicTitle, actionData }: RequestDesignF
   const [aircraftType, setAircraftType] = useState('');
   const [helicopterType, setHelicopterType] = useState('');
   const [aerospaceName, setAerospaceName] = useState('');
-  const [tailNumber, setTailNumber] = useState('');
   const [sailboatName, setSailboatName] = useState('');
   const [shipName, setShipName] = useState('');
   const [cameraModel, setCameraModel] = useState('');
@@ -153,6 +153,11 @@ export const RequestDesignForm = ({ schematicTitle, actionData }: RequestDesignF
           request_category: category,
           request_details: requestDetails,
         });
+
+        // Simple Analytics event tracking
+        if (window.sa_event) {
+          window.sa_event('requested_design');
+        }
       }
 
       // Subscribe to newsletter if user opted in
@@ -170,7 +175,29 @@ export const RequestDesignForm = ({ schematicTitle, actionData }: RequestDesignF
         });
       }
     }
-  }, [actionData?.success, name, email, category, joinNewsletter]);
+  }, [
+    actionData?.success,
+    name,
+    email,
+    category,
+    joinNewsletter,
+    aircraftType,
+    helicopterType,
+    aerospaceName,
+    airportCode,
+    sailboatName,
+    shipName,
+    cameraModel,
+    carMake,
+    carModel,
+    carYear,
+    truckMake,
+    truckModel,
+    truckYear,
+    patentNumber,
+    engineType,
+    request,
+  ]);
 
   // Load saved name and email on component mount
   React.useEffect(() => {
