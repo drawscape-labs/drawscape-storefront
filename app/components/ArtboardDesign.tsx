@@ -46,7 +46,7 @@ export function ArtboardDesign({
         <Label className="capitalize">{categoryLabel}</Label>
         <div className="flex items-center gap-2 mt-1 sm:mt-2">
           <ArtboardSelectSchematic  options={schematics} />
-          <Button outline onClick={() => open('request-design')}>Request</Button>
+          <Button outline href="/request-a-design">Request</Button>
         </div>
       </Field>
       

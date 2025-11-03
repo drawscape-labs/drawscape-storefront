@@ -144,10 +144,9 @@ export function SearchSchematics() {
     close();
   }
 
-  // Handle submit request button click - close search and open request modal
+  // Handle submit request button click - navigate to request page
   function handleSubmitRequestClick() {
-    close();
-    open('request-design');
+    window.location.href = '/request-a-design';
   }
 
   return (

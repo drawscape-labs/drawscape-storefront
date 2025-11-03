@@ -150,7 +150,6 @@ export const RequestDesignForm = ({ schematicTitle, actionData }: RequestDesignF
         }
 
         window.klaviyo.track('Requested Design', {
-          email: email,
           request_category: category,
           request_details: requestDetails,
         });
@@ -447,7 +446,7 @@ export const RequestDesignForm = ({ schematicTitle, actionData }: RequestDesignF
             <Input
               id="patentNumber"
               name="patentNumber"
-              type="url"
+              type="text"
               value={patentNumber}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPatentNumber(e.target.value)}
               placeholder="https://patents.google.com/patent/US20230200943A1/en"
