@@ -12,12 +12,17 @@ export const sendPostmarkEmail = async (apiKey: string, options: {
   textBody?: string;
   htmlBody?: string;
   replyTo?: string;
+  attachments?: Array<{
+    Name: string;
+    Content: string;
+    ContentType: string;
+  }>;
 }) => {
   if (!apiKey) {
     throw new Error('Postmark API key is required');
   }
 
-  const { from, to, subject, textBody, htmlBody, replyTo } = options;
+  const { from, to, subject, textBody, htmlBody, replyTo, attachments } = options;
   
   // Default from address if not provided
   const fromAddress = from || 'team@drawscape.io';
@@ -41,6 +46,11 @@ export const sendPostmarkEmail = async (apiKey: string, options: {
     // Add ReplyTo if provided
     if (replyTo) {
       emailData.ReplyTo = replyTo;
+    }
+
+    // Add attachments if provided
+    if (attachments && attachments.length > 0) {
+      emailData.Attachments = attachments;
     }
 
     const response = await fetch('https://api.postmarkapp.com/email', {

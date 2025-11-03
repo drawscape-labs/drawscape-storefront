@@ -89,6 +89,10 @@ export const RequestDesignForm = ({ schematicTitle, actionData }: RequestDesignF
   const [patentNumber, setPatentNumber] = useState('');
   const [engineType, setEngineType] = useState('');
 
+  // Image upload state
+  const [images, setImages] = useState<Array<{name: string; base64: string; size: number}>>([]);
+  const [imageError, setImageError] = useState<string | null>(null);
+
   // Store submitted name and email to preserve on next request
   React.useEffect(() => {
     if (actionData?.success) {
@@ -230,6 +234,66 @@ export const RequestDesignForm = ({ schematicTitle, actionData }: RequestDesignF
                       email.trim() !== '' &&
                       category !== '' &&
                       getCategoryFieldValue() !== '';
+
+  // Handle image upload
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setImageError(null);
+
+    // Convert FileList to Array
+    const fileArray = Array.from(files);
+
+    // Validate total size (8MB limit)
+    const totalSize = fileArray.reduce((sum, file) => sum + file.size, 0);
+    const maxSize = 8 * 1024 * 1024; // 8MB in bytes
+
+    if (totalSize > maxSize) {
+      setImageError(`Total file size exceeds 8MB limit. Current total: ${(totalSize / 1024 / 1024).toFixed(2)}MB`);
+      e.target.value = ''; // Clear input
+      return;
+    }
+
+    // Validate file types
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
+    const invalidFiles = fileArray.filter(file => !validTypes.includes(file.type));
+    if (invalidFiles.length > 0) {
+      setImageError('Only JPEG, PNG, GIF, WebP, and SVG images are allowed');
+      e.target.value = ''; // Clear input
+      return;
+    }
+
+    // Convert to base64
+    try {
+      const imagePromises = fileArray.map(file => {
+        return new Promise<{name: string; base64: string; size: number}>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const base64 = reader.result as string;
+            resolve({
+              name: file.name,
+              base64: base64,
+              size: file.size,
+            });
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      });
+
+      const convertedImages = await Promise.all(imagePromises);
+      setImages(convertedImages);
+    } catch (error) {
+      setImageError('Failed to process images. Please try again.');
+      e.target.value = ''; // Clear input
+    }
+  };
+
+  // Remove an image
+  const removeImage = (index: number) => {
+    setImages(images.filter((_, i) => i !== index));
+  };
 
   // Render category-specific fields
   const renderCategoryFields = () => {
@@ -668,6 +732,63 @@ export const RequestDesignForm = ({ schematicTitle, actionData }: RequestDesignF
                       </Description>
                     </Field>
                   )}
+
+                  {/* Image Upload */}
+                  <Field className="mb-8">
+                    <Label htmlFor="images" className="block text-sm font-medium text-gray-700 mb-2">
+                      Reference Images (Optional)
+                    </Label>
+                    <input
+                      id="images"
+                      name="images"
+                      type="file"
+                      accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/svg+xml"
+                      multiple
+                      onChange={handleImageUpload}
+                      className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-l-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                    />
+                    <Description className="mt-2">
+                      Please upload any 2D reference images you can find. This is EXTREMELY helpful for us. Blueprints, schematics, and line drawings all work. (JPEG, PNG, GIF, WebP, SVG). Max 8MB total.
+                    </Description>
+
+                    {/* Image Error */}
+                    {imageError && (
+                      <div className="mt-2 text-sm text-red-600">
+                        {imageError}
+                      </div>
+                    )}
+
+                    {/* Image Previews */}
+                    {images.length > 0 && (
+                      <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-4">
+                        {images.map((image, index) => (
+                          <div key={index} className="relative group">
+                            <img
+                              src={image.base64}
+                              alt={image.name}
+                              className="w-full h-24 object-cover rounded-lg border border-gray-200"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => removeImage(index)}
+                              className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                              aria-label="Remove image"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                              </svg>
+                            </button>
+                            <div className="mt-1 text-xs text-gray-500 truncate">
+                              {image.name} ({(image.size / 1024).toFixed(0)}KB)
+                            </div>
+                            {/* Hidden input to submit base64 data */}
+                            <input type="hidden" name={`image_${index}`} value={image.base64} />
+                            <input type="hidden" name={`image_${index}_name`} value={image.name} />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </Field>
 
                   {/* Newsletter Signup */}
                   <CheckboxField className="mb-8">

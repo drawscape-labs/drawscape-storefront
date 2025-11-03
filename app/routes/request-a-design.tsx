@@ -44,6 +44,26 @@ export async function action({ request, context }: ActionFunctionArgs) {
     const engineType = formData.get('engineType') as string;
     const requestText = formData.get('request') as string;
 
+    // Process image attachments
+    const attachments: Array<{Name: string; Content: string; ContentType: string}> = [];
+    let imageIndex = 0;
+    while (formData.get(`image_${imageIndex}`)) {
+      const base64Data = formData.get(`image_${imageIndex}`) as string;
+      const imageName = formData.get(`image_${imageIndex}_name`) as string;
+
+      // Extract base64 content and content type from data URL
+      // Format: data:image/jpeg;base64,/9j/4AAQSkZJRg...
+      const matches = base64Data.match(/^data:(.+);base64,(.+)$/);
+      if (matches && matches.length === 3) {
+        attachments.push({
+          Name: imageName || `image_${imageIndex + 1}.jpg`,
+          Content: matches[2], // Base64 content without the data URL prefix
+          ContentType: matches[1], // e.g., 'image/jpeg'
+        });
+      }
+      imageIndex++;
+    }
+
     // Validate required fields
     if (!name?.trim() || !email?.trim() || !category?.trim()) {
       return {
@@ -115,6 +135,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
           <p><strong>Category:</strong> ${category}</p>
           ${categoryDetails ? `<p><strong>Details:</strong> ${categoryDetails}</p>` : ''}
           ${requestText && category !== 'other' ? `<p><strong>Additional Details:</strong> ${requestText}</p>` : ''}
+          ${attachments.length > 0 ? `<p><strong>Reference Images:</strong> ${attachments.length} image(s) attached</p>` : ''}
           <p><strong>Newsletter Opt-in:</strong> ${joinNewsletter ? 'Yes' : 'No'}</p>
         `;
 
@@ -125,6 +146,7 @@ From: ${name} (${email})
 Category: ${category}
 ${categoryDetails ? `Details: ${categoryDetails}` : ''}
 ${requestText && category !== 'other' ? `Additional Details: ${requestText}` : ''}
+${attachments.length > 0 ? `Reference Images: ${attachments.length} image(s) attached` : ''}
 Newsletter Opt-in: ${joinNewsletter ? 'Yes' : 'No'}
         `;
 
@@ -134,6 +156,7 @@ Newsletter Opt-in: ${joinNewsletter ? 'Yes' : 'No'}
           htmlBody: emailHtml,
           textBody: emailText,
           replyTo: email,
+          attachments: attachments.length > 0 ? attachments : undefined,
         });
 
         console.log('Design request email sent successfully');
