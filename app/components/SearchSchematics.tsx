@@ -144,10 +144,6 @@ export function SearchSchematics() {
     close();
   }
 
-  // Handle submit request button click - navigate to request page
-  function handleSubmitRequestClick() {
-    window.location.href = '/request-a-design';
-  }
 
   return (
     <div className="flex flex-col h-full">
@@ -227,7 +223,7 @@ export function SearchSchematics() {
               <p>Submit a request and we'll notify you when it's added to the store.</p>
             </div>
             <div className="mt-5">
-              <Button color="light" onClick={handleSubmitRequestClick}>
+              <Button color="light" href="/request-a-design">
                 Submit Request
               </Button>
             </div>
