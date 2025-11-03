@@ -190,9 +190,30 @@ export default function Contact() {
               Get in touch
             </h2>
             <p className="mt-2 text-lg/8 text-gray-600 dark:text-gray-400">
-              Need a custom design? Curious about our products and capabilities? We'd love to hear from you!
+              We'd love to hear from you!
             </p>
-            
+
+            {/* Design Request Callout */}
+            <div className="mt-8 bg-indigo-50 rounded-lg p-6 dark:bg-indigo-900/20">
+              <h3 className="text-base font-semibold text-indigo-900 dark:text-indigo-100">
+                Requesting a Design?
+              </h3>
+              <div className="mt-2 text-sm text-indigo-700 dark:text-indigo-300">
+                <p>If you're requesting a design, please use our dedicated design request form for faster processing.</p>
+              </div>
+              <div className="mt-4">
+                <a
+                  href="/request-a-design"
+                  className="inline-flex items-center rounded-md bg-indigo-600 px-3.5 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400"
+                >
+                  Go to Design Request Form
+                  <svg className="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+
             {/* Success/Error Messages */}
             {actionData?.success && (
               <div className="mt-8 rounded-md bg-green-50 p-4 dark:bg-green-900/20">
