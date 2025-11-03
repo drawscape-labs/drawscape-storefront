@@ -245,8 +245,10 @@ export const RequestDesignForm = ({ schematicTitle, actionData }: RequestDesignF
     // Convert FileList to Array
     const fileArray = Array.from(files);
 
-    // Validate total size (8MB limit)
-    const totalSize = fileArray.reduce((sum, file) => sum + file.size, 0);
+    // Validate total size (8MB limit) including existing images
+    const existingSize = images.reduce((sum, img) => sum + img.size, 0);
+    const newFilesSize = fileArray.reduce((sum, file) => sum + file.size, 0);
+    const totalSize = existingSize + newFilesSize;
     const maxSize = 8 * 1024 * 1024; // 8MB in bytes
 
     if (totalSize > maxSize) {
@@ -283,7 +285,12 @@ export const RequestDesignForm = ({ schematicTitle, actionData }: RequestDesignF
       });
 
       const convertedImages = await Promise.all(imagePromises);
-      setImages(convertedImages);
+
+      // Add new images to existing ones instead of replacing
+      setImages(prevImages => [...prevImages, ...convertedImages]);
+
+      // Clear the file input so the same file can be added again if needed
+      e.target.value = '';
     } catch (error) {
       setImageError('Failed to process images. Please try again.');
       e.target.value = ''; // Clear input
@@ -610,27 +617,38 @@ export const RequestDesignForm = ({ schematicTitle, actionData }: RequestDesignF
             <ol className="space-y-3 text-gray-700">
               <li className="flex items-start">
                 <span className="flex-shrink-0 w-6 h-6 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-sm font-semibold mr-3">1</span>
-                <span>We'll review your request within 24-48 hours</span>
+                <span>We'll review your request</span>
               </li>
               <li className="flex items-start">
                 <span className="flex-shrink-0 w-6 h-6 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-sm font-semibold mr-3">2</span>
-                <span>If we can create your design, we'll send you an email with details</span>
+                <span>If we can find your design, we'll send you some example images</span>
               </li>
               <li className="flex items-start">
                 <span className="flex-shrink-0 w-6 h-6 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-sm font-semibold mr-3">3</span>
-                <span>You'll be notified when your design is available in our store</span>
+                <span>If you like the examples, you can make a purchase via our website</span>
+              </li>
+              <li className="flex items-start">
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-sm font-semibold mr-3">4</span>
+                <span>We'll then send you a link to the full design to customize the colors, text, and layout</span>
               </li>
             </ol>
           </div>
 
-          {/* Action Button */}
-          <div className="flex justify-center">
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Button
               href="/request-a-design"
               color="indigo"
               className="px-8 py-3 text-base font-semibold"
             >
               Submit Another Request
+            </Button>
+            <Button
+              href="/contact"
+              outline={true}
+              className="px-8 py-3 text-base font-semibold"
+            >
+              Contact Us
             </Button>
           </div>
         </div>
@@ -749,7 +767,7 @@ export const RequestDesignForm = ({ schematicTitle, actionData }: RequestDesignF
                       className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-l-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
                     />
                     <Description className="mt-2">
-                      Please upload any 2D reference images you can find. This is EXTREMELY helpful for us. Blueprints, schematics, and line drawings all work. (JPEG, PNG, GIF, WebP, SVG). Max 8MB total.
+                      Please upload any 2D reference images you can find. This is EXTREMELY helpful for us. Blueprints, schematics, and line drawings all work. You can select multiple files at once or add more in batches. (JPEG, PNG, GIF, WebP, SVG). Max 8MB total.
                     </Description>
 
                     {/* Image Error */}
