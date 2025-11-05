@@ -1,5 +1,5 @@
-import {Analytics, getShopAnalytics, useNonce} from '@shopify/hydrogen';
-import {useState} from 'react';
+import {Analytics, getShopAnalytics, useNonce, useShopifyCookies} from '@shopify/hydrogen';
+import {useState, useEffect} from 'react';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {ReactQueryDevtools} from '@tanstack/react-query-devtools';
 import {ClientOnly} from '~/components/ClientOnly';
@@ -241,6 +241,7 @@ export function Layout({children}: {children?: React.ReactNode}) {
             cart={data.cart}
             shop={data.shop}
             consent={data.consent}
+            cookieDomain='.drawscape.io'  // Add this line to set the cookie domain
           >
             <QueryClientProvider client={queryClient}>
               <PageLayout {...data}>{children}</PageLayout>
