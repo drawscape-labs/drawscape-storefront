@@ -1,4 +1,4 @@
-import { Select } from '~/ui/select';
+import { ComboboxSchematic, ComboboxSchematicOption, ComboboxSchematicLabel } from '~/ui/combobox-schematic';
 import { useArtboards } from '~/context/artboards';
 
 export type Schematic = {
@@ -18,24 +18,27 @@ export function ArtboardSelectSchematic({
 }: ArtboardSelectSchematicProps) {
   const { schematicId, selectSchematic } = useArtboards();
 
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedId = event.target.value;
-    selectSchematic(selectedId || null);
+  // Find the currently selected schematic
+  const selectedSchematic = options.find((option) => option.id === schematicId) || null;
+
+  const handleChange = (schematic: Schematic | null) => {
+    selectSchematic(schematic?.id || null);
   };
 
   return (
-    <Select
-      value={schematicId || ''}
+    <ComboboxSchematic
+      value={selectedSchematic}
       onChange={handleChange}
+      options={options}
+      displayValue={(schematic) => schematic?.name}
+      placeholder={placeholder ?? 'Select a Design'}
+      aria-label="Select schematic design"
     >
-      <option value="" disabled>
-        {placeholder ?? 'Select a Design'}
-      </option>
-      {options.map((option) => (
-        <option key={option.id} value={option.id}>
-          {option.name}
-        </option>
-      ))}
-    </Select>
+      {(schematic) => (
+        <ComboboxSchematicOption key={schematic.id} value={schematic}>
+          <ComboboxSchematicLabel>{schematic.name}</ComboboxSchematicLabel>
+        </ComboboxSchematicOption>
+      )}
+    </ComboboxSchematic>
   );
 }
