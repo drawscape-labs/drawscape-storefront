@@ -208,7 +208,7 @@ export function HeaderMenu({
             "id": "gid://shopify/MenuItem/687200141606",
             "resourceId": "gid://shopify/Page/151583064358",
             "tags": [],
-            "title": "Shop",
+            "title": "Products",
             "type": "PAGE",
             "url": "/shop-all",
             "items": [
