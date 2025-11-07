@@ -2,7 +2,8 @@
 
 import * as Headless from '@headlessui/react'
 import clsx from 'clsx'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useMemo } from 'react'
+import Fuse from 'fuse.js'
 
 export function ComboboxSchematic<T>({
   options,
@@ -53,12 +54,52 @@ export function ComboboxSchematic<T>({
     }
   }, [isOpen, value])
 
-  const filteredOptions: (T | null)[] =
-    query === ''
-      ? options
-      : options.filter((option) =>
-          filter ? filter(option, query) : displayValue(option)?.toLowerCase().includes(query.toLowerCase())
-        )
+  // Create Fuse instance for fuzzy searching
+  const fuse = useMemo(() => {
+    if (!options.length) return null
+
+    // Automatically detect searchable string fields from the first option
+    const firstOption = options[0]
+    const keys: string[] = []
+
+    // Check if it's an object with string properties
+    if (firstOption && typeof firstOption === 'object') {
+      Object.entries(firstOption).forEach(([key, val]) => {
+        if (typeof val === 'string') {
+          keys.push(key)
+        }
+      })
+    }
+
+    return new Fuse(options, {
+      keys: keys.length > 0 ? keys : undefined,
+      threshold: 0.3, // 0 = exact match, 1 = match anything
+      ignoreLocation: true, // Don't penalize matches based on position
+      minMatchCharLength: 1,
+      includeScore: true,
+    })
+  }, [options])
+
+  const filteredOptions: (T | null)[] = useMemo(() => {
+    if (query === '') {
+      return options
+    }
+
+    // Use custom filter if provided
+    if (filter) {
+      return options.filter((option) => filter(option, query))
+    }
+
+    // Use Fuse.js for fuzzy search
+    if (fuse) {
+      return fuse.search(query).map(result => result.item)
+    }
+
+    // Fallback to simple string matching
+    return options.filter((option) =>
+      displayValue(option)?.toLowerCase().includes(query.toLowerCase())
+    )
+  }, [query, options, filter, fuse, displayValue])
 
   const handleChange = (newValue: T | null) => {
     // User selected something, update the value
