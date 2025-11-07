@@ -1,4 +1,4 @@
-import {Suspense} from 'react';
+import {Suspense, useState} from 'react';
 import {Await, NavLink, useAsyncValue} from 'react-router';
 import {
   type CartViewPayload,
@@ -10,6 +10,7 @@ import {useAside} from '~/components/Aside';
 import {Bars3Icon, MagnifyingGlassIcon, ShoppingCartIcon} from '@heroicons/react/24/outline';
 import {ChevronDownIcon} from '@heroicons/react/20/solid';
 import {Button} from '~/ui/button';
+import {FancyIcon} from '~/components/FancyIcons';
 
 interface HeaderProps {
   header: HeaderQuery;
@@ -72,13 +73,111 @@ export function Header({
   );
 }
 
+// Desktop menu item with dropdown support
+function DesktopMenuItem({
+  item,
+  close,
+  publicStoreDomain,
+  primaryDomainUrl,
+}: {
+  item: any;
+  close: () => void;
+  publicStoreDomain: string;
+  primaryDomainUrl: string;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  if (!item.url) return null;
+
+  const url =
+    item.url.includes('myshopify.com') ||
+    item.url.includes(publicStoreDomain) ||
+    item.url.includes(primaryDomainUrl)
+      ? new URL(item.url).pathname
+      : item.url;
+
+  const hasSubitems = item.items && item.items.length > 0;
+
+  if (hasSubitems) {
+    return (
+      <div
+        className="relative"
+        onMouseEnter={() => setIsOpen(true)}
+        onMouseLeave={() => setIsOpen(false)}
+      >
+        <NavLink
+          end
+          onClick={close}
+          prefetch="intent"
+          to={url}
+          className="header-menu-item inline-flex items-center px-3 py-4 text-sm font-medium text-gray-700 hover:text-gray-800"
+        >
+          {item.title}
+          <ChevronDownIcon className="ml-1 h-4 w-4" aria-hidden="true" />
+        </NavLink>
+
+        {/* Dropdown menu */}
+        {isOpen && (
+          <div className="absolute left-0 z-10 mt-0 w-48 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black/5">
+            <div className="py-1">
+              {item.items.map((subitem: any) => {
+                const subUrl =
+                  subitem.url.includes('myshopify.com') ||
+                  subitem.url.includes(publicStoreDomain) ||
+                  subitem.url.includes(primaryDomainUrl)
+                    ? new URL(subitem.url).pathname
+                    : subitem.url;
+                return (
+                  <NavLink
+                    key={subitem.id}
+                    end
+                    onClick={close}
+                    prefetch="intent"
+                    to={subUrl}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                  >
+                    {subitem.title}
+                  </NavLink>
+                );
+              })}
+            </div>
+            <div className="border-t border-gray-100">
+              <NavLink
+                end
+                onClick={close}
+                prefetch="intent"
+                to="/request-a-design"
+                className="flex items-center gap-2 rounded-b-md bg-gray-50 px-4 py-2.5 text-sm font-semibold text-gray-900 hover:bg-gray-100"
+              >
+                <FancyIcon name="lightbulb" width={16} height={16} />
+                Request a Design
+              </NavLink>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <NavLink
+      end
+      onClick={close}
+      prefetch="intent"
+      to={url}
+      className="header-menu-item px-3 py-4 text-sm font-medium text-gray-700 hover:text-gray-800"
+    >
+      {item.title}
+    </NavLink>
+  );
+}
+
 export function HeaderMenu({
-  menu,
   primaryDomainUrl,
   viewport,
   publicStoreDomain,
 }: {
-  menu: HeaderProps['header']['menu'];
+  menu?: HeaderProps['header']['menu'];
   primaryDomainUrl: HeaderProps['header']['shop']['primaryDomain']['url'];
   viewport: Viewport;
   publicStoreDomain: HeaderProps['publicStoreDomain'];
@@ -86,8 +185,8 @@ export function HeaderMenu({
   const className = `header-menu-${viewport}`;
   const {close} = useAside();
 
-  // tempararily hardcode for development
-  menu = {
+  // tempararily hardcode for development with custom submenu structure
+  const customMenu = {
     "id": "gid://shopify/Menu/284328165670",
     "items": [
         {
@@ -106,7 +205,44 @@ export function HeaderMenu({
             "title": "Shop",
             "type": "PAGE",
             "url": "/shop-all",
-            "items": []
+            "items": [
+                {
+                    "id": "gid://shopify/MenuItem/687200141608",
+                    "resourceId": null,
+                    "tags": [],
+                    "title": "Aircraft",
+                    "type": "PAGE",
+                    "url": "/products/aircraft",
+                    "items": []
+                },
+                {
+                    "id": "gid://shopify/MenuItem/687200141609",
+                    "resourceId": null,
+                    "tags": [],
+                    "title": "Airport Diagrams",
+                    "type": "PAGE",
+                    "url": "/products/airports",
+                    "items": []
+                },
+                {
+                    "id": "gid://shopify/MenuItem/687200141610",
+                    "resourceId": null,
+                    "tags": [],
+                    "title": "Cars",
+                    "type": "PAGE",
+                    "url": "/products/cars",
+                    "items": []
+                },
+                {
+                    "id": "gid://shopify/MenuItem/687200141611",
+                    "resourceId": null,
+                    "tags": [],
+                    "title": "Sailboats",
+                    "type": "PAGE",
+                    "url": "/products/sailboats",
+                    "items": []
+                }
+            ]
         },
         {
             "id": "gid://shopify/MenuItem/717103038752",
@@ -150,7 +286,7 @@ export function HeaderMenu({
         <div className="mt-2 w-full">
           {/* Primary links */}
           <div className="space-y-6 border-b border-gray-200 px-4 py-6">
-            {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
+            {(customMenu).items.map((item) => {
               if (!item.url) return null;
               const url =
                 item.url.includes('myshopify.com') ||
@@ -158,17 +294,58 @@ export function HeaderMenu({
                 item.url.includes(primaryDomainUrl)
                   ? new URL(item.url).pathname
                   : item.url;
+
+              // Check if item has subitems
+              const hasSubitems = item.items && item.items.length > 0;
+
               return (
                 <div className="flow-root" key={item.id}>
-                  <NavLink
-                    end
-                    onClick={close}
-                    prefetch="intent"
-                    to={url}
-                    className="-m-2 block p-2 text-base font-medium text-gray-900"
-                  >
-                    {item.title}
-                  </NavLink>
+                  {hasSubitems ? (
+                    <div>
+                      <NavLink
+                        end
+                        onClick={close}
+                        prefetch="intent"
+                        to={url}
+                        className="-m-2 block p-2 text-base font-medium text-gray-900"
+                      >
+                        {item.title}
+                      </NavLink>
+                      {/* Render subitems */}
+                      <div className="ml-4 mt-2 space-y-2">
+                        {item.items.map((subitem: any) => {
+                          const subUrl =
+                            subitem.url.includes('myshopify.com') ||
+                            subitem.url.includes(publicStoreDomain) ||
+                            subitem.url.includes(primaryDomainUrl)
+                              ? new URL(subitem.url).pathname
+                              : subitem.url;
+                          return (
+                            <NavLink
+                              key={subitem.id}
+                              end
+                              onClick={close}
+                              prefetch="intent"
+                              to={subUrl}
+                              className="-m-2 block p-2 text-sm text-gray-600"
+                            >
+                              {subitem.title}
+                            </NavLink>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ) : (
+                    <NavLink
+                      end
+                      onClick={close}
+                      prefetch="intent"
+                      to={url}
+                      className="-m-2 block p-2 text-base font-medium text-gray-900"
+                    >
+                      {item.title}
+                    </NavLink>
+                  )}
                 </div>
               );
             })}
@@ -179,9 +356,10 @@ export function HeaderMenu({
             <Button
               href="/request-a-design"
               onClick={close}
-              outline
+              color="light"
               className="w-full"
             >
+              <FancyIcon name="lightbulb" width={16} height={16} data-slot="icon" />
               Request a Design
             </Button>
           </div>
@@ -189,27 +367,15 @@ export function HeaderMenu({
         </div>
       )}
       {viewport === 'desktop' &&
-        (menu || FALLBACK_HEADER_MENU).items.map((item) => {
-          if (!item.url) return null;
-          const url =
-            item.url.includes('myshopify.com') ||
-            item.url.includes(publicStoreDomain) ||
-            item.url.includes(primaryDomainUrl)
-              ? new URL(item.url).pathname
-              : item.url;
-          return (
-            <NavLink
-              end
-              key={item.id}
-              onClick={close}
-              prefetch="intent"
-              to={url}
-              className="header-menu-item px-3 py-4 text-sm font-medium text-gray-700 hover:text-gray-800"
-            >
-              {item.title}
-            </NavLink>
-          );
-        })}
+        (customMenu).items.map((item) => (
+          <DesktopMenuItem
+            key={item.id}
+            item={item}
+            close={close}
+            publicStoreDomain={publicStoreDomain}
+            primaryDomainUrl={primaryDomainUrl}
+          />
+        ))}
     </nav>
   );
 }
@@ -317,44 +483,3 @@ function CartBanner() {
   return <CartBadge count={cart?.totalQuantity ?? 0} />;
 }
 
-const FALLBACK_HEADER_MENU = {
-  id: 'gid://shopify/Menu/199655587896',
-  items: [
-    {
-      id: 'gid://shopify/MenuItem/461609500728',
-      resourceId: null,
-      tags: [],
-      title: 'Collections',
-      type: 'HTTP',
-      url: '/collections',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461609533496',
-      resourceId: null,
-      tags: [],
-      title: 'Blog',
-      type: 'HTTP',
-      url: '/blogs/journal',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461609566264',
-      resourceId: null,
-      tags: [],
-      title: 'Policies',
-      type: 'HTTP',
-      url: '/policies',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461609599032',
-      resourceId: 'gid://shopify/Page/92591030328',
-      tags: [],
-      title: 'About',
-      type: 'PAGE',
-      url: '/pages/about',
-      items: [],
-    },
-  ],
-};

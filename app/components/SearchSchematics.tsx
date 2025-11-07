@@ -224,7 +224,7 @@ export function SearchSchematics() {
             </div>
             <div className="mt-5">
               <Button color="light" href="/request-a-design">
-                Submit Request
+                Request a Design
               </Button>
             </div>
           </div>

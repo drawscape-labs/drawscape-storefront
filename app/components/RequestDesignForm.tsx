@@ -46,7 +46,7 @@ interface RequestDesignFormProps {
 // Category options for the design request
 const CATEGORIES = [
   { value: '', label: 'Select a category...' },
-  { value: 'aerospace', label: 'Aerospace' },
+  { value: 'aerospace', label: 'Space' },
   { value: 'aircraft', label: 'Aircraft' },
   { value: 'airport-diagrams', label: 'Airport Diagrams' },
   { value: 'cameras', label: 'Cameras' },
@@ -348,7 +348,7 @@ export const RequestDesignForm = ({ schematicTitle, actionData }: RequestDesignF
         return (
           <Field className="mb-6">
             <Label htmlFor="aerospaceName" className="block text-sm font-medium text-gray-700 mb-2">
-              Aerospace Vehicle
+              Space Vehicle
             </Label>
             <Input
               id="aerospaceName"
