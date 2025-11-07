@@ -131,7 +131,10 @@ function DesktopMenuItem({
                   <NavLink
                     key={subitem.id}
                     end
-                    onClick={close}
+                    onClick={() => {
+                      setIsOpen(false);
+                      close();
+                    }}
                     prefetch="intent"
                     to={subUrl}
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900"
@@ -144,7 +147,10 @@ function DesktopMenuItem({
             <div className="border-t border-gray-100">
               <NavLink
                 end
-                onClick={close}
+                onClick={() => {
+                  setIsOpen(false);
+                  close();
+                }}
                 prefetch="intent"
                 to="/request-a-design"
                 className="flex items-center gap-2 rounded-b-md bg-gray-50 px-4 py-2.5 text-sm font-semibold text-gray-900 hover:bg-gray-100"
