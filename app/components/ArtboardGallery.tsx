@@ -137,7 +137,7 @@ export default function ArtboardGallery({
             <TabList className="flex max-w-full gap-3 overflow-x-auto rounded-md p-2 lg:flex-col lg:overflow-visible lg:bg-transparent lg:p-0">
               {/* Artboard Render */}
               <Tab className={TAB_ARTBOARD_CLASS} title="Artboard Render">
-                <div className="relative flex h-full w-full items-center justify-center">
+                <div className="relative flex h-full w-full items-center justify-center isolate">
                   <EyeIcon
                     className={`absolute inset-0 m-auto z-10 pointer-events-none ${ICON_SIZE_CLASS}`}
                     style={{ color: eyeIconColor }}
@@ -151,7 +151,7 @@ export default function ArtboardGallery({
               {hasVideos &&
                 limitedVideos.map((video, idx) => (
                   <Tab key={video.id || idx} className={TAB_BASE_CLASS} title={`Select video ${idx + 1}`}>
-                    <div className="relative h-full w-full flex items-center justify-center bg-gray-800 rounded">
+                    <div className="relative h-full w-full flex items-center justify-center bg-gray-800 rounded isolate">
                       {video.previewImage?.url ? (
                         <>
                           <Image

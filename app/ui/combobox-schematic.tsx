@@ -191,7 +191,7 @@ export function ComboboxSchematic<T>({
                 // Anchor positioning
                 '[--anchor-gap:--spacing(2)] [--anchor-padding:--spacing(4)] sm:data-[anchor~=start]:[--anchor-offset:-4px]',
                 // Base styles - increased min width for mobile
-                'isolate min-w-[calc(var(--input-width)+24px)] sm:min-w-[calc(var(--input-width)+8px)] scroll-py-1 rounded-xl p-1 select-none empty:invisible',
+                'isolate z-50 min-w-[calc(var(--input-width)+24px)] sm:min-w-[calc(var(--input-width)+8px)] scroll-py-1 rounded-xl p-1 select-none empty:invisible',
                 // Max height for scrolling
                 'max-h-60',
                 // Invisible border that is only visible in `forced-colors` mode for accessibility purposes
