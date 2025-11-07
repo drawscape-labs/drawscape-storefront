@@ -9,6 +9,7 @@ import type {HeaderQuery, CartApiQueryFragment} from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
 import {Bars3Icon, MagnifyingGlassIcon, ShoppingCartIcon} from '@heroicons/react/24/outline';
 import {ChevronDownIcon} from '@heroicons/react/20/solid';
+import {Button} from '~/ui/button';
 
 interface HeaderProps {
   header: HeaderQuery;
@@ -173,7 +174,17 @@ export function HeaderMenu({
             })}
           </div>
 
-
+          {/* Request a Design button */}
+          <div className="px-4 py-6">
+            <Button
+              href="/request-a-design"
+              onClick={close}
+              outline
+              className="w-full"
+            >
+              Request a Design
+            </Button>
+          </div>
 
         </div>
       )}

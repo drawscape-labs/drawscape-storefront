@@ -590,7 +590,7 @@ export const RequestDesignForm = ({ schematicTitle, actionData }: RequestDesignF
             Request a Design
           </Heading>
           <p className="text-base sm:text-lg text-gray-600 mb-8">
-            Curious if we can draw your thing? You are in the right spot. Use the form multiple times for each request.
+            Want to know if we can draw your thing? You are in the right spot. Use the form multiple times if needed.
           </p>
         </>
       )}
