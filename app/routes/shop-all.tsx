@@ -16,7 +16,7 @@ const products = [
   },
   {
     id: 2,
-    name: 'Airports',
+    name: 'Airport Diagrams',
     category: 'Blueprints',
     href: '/products/airports',
     imageSrc: 'https://cdn.shopify.com/s/files/1/0905/0138/2438/files/DSC_0061_1.jpg',
