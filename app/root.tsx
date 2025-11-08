@@ -24,7 +24,7 @@ import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
 import appStyles from '~/styles/app.css?url';
 import tailwindCss from './styles/tailwind.css?url';
 import {PageLayout} from './components/PageLayout';
-import {FrontChat} from './components/FrontChat';
+// import {FrontChat} from './components/FrontChat';
 import { useJudgeme } from '@judgeme/shopify-hydrogen';
 
 export type RootLoader = typeof loader;
