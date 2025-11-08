@@ -276,6 +276,13 @@ export function Layout({children}: {children?: React.ReactNode}) {
 export default function App() {
   const data = useRouteLoaderData<RootLoader>('root');
   useJudgeme(data!.judgeme);
+
+  useShopifyCookies({
+    hasUserConsent: true,
+    domain: '.drawscape.io',
+    checkoutDomain: 'checkout.drawscape.io'
+  });
+
   return <Outlet />;
 }
 
