@@ -3,19 +3,7 @@ import {ServerRouter} from 'react-router';
 import {isbot} from 'isbot';
 import {renderToReadableStream} from 'react-dom/server';
 import type {EntryContext} from 'react-router';
-// import {createContentSecurityPolicy} from '@shopify/hydrogen';
-
-const PERMISSIVE_CSP = [
-  "default-src * data: blob:;",
-  "script-src * 'unsafe-inline' 'unsafe-eval';",
-  "style-src * 'unsafe-inline';",
-  'img-src * data: blob:;',
-  'font-src * data: blob:;',
-  'connect-src * data: blob:;',
-  'frame-src *;',
-  'worker-src * blob:;',
-  'media-src * data:;',
-].join(' ');
+import {createContentSecurityPolicy} from '@shopify/hydrogen';
 
 export default async function handleRequest(
   request: Request,
@@ -24,9 +12,68 @@ export default async function handleRequest(
   reactRouterContext: EntryContext,
   context: AppLoadContext,
 ) {
+  const {nonce, header, NonceProvider} = createContentSecurityPolicy({
+    shop: {
+      checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
+      storeDomain: context.env.PUBLIC_STORE_DOMAIN,
+    },
+    // Allow external stylesheet for Inter font
+    styleSrc: ['https://rsms.me', 'blob:', "'self'"],
+    // Allow images from Tailwind assets and Shopify domains
+    imgSrc: [
+      "'self'",
+      'data:',
+      'https://cdn.shopify.com',
+      'https://shopify.com',
+      'https://tailwindcss.com',
+      'https://drawscape.io',
+      'https://drawscape-projects.s3.us-west-2.amazonaws.com',
+      'https://queue.simpleanalyticscdn.com',
+    ],
+    // Allow font files for Inter
+    fontSrc: [
+      "'self'",
+      'data:',
+      'https://rsms.me',
+      'https://static.klaviyo.com',
+    ],
+    connectSrc: [
+      "'self'",
+      'https://cdn.judge.me',
+      'https://cdnwidget.judge.me',
+      'https://cdn.shopify.com',
+      'https://scripts.simpleanalyticscdn.com',
+      'https://static-forms.klaviyo.com',
+      'https://fast.a.klaviyo.com',
+      'https://monorail-edge.shopifysvc.com',
+      `https://${context.env.PUBLIC_CHECKOUT_DOMAIN}`,
+      `https://${context.env.PUBLIC_STORE_DOMAIN}`,
+    ],
+    scriptSrc: [
+      "'self'",
+      'https://cdn.judge.me',
+      'https://cdnwidget.judge.me',
+      'https://cdn.shopify.com',
+      'https://scripts.simpleanalyticscdn.com',
+      'https://static.klaviyo.com',
+      'https://static-tracking.klaviyo.com',
+      'https://chat-assets.frontapp.com',
+      `https://${context.env.PUBLIC_CHECKOUT_DOMAIN}`,
+      "'unsafe-inline'",
+      "'unsafe-eval'",
+    ],
+  });
+
   const body = await renderToReadableStream(
-    <ServerRouter context={reactRouterContext} url={request.url} />,
+    <NonceProvider>
+      <ServerRouter
+        context={reactRouterContext}
+        url={request.url}
+        nonce={nonce}
+      />
+    </NonceProvider>,
     {
+      nonce,
       signal: request.signal,
       onError(error) {
         console.error(error);
@@ -40,10 +87,7 @@ export default async function handleRequest(
   }
 
   responseHeaders.set('Content-Type', 'text/html');
-  
-  // WARNING: This CSP intentionally allows inline scripts for Judge.me; tighten before production.
-  responseHeaders.set('Content-Security-Policy', PERMISSIVE_CSP);
-  // responseHeaders.set('Content-Security-Policy', header);
+  responseHeaders.set('Content-Security-Policy', header);
 
   return new Response(body, {
     headers: responseHeaders,
