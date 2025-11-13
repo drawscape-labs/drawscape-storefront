@@ -203,8 +203,7 @@ export function Layout({children}: {children?: React.ReactNode}) {
         <Meta />
         <Links />
         {/* Meta Pixel Code */}
-        <ClientOnly>
-          <script
+        <script
             dangerouslySetInnerHTML={{
               __html: `
                 !function(f,b,e,v,n,t,s)
@@ -220,19 +219,7 @@ export function Layout({children}: {children?: React.ReactNode}) {
               `,
             }}
           />
-          <script async src="https://www.googletagmanager.com/gtag/js?id=G-79RLFMDTXV"></script>
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
 
-                gtag('config', 'G-79RLFMDTXV');
-              `,
-            }}
-          />
-        </ClientOnly>
         <noscript>
           <img 
             height="1" 
@@ -243,6 +230,18 @@ export function Layout({children}: {children?: React.ReactNode}) {
           />
         </noscript>
         {/* End Meta Pixel Code */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-79RLFMDTXV"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+
+              gtag('config', 'G-79RLFMDTXV');
+            `,
+          }}
+        />
 
 
 
