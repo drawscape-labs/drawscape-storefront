@@ -220,6 +220,18 @@ export function Layout({children}: {children?: React.ReactNode}) {
               `,
             }}
           />
+          <script async src="https://www.googletagmanager.com/gtag/js?id=G-79RLFMDTXV"></script>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+
+                gtag('config', 'G-79RLFMDTXV');
+              `,
+            }}
+          />
         </ClientOnly>
         <noscript>
           <img 
