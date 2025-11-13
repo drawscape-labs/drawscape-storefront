@@ -51,6 +51,24 @@ declare global {
       reloadAll: () => void;
     };
     jdgm_rerender?: number;
+    
+    // Shopify Customer Privacy API
+    Shopify?: {
+      customerPrivacy?: {
+        currentVisitorConsent: () => Promise<{
+          analytics?: boolean;
+          marketing?: boolean;
+          preferences?: boolean;
+          saleOfData?: boolean;
+        }>;
+        setTrackingConsent: (consent: {
+          analytics?: boolean;
+          marketing?: boolean;
+          preferences?: boolean;
+          saleOfData?: boolean;
+        }, callback?: () => void) => void;
+      };
+    };
   }
 }
 
