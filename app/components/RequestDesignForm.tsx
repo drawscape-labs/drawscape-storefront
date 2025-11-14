@@ -592,6 +592,61 @@ export const RequestDesignForm = ({ schematicTitle, actionData }: RequestDesignF
           <p className="text-base sm:text-lg text-gray-600 mb-8">
             Want to know if we can draw your thing? You are in the right spot. Use the form multiple times if needed.
           </p>
+
+          {/* How It Works Section */}
+          <div className="mb-8 bg-indigo-50 rounded-lg p-6 dark:bg-indigo-900/20">
+            <h3 className="text-lg font-semibold text-indigo-900 mb-4 dark:text-indigo-100">
+              How It Works
+            </h3>
+            <ol className="space-y-4">
+              <li className="flex items-start gap-3">
+                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-semibold dark:bg-indigo-500">
+                  1
+                </span>
+                <div className="pt-1">
+                  <p className="font-medium text-indigo-900 dark:text-indigo-100">Request</p>
+                  <p className="text-sm text-indigo-700 dark:text-indigo-300">Fill out the form below with your design details.</p>
+                </div>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-semibold dark:bg-indigo-500">
+                  2
+                </span>
+                <div className="pt-1">
+                  <p className="font-medium text-indigo-900 dark:text-indigo-100">Verify</p>
+                  <p className="text-sm text-indigo-700 dark:text-indigo-300">We'll send sample images to verify we have the correct design.</p>
+                </div>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-semibold dark:bg-indigo-500">
+                  3
+                </span>
+                <div className="pt-1">
+                  <p className="font-medium text-indigo-900 dark:text-indigo-100">Purchase</p>
+                  <p className="text-sm text-indigo-700 dark:text-indigo-300">Pre-purchase your design via the website.</p>
+                </div>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-semibold dark:bg-indigo-500">
+                  4
+                </span>
+                <div className="pt-1">
+                  <p className="font-medium text-indigo-900 dark:text-indigo-100">Create</p>
+                  <p className="text-sm text-indigo-700 dark:text-indigo-300">Our team builds the design, based on your requirements.</p>
+                </div>
+              </li>
+
+              <li className="flex items-start gap-3">
+                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-semibold dark:bg-indigo-500">
+                  5
+                </span>
+                <div className="pt-1">
+                  <p className="font-medium text-indigo-900 dark:text-indigo-100">Customize</p>
+                  <p className="text-sm text-indigo-700 dark:text-indigo-300">Personalize your design with colors, text, and layout to your liking</p>
+                </div>
+              </li>
+            </ol>
+          </div>
         </>
       )}
 
@@ -624,7 +679,7 @@ export const RequestDesignForm = ({ schematicTitle, actionData }: RequestDesignF
               </li>
               <li className="flex items-start">
                 <span className="flex-shrink-0 w-6 h-6 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-sm font-semibold mr-3">2</span>
-                <span>If we can find your design, we'll send you some example images</span>
+                <span>We'll send you some example images</span>
               </li>
               <li className="flex items-start">
                 <span className="flex-shrink-0 w-6 h-6 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-sm font-semibold mr-3">3</span>
@@ -824,7 +879,7 @@ export const RequestDesignForm = ({ schematicTitle, actionData }: RequestDesignF
                     />
                     <Label>Stay Updated!</Label>
                     <Description>
-                      Get notified about new designs and special offers.
+                      Get notified about new designs and product launches.
                     </Description>
                   </CheckboxField>
 
