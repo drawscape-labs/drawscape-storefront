@@ -1,4 +1,4 @@
-import {Analytics, getShopAnalytics} from '@shopify/hydrogen';
+import {Analytics, getShopAnalytics, useNonce} from '@shopify/hydrogen';
 import {useState, useEffect} from 'react';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {ReactQueryDevtools} from '@tanstack/react-query-devtools';
@@ -172,7 +172,7 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
       cache: storefront.CacheLong(),
       variables: {
         footerMenuHandle: 'legal',
-      },
+      }, 
     })
     .catch((error) => {
       console.error(error);
@@ -188,6 +188,7 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
 }
 
 export function Layout({children}: {children?: React.ReactNode}) {
+  const nonce = useNonce();
   const data = useRouteLoaderData<RootLoader>('root');
   const [queryClient] = useState(() => new QueryClient());
 
@@ -264,8 +265,8 @@ export function Layout({children}: {children?: React.ReactNode}) {
         <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
         <script async type="text/javascript" src="https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=WZP4fv"/>
 
-        <ScrollRestoration />
-        <Scripts />
+        <ScrollRestoration nonce={nonce} />
+        <Scripts nonce={nonce} />
       </body>
     </html>
   );

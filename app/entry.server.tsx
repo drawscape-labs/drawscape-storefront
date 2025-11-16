@@ -3,6 +3,7 @@ import {ServerRouter} from 'react-router';
 import {isbot} from 'isbot';
 import {renderToReadableStream} from 'react-dom/server';
 import type {EntryContext} from 'react-router';
+import {createContentSecurityPolicy} from '@shopify/hydrogen';
 
 export default async function handleRequest(
   request: Request,
@@ -11,13 +12,20 @@ export default async function handleRequest(
   reactRouterContext: EntryContext,
   context: AppLoadContext,
 ) {
-  // CSP disabled to allow Judge.me and other third-party scripts to run without restrictions
+  // Keep CSP setup for React hydration but don't enforce the policy
+  // This prevents hydration errors while allowing all third-party scripts
+  const {nonce, NonceProvider} = createContentSecurityPolicy();
+
   const body = await renderToReadableStream(
-    <ServerRouter
-      context={reactRouterContext}
-      url={request.url}
-    />,
+    <NonceProvider>
+      <ServerRouter
+        context={reactRouterContext}
+        url={request.url}
+        nonce={nonce}
+      />
+    </NonceProvider>,
     {
+      nonce,
       signal: request.signal,
       onError(error) {
         console.error(error);
@@ -31,6 +39,8 @@ export default async function handleRequest(
   }
 
   responseHeaders.set('Content-Type', 'text/html');
+  // Note: We deliberately DO NOT set the Content-Security-Policy header
+  // This allows all third-party scripts to run without restrictions
 
   return new Response(body, {
     headers: responseHeaders,
