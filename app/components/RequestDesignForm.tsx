@@ -13,6 +13,7 @@
  */
 import React, { useState } from 'react';
 import { Form, useNavigation } from 'react-router';
+import { useAnalytics } from '@shopify/hydrogen';
 import { Input } from '~/ui/input';
 import { Textarea } from '~/ui/textarea';
 import { Button } from '~/ui/button';
@@ -21,6 +22,7 @@ import { Fieldset, Field, Label, Description } from '~/ui/fieldset';
 import { CheckboxField, Checkbox } from '~/ui/checkbox';
 import { Select } from '~/ui/select';
 import { subscribeToNewsletterClient } from '~/lib/klaviyo';
+import { trackEvent } from '~/lib/analytics';
 
 // Declare Klaviyo and Simple Analytics globals for TypeScript
 declare global {
@@ -63,6 +65,7 @@ const CATEGORIES = [
 
 export const RequestDesignForm = ({ schematicTitle, actionData }: RequestDesignFormProps) => {
   const navigation = useNavigation();
+  const analytics = useAnalytics();
   const isSubmitting = navigation.state === 'submitting';
 
   // Form state
@@ -156,15 +159,11 @@ export const RequestDesignForm = ({ schematicTitle, actionData }: RequestDesignF
             break;
         }
 
-        window.klaviyo.track('Requested Design', {
+        // Track event to all analytics platforms (Shopify, Klaviyo, Simple Analytics)
+        trackEvent('requested_design', {
           request_category: category,
           request_details: requestDetails,
-        });
-
-        // Simple Analytics event tracking
-        if (window.sa_event) {
-          window.sa_event('requested_design');
-        }
+        }, analytics);
       }
 
       // Subscribe to newsletter if user opted in
