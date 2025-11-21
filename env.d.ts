@@ -51,6 +51,34 @@ declare global {
       reloadAll: () => void;
     };
     jdgm_rerender?: number;
+    
+    // Shopify Customer Privacy API
+    Shopify?: {
+      customerPrivacy?: {
+        currentVisitorConsent: () => Promise<{
+          analytics?: boolean;
+          marketing?: boolean;
+          preferences?: boolean;
+          saleOfData?: boolean;
+        }>;
+        setTrackingConsent: (consent: {
+          analytics?: boolean;
+          marketing?: boolean;
+          preferences?: boolean;
+          saleOfData?: boolean;
+        }, callback?: () => void) => void;
+      };
+    };
+    
+    // Simple Analytics
+    sa_event?: (eventName: string, metadata?: Record<string, any>) => void;
+    
+    // Klaviyo
+    klaviyo?: {
+      identify: (properties: Record<string, any>) => void;
+      track: (eventName: string, properties?: Record<string, any>) => void;
+      push: (args: any[]) => void;
+    };
   }
 }
 

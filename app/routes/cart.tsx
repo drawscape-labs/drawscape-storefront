@@ -1,6 +1,6 @@
 import {type MetaFunction, useLoaderData} from 'react-router';
 import type {CartQueryDataReturn} from '@shopify/hydrogen';
-import {CartForm} from '@shopify/hydrogen';
+import {CartForm, Analytics} from '@shopify/hydrogen';
 import {
   data,
   type LoaderFunctionArgs,
@@ -164,6 +164,7 @@ export default function Cart() {
     <div className="cart">
       <h1>Cart</h1>
       <CartMain layout="page" cart={cart} />
+      <Analytics.CartView />
     </div>
   );
 }
