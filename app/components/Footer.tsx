@@ -14,7 +14,6 @@ declare global {
       identify: (properties: Record<string, any>) => void;
       track: (eventName: string, properties?: Record<string, any>) => void;
       push: (args: any[]) => void;
-      isIdentified: () => boolean;
     };
   }
 }

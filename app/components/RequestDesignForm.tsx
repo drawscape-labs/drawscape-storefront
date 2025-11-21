@@ -31,9 +31,8 @@ declare global {
       identify: (properties: Record<string, any>) => void;
       track: (eventName: string, properties?: Record<string, any>) => void;
       push: (args: any[]) => void;
-      isIdentified: () => boolean;
     };
-    sa_event?: (eventName: string, metadata?: Record<string, any> | (() => void)) => void;
+    sa_event?: (eventName: string, metadata?: Record<string, any>) => void;
   }
 }
 
@@ -163,7 +162,7 @@ export const RequestDesignForm = ({ schematicTitle, actionData }: RequestDesignF
         trackEvent('requested_design', {
           request_category: category,
           request_details: requestDetails,
-        }, analytics);
+        }, analytics as { publish: (eventName: string, properties?: Record<string, any>) => void });
       }
 
       // Subscribe to newsletter if user opted in

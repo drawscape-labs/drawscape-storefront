@@ -193,13 +193,15 @@ export default [
   })),
   {
     files: ['**/*.test.*'],
-    plugins: {
-      jest,
-    },
     languageOptions: {
       globals: {
         ...globals.node,
         ...globals.jest,
+      },
+    },
+    settings: {
+      jest: {
+        version: 'detect',
       },
     },
   },
