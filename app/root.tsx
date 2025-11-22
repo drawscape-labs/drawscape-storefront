@@ -252,6 +252,7 @@ export function Layout({children}: {children?: React.ReactNode}) {
             cart={data.cart}
             shop={data.shop}
             consent={data.consent}
+            cookieDomain=".drawscape.io"
           >
             <QueryClientProvider client={queryClient}>
               <PageLayout {...data}>{children}</PageLayout>
@@ -286,10 +287,6 @@ export function Layout({children}: {children?: React.ReactNode}) {
 export default function App() {
   const data = useRouteLoaderData<RootLoader>('root');
   useJudgeme(data!.judgeme);
-
-  // DO NOT call useShopifyCookies() here - it sets cookies immediately
-  // The Analytics.Provider with consent config handles cookie management
-  // based on the Customer Privacy API and user consent
 
   return <Outlet />;
 }
