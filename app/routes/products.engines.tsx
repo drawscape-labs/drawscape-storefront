@@ -15,7 +15,7 @@ import { type Schematic } from '~/components/ArtboardSelectSchematic';
 import drawscapeServerApi from '~/lib/drawscapeServerApi';
 
 
-const SCHEMATIC_CATEGORY = 'sailboats';
+const SCHEMATIC_CATEGORY = 'engines';
 
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
