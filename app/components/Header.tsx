@@ -240,6 +240,15 @@ export function HeaderMenu({
                     "items": []
                 },
                 {
+                  "id": "gid://shopify/MenuItem/687200141611",
+                  "resourceId": null,
+                  "tags": [],
+                  "title": "Engines",
+                  "type": "PAGE",
+                  "url": "/products/engines",
+                  "items": []
+                },
+                {
                     "id": "gid://shopify/MenuItem/687200141611",
                     "resourceId": null,
                     "tags": [],

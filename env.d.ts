@@ -33,6 +33,7 @@ declare global {
     TRAIL_DEFAULT_SCHEMATIC_ID?: string;
     SKI_RESORT_DEFAULT_SCHEMATIC_ID?: string;
     CAR_DEFAULT_SCHEMATIC_ID?: string;
+    ENGINE_DEFAULT_SCHEMATIC_ID?: string;
     
     // Judgeme public configuration
     JUDGEME_SHOP_DOMAIN: string;
