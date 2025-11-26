@@ -43,7 +43,7 @@ const products = [
     name: 'Engines',
     category: 'Blueprints',
     href: '/products/engines',
-    imageSrc: 'https://cdn.shopify.com/s/files/1/0905/0138/2438/files/IMG_0425.jpg?v=1764185507',
+    imageSrc: 'https://cdn.shopify.com/s/files/1/0905/0138/2438/files/IMG_0425_1.jpg',
     imageAlt: 'Engine blueprint artwork collection',
   },
 ];
