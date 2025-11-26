@@ -38,6 +38,14 @@ const products = [
     imageSrc: 'https://cdn.shopify.com/s/files/1/0905/0138/2438/files/IMG_0085.jpg',
     imageAlt: 'Car blueprint artwork collection',
   },
+  {
+    id: 5,
+    name: 'Engines',
+    category: 'Blueprints',
+    href: '/products/engines',
+    imageSrc: 'https://cdn.shopify.com/s/files/1/0905/0138/2438/files/IMG_0425.jpg?v=1764185507',
+    imageAlt: 'Engine blueprint artwork collection',
+  },
 ];
 
 export default function ShopAllPage() {
